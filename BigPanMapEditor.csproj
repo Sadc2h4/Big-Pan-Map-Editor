@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>BigPanMapEditor</AssemblyName>
+    <RootNamespace>PikminUnitEditor</RootNamespace>
+    <AssemblyTitle>Big Pan Map Editor</AssemblyTitle>
+    <Product>Big Pan Map Editor</Product>
+    <Authors>C2H4</Authors>
+    <Company></Company>
+    <ApplicationIcon>ホーム画面用素材\BigPan_icon_trim_20260522_161519.ico</ApplicationIcon>
+    <PublishSingleFile>true</PublishSingleFile>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="obj\**\*.cs;codex_obj\**\*.cs" />
+    <EmbeddedResource Remove="obj\**\*;codex_obj\**\*" />
+    <None Remove="obj\**\*;codex_obj\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="スポーンアイコン\*.png" />
+    <EmbeddedResource Include="スポーンアイコン\resources\*.png" />
+    <EmbeddedResource Include="ホーム画面用素材\*.*" />
+    <EmbeddedResource Include="ボタン用アイコン\*.png" />
+    <EmbeddedResource Include="確認用画像\Loading.*" Link="loading\%(Filename)%(Extension)" />
+    <EmbeddedResource Include="manual\**\*.*" />
+    <EmbeddedResource Include="pretty\*.png" />
+  </ItemGroup>
+
+</Project>

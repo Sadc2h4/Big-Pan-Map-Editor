@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Big Pan Map Editor Manual Editor</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #eef3f8;
+      --panel: #ffffff;
+      --panel-2: #f7f9fc;
+      --line: #cfd8e3;
+      --text: #172033;
+      --muted: #667085;
+      --accent: #0e93c8;
+      --accent-dark: #0875a2;
+      --danger: #ad3b3b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #102135;
+      color: white;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    button {
+      height: 32px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0 12px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+    }
+
+    button.primary:hover {
+      background: var(--accent-dark);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(320px, 1.1fr) minmax(220px, 280px) minmax(320px, 1.1fr);
+      gap: 14px;
+      height: calc(100vh - 61px);
+      padding: 14px;
+    }
+
+    .panel {
+      display: flex;
+      min-width: 0;
+      min-height: 0;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-2);
+      min-width: 0;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .segmented {
+      display: flex;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: white;
+    }
+
+    .segmented button {
+      height: 30px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .segmented button:last-child {
+      border-right: 0;
+    }
+
+    .segmented button.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    textarea {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      resize: none;
+      border: 0;
+      padding: 16px;
+      outline: none;
+      color: var(--text);
+      font: 14px/1.6 Consolas, "Yu Gothic UI", monospace;
+      tab-size: 2;
+    }
+
+    #preview {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 20px 24px;
+      line-height: 1.7;
+    }
+
+    #preview h1 {
+      margin: 0 0 18px;
+      color: var(--text);
+      font-size: 24px;
+    }
+
+    #preview h2 {
+      margin: 22px 0 10px;
+      font-size: 18px;
+    }
+
+    #preview p {
+      margin: 8px 0;
+    }
+
+    #preview ul {
+      margin: 8px 0 12px 1.4em;
+      padding: 0;
+    }
+
+    #preview img {
+      display: block;
+      max-width: 100%;
+      margin: 14px 0;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+    }
+
+    #preview hr {
+      height: 1px;
+      margin: 18px 0;
+      border: 0;
+      background: var(--line);
+    }
+
+    .status {
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 13px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .warning {
+      padding: 10px 12px;
+      border-bottom: 1px solid #eed3a1;
+      background: #fff8e5;
+      color: #6c4a00;
+      font-size: 13px;
+    }
+
+    .dirty {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    .image-list {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 8px;
+    }
+
+    .image-card {
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+      min-width: 0;
+      width: 100%;
+      max-width: 100%;
+      margin: 0 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 7px;
+      background: white;
+      text-align: left;
+    }
+
+    .image-card.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(14, 147, 200, 0.15);
+    }
+
+    .image-card img {
+      width: 56px;
+      height: 44px;
+      object-fit: contain;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #f9fbfd;
+    }
+
+    .image-name {
+      overflow: hidden;
+      min-width: 0;
+      font-size: 13px;
+      font-weight: 700;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow-wrap: anywhere;
+    }
+
+    .image-path {
+      overflow: hidden;
+      min-width: 0;
+      color: var(--muted);
+      font-size: 12px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow-wrap: anywhere;
+    }
+
+    .image-card > div {
+      min-width: 0;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+
+      .panel {
+        min-height: 420px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Big Pan Map Editor Manual Editor</h1>
+    <div class="button-row">
+      <button id="selectFolder" class="primary">manualフォルダを選択</button>
+      <button id="save" disabled>保存</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div id="unsupported" class="warning" hidden>
+        このHTMLは Chromium 系ブラウザの File System Access API を使用します．Chrome または Edge で開いてください．
+      </div>
+      <div class="toolbar">
+        <div class="button-row">
+          <div class="segmented" id="languageTabs">
+            <button data-language="ja" class="active">日本語</button>
+            <button data-language="en">English</button>
+          </div>
+          <div class="segmented" id="sectionTabs">
+            <button data-section="Setup" class="active">Setup</button>
+            <button data-section="Basic">Basic</button>
+            <button data-section="Cave">Cave</button>
+            <button data-section="Field">Field</button>
+            <button data-section="ViewSave">ViewSave</button>
+          </div>
+        </div>
+      </div>
+      <textarea id="editor" spellcheck="false" disabled></textarea>
+      <div class="toolbar">
+        <div id="status" class="status">PikminUnitEditor/manual フォルダを選択してください．</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="toolbar">
+        <div class="status">Embedded Images</div>
+      </div>
+      <div class="toolbar">
+        <div class="button-row">
+          <button id="addImage" disabled>画像を追加</button>
+          <button id="insertImage" disabled>mdへ挿入</button>
+          <button id="refreshImages" disabled>更新</button>
+        </div>
+      </div>
+      <div id="imageList" class="image-list"></div>
+      <div class="toolbar">
+        <div id="imageStatus" class="status">manual/images 配下の画像がビルド時に埋め込まれます．</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="toolbar">
+        <div class="status">Preview</div>
+        <div id="dirtyState" class="status"></div>
+      </div>
+      <article id="preview"></article>
+    </section>
+  </main>
+
+  <script>
+    const sections = ["Setup", "Basic", "Cave", "Field", "ViewSave"];
+    const languages = ["ja", "en"];
+    const state = {
+      rootHandle: null,
+      files: new Map(),
+      currentLanguage: "ja",
+      currentSection: "Setup",
+      dirty: false,
+      imageUrls: new Map(),
+      imagesHandle: null,
+      images: [],
+      selectedImagePath: ""
+    };
+
+    const editor = document.getElementById("editor");
+    const preview = document.getElementById("preview");
+    const statusLabel = document.getElementById("status");
+    const dirtyState = document.getElementById("dirtyState");
+    const saveButton = document.getElementById("save");
+    const unsupported = document.getElementById("unsupported");
+    const imageList = document.getElementById("imageList");
+    const imageStatus = document.getElementById("imageStatus");
+    const addImageButton = document.getElementById("addImage");
+    const insertImageButton = document.getElementById("insertImage");
+    const refreshImagesButton = document.getElementById("refreshImages");
+
+    if (!("showDirectoryPicker" in window)) {
+      unsupported.hidden = false;
+      document.getElementById("selectFolder").disabled = true;
+    }
+
+    document.getElementById("selectFolder").addEventListener("click", selectManualFolder);
+    saveButton.addEventListener("click", saveCurrentFile);
+    addImageButton.addEventListener("click", addManualImage);
+    insertImageButton.addEventListener("click", insertSelectedImageMarkdown);
+    refreshImagesButton.addEventListener("click", loadManualImages);
+    editor.addEventListener("input", () => {
+      setCurrentText(editor.value);
+      state.dirty = true;
+      updateDirtyState();
+      renderPreview(editor.value);
+    });
+
+    document.getElementById("languageTabs").addEventListener("click", event => {
+      const button = event.target.closest("button[data-language]");
+      if (!button) {
+        return;
+      }
+
+      switchFile(button.dataset.language, state.currentSection);
+    });
+
+    document.getElementById("sectionTabs").addEventListener("click", event => {
+      const button = event.target.closest("button[data-section]");
+      if (!button) {
+        return;
+      }
+
+      switchFile(state.currentLanguage, button.dataset.section);
+    });
+
+    async function selectManualFolder() {
+      state.rootHandle = await window.showDirectoryPicker({ mode: "readwrite" });
+      state.files.clear();
+      state.imageUrls.forEach(url => URL.revokeObjectURL(url));
+      state.imageUrls.clear();
+      state.images = [];
+      state.selectedImagePath = "";
+      state.imagesHandle = await state.rootHandle.getDirectoryHandle("images", { create: true });
+
+      for (const language of languages) {
+        const languageHandle = await getDirectoryHandleOrNull(state.rootHandle, language);
+        if (!languageHandle) {
+          continue;
+        }
+
+        for (const section of sections) {
+          const fileHandle = await getFileHandleOrNull(languageHandle, `${section}.md`);
+          if (!fileHandle) {
+            continue;
+          }
+
+          const file = await fileHandle.getFile();
+          state.files.set(getFileKey(language, section), {
+            handle: fileHandle,
+            text: await file.text()
+          });
+        }
+      }
+
+      editor.disabled = false;
+      saveButton.disabled = false;
+      addImageButton.disabled = false;
+      refreshImagesButton.disabled = false;
+      state.dirty = false;
+      await loadManualImages();
+      switchFile(state.currentLanguage, state.currentSection, true);
+      statusLabel.textContent = "manual フォルダを読み込みました．";
+    }
+
+    async function getDirectoryHandleOrNull(parent, name) {
+      try {
+        return await parent.getDirectoryHandle(name);
+      } catch {
+        return null;
+      }
+    }
+
+    async function getFileHandleOrNull(parent, name) {
+      try {
+        return await parent.getFileHandle(name);
+      } catch {
+        return null;
+      }
+    }
+
+    function switchFile(language, section, force = false) {
+      if (state.dirty && !force && !window.confirm("未保存の変更があります．切り替えますか？")) {
+        updateTabs();
+        return;
+      }
+
+      state.currentLanguage = language;
+      state.currentSection = section;
+      state.dirty = false;
+      updateTabs();
+
+      const entry = state.files.get(getFileKey(language, section));
+      editor.value = entry?.text ?? "";
+      editor.disabled = !entry;
+      saveButton.disabled = !entry;
+      renderPreview(editor.value);
+      updateDirtyState();
+      statusLabel.textContent = entry
+        ? `${language}/${section}.md`
+        : `${language}/${section}.md が見つかりません．`;
+    }
+
+    function updateTabs() {
+      document.querySelectorAll("[data-language]").forEach(button => {
+        button.classList.toggle("active", button.dataset.language === state.currentLanguage);
+      });
+      document.querySelectorAll("[data-section]").forEach(button => {
+        button.classList.toggle("active", button.dataset.section === state.currentSection);
+      });
+    }
+
+    function getFileKey(language, section) {
+      return `${language}/${section}`;
+    }
+
+    function setCurrentText(text) {
+      const entry = state.files.get(getFileKey(state.currentLanguage, state.currentSection));
+      if (entry) {
+        entry.text = text;
+      }
+    }
+
+    async function saveCurrentFile() {
+      const entry = state.files.get(getFileKey(state.currentLanguage, state.currentSection));
+      if (!entry) {
+        return;
+      }
+
+      const writable = await entry.handle.createWritable();
+      await writable.write(entry.text);
+      await writable.close();
+      state.dirty = false;
+      updateDirtyState();
+      statusLabel.textContent = `${state.currentLanguage}/${state.currentSection}.md を保存しました．`;
+    }
+
+    async function addManualImage() {
+      if (!state.imagesHandle) {
+        return;
+      }
+
+      const handles = await window.showOpenFilePicker({
+        multiple: true,
+        types: [{
+          description: "Manual images",
+          accept: {
+            "image/png": [".png"],
+            "image/jpeg": [".jpg", ".jpeg"],
+            "image/gif": [".gif"],
+            "image/webp": [".webp"]
+          }
+        }]
+      });
+
+      for (const handle of handles) {
+        const file = await handle.getFile();
+        const outputHandle = await state.imagesHandle.getFileHandle(file.name, { create: true });
+        const writable = await outputHandle.createWritable();
+        await writable.write(file);
+        await writable.close();
+      }
+
+      await loadManualImages();
+      imageStatus.textContent = "manual/images に画像を追加しました．";
+    }
+
+    async function loadManualImages() {
+      if (!state.imagesHandle) {
+        return;
+      }
+
+      state.imageUrls.forEach(url => URL.revokeObjectURL(url));
+      state.imageUrls.clear();
+      state.images = [];
+
+      for await (const [name, handle] of state.imagesHandle.entries()) {
+        if (handle.kind !== "file" || !/\.(png|jpe?g|gif|webp)$/i.test(name)) {
+          continue;
+        }
+
+        const file = await handle.getFile();
+        const path = `images/${name}`;
+        const url = URL.createObjectURL(file);
+        state.imageUrls.set(path, url);
+        state.images.push({ name, path, url });
+      }
+
+      state.images.sort((a, b) => a.name.localeCompare(b.name));
+      if (!state.images.some(image => image.path === state.selectedImagePath)) {
+        state.selectedImagePath = "";
+      }
+
+      renderImageList();
+      renderPreview(editor.value);
+      imageStatus.textContent = state.images.length > 0
+        ? `${state.images.length} 件の画像を読み込みました．`
+        : "manual/images に画像がありません．";
+    }
+
+    function renderImageList() {
+      imageList.innerHTML = "";
+      for (const image of state.images) {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "image-card";
+        card.classList.toggle("active", image.path === state.selectedImagePath);
+        card.addEventListener("click", () => {
+          state.selectedImagePath = image.path;
+          insertImageButton.disabled = false;
+          renderImageList();
+          imageStatus.textContent = image.path;
+        });
+
+        const previewImage = document.createElement("img");
+        previewImage.src = image.url;
+        previewImage.alt = image.name;
+
+        const textWrap = document.createElement("div");
+        const name = document.createElement("div");
+        name.className = "image-name";
+        name.textContent = image.name;
+        const path = document.createElement("div");
+        path.className = "image-path";
+        path.textContent = image.path;
+        textWrap.append(name, path);
+        card.append(previewImage, textWrap);
+        imageList.appendChild(card);
+      }
+
+      insertImageButton.disabled = !state.selectedImagePath || editor.disabled;
+    }
+
+    function insertSelectedImageMarkdown() {
+      if (!state.selectedImagePath || editor.disabled) {
+        return;
+      }
+
+      const altText = state.selectedImagePath.split("/").pop().replace(/\.[^.]+$/, "");
+      const markdown = `![${altText}](${state.selectedImagePath})`;
+      const prefix = editor.value.slice(0, editor.selectionStart);
+      const suffix = editor.value.slice(editor.selectionEnd);
+      const needsLeadingBreak = prefix.length > 0 && !prefix.endsWith("\n");
+      const needsTrailingBreak = suffix.length > 0 && !suffix.startsWith("\n");
+      const insertion = `${needsLeadingBreak ? "\n" : ""}${markdown}${needsTrailingBreak ? "\n" : ""}`;
+      const cursor = prefix.length + insertion.length;
+      editor.value = prefix + insertion + suffix;
+      editor.focus();
+      editor.setSelectionRange(cursor, cursor);
+      setCurrentText(editor.value);
+      state.dirty = true;
+      updateDirtyState();
+      renderPreview(editor.value);
+    }
+
+    function updateDirtyState() {
+      dirtyState.textContent = state.dirty ? "未保存" : "";
+      dirtyState.classList.toggle("dirty", state.dirty);
+    }
+
+    async function renderPreview(markdown) {
+      preview.innerHTML = "";
+      const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+      let list = null;
+
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+        if (!line) {
+          list = null;
+          continue;
+        }
+
+        const imageMatch = line.match(/^!\[([^\]]*)\]\(([^)]+)\)/);
+        if (imageMatch) {
+          list = null;
+          const image = document.createElement("img");
+          image.alt = imageMatch[1];
+          const url = await loadImageUrl(imageMatch[2]);
+          if (url) {
+            image.src = url;
+          }
+          preview.appendChild(image);
+          continue;
+        }
+
+        if (line === "***") {
+          list = null;
+          preview.appendChild(document.createElement("hr"));
+          continue;
+        }
+
+        if (line.startsWith("# ")) {
+          list = null;
+          appendTextElement("h1", line.slice(2).trim());
+          continue;
+        }
+
+        if (line.startsWith("## ")) {
+          list = null;
+          appendTextElement("h2", line.slice(3).trim());
+          continue;
+        }
+
+        if (line.startsWith("- ")) {
+          if (!list) {
+            list = document.createElement("ul");
+            preview.appendChild(list);
+          }
+          const item = document.createElement("li");
+          item.textContent = line.slice(2).trim();
+          list.appendChild(item);
+          continue;
+        }
+
+        list = null;
+        appendTextElement("p", line);
+      }
+    }
+
+    function appendTextElement(tagName, text) {
+      const element = document.createElement(tagName);
+      element.textContent = text;
+      preview.appendChild(element);
+    }
+
+    async function loadImageUrl(relativePath) {
+      if (!state.rootHandle) {
+        return null;
+      }
+
+      const normalized = relativePath.replace(/\\/g, "/").split("/").filter(Boolean);
+      const cacheKey = normalized.join("/");
+      if (state.imageUrls.has(cacheKey)) {
+        return state.imageUrls.get(cacheKey);
+      }
+
+      try {
+        let handle = state.rootHandle;
+        for (let i = 0; i < normalized.length - 1; i++) {
+          handle = await handle.getDirectoryHandle(normalized[i]);
+        }
+
+        const fileHandle = await handle.getFileHandle(normalized.at(-1));
+        const file = await fileHandle.getFile();
+        const url = URL.createObjectURL(file);
+        state.imageUrls.set(cacheKey, url);
+        return url;
+      } catch {
+        return null;
+      }
+    }
+  </script>
+</body>
+</html>
