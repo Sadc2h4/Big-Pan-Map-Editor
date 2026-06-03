@@ -12,6 +12,10 @@
     <Product>Big Pan Map Editor</Product>
     <Authors>C2H4</Authors>
     <Company></Company>
+    <Version>2.0.1</Version>
+    <AssemblyVersion>2.0.1.0</AssemblyVersion>
+    <FileVersion>2.0.1.0</FileVersion>
+    <InformationalVersion>2.0b</InformationalVersion>
     <ApplicationIcon>ホーム画面用素材\BigPan_icon_trim_20260522_161519.ico</ApplicationIcon>
     <PublishSingleFile>true</PublishSingleFile>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>

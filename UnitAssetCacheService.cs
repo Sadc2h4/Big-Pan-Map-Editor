@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using System.Buffers.Binary;
 using System.Drawing.Imaging;
 using System.Xml.Linq;
 
@@ -7,6 +8,8 @@ namespace PikminUnitEditor;
 
 internal sealed class UnitAssetCacheService
 {
+    private const string OriginalArchiveManifestExtension = ".original-files.txt";
+
     private readonly string _arcRoot;
     private readonly string _unitCacheDir;
     private readonly string _imageCacheDir;
@@ -32,7 +35,11 @@ internal sealed class UnitAssetCacheService
     //-------------------------------------------------------------------------------
     // 指定ユニットの展開済みキャッシュを用意する処理
     //-------------------------------------------------------------------------------
-    public UnitCacheEntry EnsureUnitCache(string unitName, Action<string, int, int>? progressCallback = null, bool replacePreviewWithPrettyImage = false)
+    public UnitCacheEntry EnsureUnitCache(
+        string unitName,
+        Action<string, int, int>? progressCallback = null,
+        bool replacePreviewWithPrettyImage = false,
+        CaveModelSourceMode modelSourceMode = CaveModelSourceMode.TextsGrid)
     {
         progressCallback?.Invoke(unitName, 0, 4);
         Directory.CreateDirectory(_unitCacheDir);
@@ -46,63 +53,80 @@ internal sealed class UnitAssetCacheService
 
         Directory.CreateDirectory(cacheDir);
         progressCallback?.Invoke(unitName, 1, 4);
-        EnsureArchiveExtracted(Path.Combine(unitDir, "arc.szs"), arcExtractDir);
-        progressCallback?.Invoke(unitName, 2, 4);
         EnsureArchiveExtracted(Path.Combine(unitDir, "texts.szs"), textsExtractDir);
+        progressCallback?.Invoke(unitName, 2, 4);
 
-        string? objPath = FindFirstExistingPathOrNull(
-            Path.Combine(arcExtractDir, "view", "view.obj"),
-            Path.Combine(arcExtractDir, "view.obj"),
-            Path.Combine(unitDir, "arc", "view", "view.obj"),
-            Path.Combine(unitDir, "arc", "view.obj"),
-            Path.Combine(unitDir, "tmp", "view.obj"));
-        string? mtlPath = FindFirstExistingPathOrNull(
-            Path.Combine(arcExtractDir, "view", "view.obj.mtl"),
-            Path.Combine(arcExtractDir, "view.obj.mtl"),
-            Path.Combine(unitDir, "arc", "view", "view.obj.mtl"),
-            Path.Combine(unitDir, "arc", "view.obj.mtl"),
-            Path.Combine(unitDir, "tmp", "view.obj.mtl"));
-        string? daePath = FindFirstExistingPathOrNull(
-            Path.Combine(arcExtractDir, "view", "view.dae"),
-            Path.Combine(arcExtractDir, "view.dae"));
-        string? bmdPath = FindFirstExistingPathOrNull(
-            Path.Combine(arcExtractDir, "view", "view.bmd"),
-            Path.Combine(arcExtractDir, "view.bmd"),
-            Path.Combine(unitDir, "arc", "view.bmd"),
-            Path.Combine(unitDir, "tmp", "view.bmd"));
+        string? objPath = null;
+        string? mtlPath = null;
+        string? daePath = null;
 
-        if ((objPath is null || mtlPath is null) && bmdPath is not null)
+        if (modelSourceMode == CaveModelSourceMode.TextsGrid)
         {
-            string conversionDir = GetConversionOutputDirectory(bmdPath);
-            Directory.CreateDirectory(conversionDir);
-            string requestedObjPath = Path.Combine(conversionDir, "view.obj");
-            string requestedDaePath = Path.Combine(conversionDir, "view.dae");
-
-            if (objPath is null || mtlPath is null)
-            {
-                TryRunToolkit($"--bmd2obj \"{bmdPath}\" \"{requestedObjPath}\"", conversionDir);
-            }
-
-            if (daePath is null)
-            {
-                TryRunToolkit($"--bmd2dae \"{bmdPath}\" \"{requestedDaePath}\"", conversionDir);
-            }
-            DeleteToolkitSidecarDirectory(conversionDir);
-
+            string? gridPath = FindFirstExistingPathOrNull(
+                Path.Combine(textsExtractDir, "grid.bin"),
+                Path.Combine(textsExtractDir, "text", "grid.bin"),
+                Path.Combine(unitDir, "texts", "grid.bin"),
+                Path.Combine(unitDir, "tmp", "grid.bin"),
+                Path.Combine(unitDir, "大本", "texts", "grid.bin"));
+            objPath = TryCreateCollisionObjFromGrid(gridPath, Path.Combine(cacheDir, "collision", "grid.obj"));
+        }
+        else
+        {
+            EnsureArchiveExtracted(Path.Combine(unitDir, "arc.szs"), arcExtractDir);
             objPath = FindFirstExistingPathOrNull(
-                requestedObjPath,
-                Path.Combine(conversionDir, "view.obj"),
                 Path.Combine(arcExtractDir, "view", "view.obj"),
-                Path.Combine(arcExtractDir, "view.obj"));
+                Path.Combine(arcExtractDir, "view.obj"),
+                Path.Combine(unitDir, "arc", "view", "view.obj"),
+                Path.Combine(unitDir, "arc", "view.obj"),
+                Path.Combine(unitDir, "tmp", "view.obj"));
             mtlPath = FindFirstExistingPathOrNull(
-                Path.Combine(conversionDir, "view.obj.mtl"),
                 Path.Combine(arcExtractDir, "view", "view.obj.mtl"),
-                Path.Combine(arcExtractDir, "view.obj.mtl"));
+                Path.Combine(arcExtractDir, "view.obj.mtl"),
+                Path.Combine(unitDir, "arc", "view", "view.obj.mtl"),
+                Path.Combine(unitDir, "arc", "view.obj.mtl"),
+                Path.Combine(unitDir, "tmp", "view.obj.mtl"));
             daePath = FindFirstExistingPathOrNull(
-                requestedDaePath,
-                Path.Combine(conversionDir, "view.dae"),
                 Path.Combine(arcExtractDir, "view", "view.dae"),
                 Path.Combine(arcExtractDir, "view.dae"));
+            string? bmdPath = FindFirstExistingPathOrNull(
+                Path.Combine(arcExtractDir, "view", "view.bmd"),
+                Path.Combine(arcExtractDir, "view.bmd"),
+                Path.Combine(unitDir, "arc", "view.bmd"),
+                Path.Combine(unitDir, "tmp", "view.bmd"));
+
+            if ((objPath is null || mtlPath is null) && bmdPath is not null)
+            {
+                string conversionDir = GetConversionOutputDirectory(bmdPath);
+                Directory.CreateDirectory(conversionDir);
+                string requestedObjPath = Path.Combine(conversionDir, "view.obj");
+                string requestedDaePath = Path.Combine(conversionDir, "view.dae");
+
+                if (objPath is null || mtlPath is null)
+                {
+                    TryRunToolkit($"--bmd2obj \"{bmdPath}\" \"{requestedObjPath}\"", conversionDir);
+                }
+
+                if (daePath is null)
+                {
+                    TryRunToolkit($"--bmd2dae \"{bmdPath}\" \"{requestedDaePath}\"", conversionDir);
+                }
+                DeleteToolkitSidecarDirectory(conversionDir);
+
+                objPath = FindFirstExistingPathOrNull(
+                    requestedObjPath,
+                    Path.Combine(conversionDir, "view.obj"),
+                    Path.Combine(arcExtractDir, "view", "view.obj"),
+                    Path.Combine(arcExtractDir, "view.obj"));
+                mtlPath = FindFirstExistingPathOrNull(
+                    Path.Combine(conversionDir, "view.obj.mtl"),
+                    Path.Combine(arcExtractDir, "view", "view.obj.mtl"),
+                    Path.Combine(arcExtractDir, "view.obj.mtl"));
+                daePath = FindFirstExistingPathOrNull(
+                    requestedDaePath,
+                    Path.Combine(conversionDir, "view.dae"),
+                    Path.Combine(arcExtractDir, "view", "view.dae"),
+                    Path.Combine(arcExtractDir, "view.dae"));
+            }
         }
 
         progressCallback?.Invoke(unitName, 3, 4);
@@ -253,7 +277,11 @@ internal sealed class UnitAssetCacheService
         string unitDir = Path.Combine(_arcRoot, unitName);
         Directory.CreateDirectory(unitDir);
 
-        string arcArchivePath = RepackArchiveDirectory(arcExtractDir, Path.Combine(unitDir, "arc.szs"), "arc.szs");
+        string arcArchivePath = RepackArchiveDirectory(
+            arcExtractDir,
+            Path.Combine(unitDir, "arc.szs"),
+            "arc.szs",
+            repackOnlyOriginalFiles: true);
         string textsArchivePath = RepackArchiveDirectory(textsExtractDir, Path.Combine(unitDir, "texts.szs"), "texts.szs");
         return new UnitArchiveRepackResult(arcArchivePath, textsArchivePath);
     }
@@ -261,19 +289,145 @@ internal sealed class UnitAssetCacheService
     //-------------------------------------------------------------------------------
     // 指定フォルダを指定 szs ファイルへ再圧縮する処理
     //-------------------------------------------------------------------------------
-    private string RepackArchiveDirectory(string sourceDirectory, string outputArchivePath, string archiveLabel)
+    private string RepackArchiveDirectory(
+        string sourceDirectory,
+        string outputArchivePath,
+        string archiveLabel,
+        bool repackOnlyOriginalFiles = false)
     {
         if (!Directory.Exists(sourceDirectory))
         {
             throw new DirectoryNotFoundException($"{archiveLabel} 用キャッシュが見つかりません: {sourceDirectory}");
         }
 
-        if (!TryRunToolkit($"--szs \"{sourceDirectory}\" \"{outputArchivePath}\"", Path.GetDirectoryName(outputArchivePath) ?? _arcRoot))
+        string sourceForRepack = sourceDirectory;
+        string? temporaryRepackDirectory = null;
+        try
         {
-            throw new InvalidOperationException($"{archiveLabel} の再圧縮に失敗しました．Hocotate_Toolkit の設定と出力先を確認してください．");
+            if (repackOnlyOriginalFiles)
+            {
+                temporaryRepackDirectory = CreateOriginalFileOnlyRepackDirectory(sourceDirectory, outputArchivePath, archiveLabel);
+                sourceForRepack = temporaryRepackDirectory;
+            }
+
+            if (!TryRunToolkit($"--szs \"{sourceForRepack}\" \"{outputArchivePath}\"", Path.GetDirectoryName(outputArchivePath) ?? _arcRoot))
+            {
+                throw new InvalidOperationException($"{archiveLabel} の再圧縮に失敗しました．Hocotate_Toolkit の設定と出力先を確認してください．");
+            }
+        }
+        finally
+        {
+            if (!string.IsNullOrWhiteSpace(temporaryRepackDirectory) &&
+                Directory.Exists(temporaryRepackDirectory))
+            {
+                try
+                {
+                    Directory.Delete(temporaryRepackDirectory, true);
+                }
+                catch
+                {
+                }
+            }
         }
 
         return outputArchivePath;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 元アーカイブに存在したファイルだけを一時フォルダへコピーする処理
+    //-------------------------------------------------------------------------------
+    private string CreateOriginalFileOnlyRepackDirectory(string sourceDirectory, string outputArchivePath, string archiveLabel)
+    {
+        IReadOnlyList<string> originalRelativePaths = GetOriginalArchiveRelativeFilePaths(sourceDirectory, outputArchivePath);
+        if (originalRelativePaths.Count == 0)
+        {
+            throw new InvalidOperationException($"{archiveLabel} の元ファイル一覧を取得できませんでした．");
+        }
+
+        string temporaryDirectory = Path.Combine(
+            Path.GetTempPath(),
+            "BigPanMapEditor_repack_" + Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+        Directory.CreateDirectory(temporaryDirectory);
+
+        foreach (string relativePath in originalRelativePaths)
+        {
+            if (!IsSafeRelativeArchivePath(relativePath))
+            {
+                continue;
+            }
+
+            string sourcePath = Path.Combine(sourceDirectory, relativePath);
+            if (!File.Exists(sourcePath))
+            {
+                throw new FileNotFoundException($"{archiveLabel} の元ファイルがキャッシュ内に見つかりません: {relativePath}", sourcePath);
+            }
+
+            string destinationPath = Path.Combine(temporaryDirectory, relativePath);
+            string? destinationDirectory = Path.GetDirectoryName(destinationPath);
+            if (!string.IsNullOrWhiteSpace(destinationDirectory))
+            {
+                Directory.CreateDirectory(destinationDirectory);
+            }
+
+            File.Copy(sourcePath, destinationPath, true);
+        }
+
+        return temporaryDirectory;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 展開直後のファイル一覧を取得する処理
+    //-------------------------------------------------------------------------------
+    private IReadOnlyList<string> GetOriginalArchiveRelativeFilePaths(string sourceDirectory, string archivePath)
+    {
+        string manifestPath = GetArchiveManifestPath(sourceDirectory);
+        if (File.Exists(manifestPath))
+        {
+            return File.ReadAllLines(manifestPath)
+                .Where(IsSafeRelativeArchivePath)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+        }
+
+        if (!File.Exists(archivePath))
+        {
+            return Array.Empty<string>();
+        }
+
+        string temporaryExtractDirectory = Path.Combine(
+            Path.GetTempPath(),
+            "BigPanMapEditor_manifest_" + Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+        try
+        {
+            Directory.CreateDirectory(temporaryExtractDirectory);
+            if (!TryRunToolkit($"--extract \"{archivePath}\" \"{temporaryExtractDirectory}\"", Path.GetDirectoryName(archivePath) ?? _arcRoot))
+            {
+                return Array.Empty<string>();
+            }
+
+            WriteArchiveFileManifest(temporaryExtractDirectory, manifestPath);
+            return File.Exists(manifestPath)
+                ? File.ReadAllLines(manifestPath)
+                    .Where(IsSafeRelativeArchivePath)
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+                    .ToArray()
+                : Array.Empty<string>();
+        }
+        finally
+        {
+            if (Directory.Exists(temporaryExtractDirectory))
+            {
+                try
+                {
+                    Directory.Delete(temporaryExtractDirectory, true);
+                }
+                catch
+                {
+                }
+            }
+        }
     }
 
     //-------------------------------------------------------------------------------
@@ -577,6 +731,151 @@ internal sealed class UnitAssetCacheService
         }
 
         DeleteToolkitSidecarDirectory(outputDirectory);
+        WriteArchiveFileManifest(outputDirectory, GetArchiveManifestPath(outputDirectory));
+    }
+
+    //-------------------------------------------------------------------------------
+    // 展開済みアーカイブのファイル一覧をキャッシュ外へ保存する処理
+    //-------------------------------------------------------------------------------
+    private static void WriteArchiveFileManifest(string archiveDirectory, string manifestPath)
+    {
+        if (!Directory.Exists(archiveDirectory))
+        {
+            return;
+        }
+
+        string[] relativePaths = Directory
+            .EnumerateFiles(archiveDirectory, "*", SearchOption.AllDirectories)
+            .Select(path => NormalizeArchiveRelativePath(Path.GetRelativePath(archiveDirectory, path)))
+            .Where(IsSafeRelativeArchivePath)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        string? manifestDirectory = Path.GetDirectoryName(manifestPath);
+        if (!string.IsNullOrWhiteSpace(manifestDirectory))
+        {
+            Directory.CreateDirectory(manifestDirectory);
+        }
+
+        File.WriteAllLines(manifestPath, relativePaths);
+    }
+
+    private static string GetArchiveManifestPath(string archiveDirectory)
+    {
+        string normalizedDirectory = archiveDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        return normalizedDirectory + OriginalArchiveManifestExtension;
+    }
+
+    private static string NormalizeArchiveRelativePath(string relativePath)
+    {
+        return relativePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+    }
+
+    private static bool IsSafeRelativeArchivePath(string relativePath)
+    {
+        if (string.IsNullOrWhiteSpace(relativePath) || Path.IsPathRooted(relativePath))
+        {
+            return false;
+        }
+
+        string normalizedPath = NormalizeArchiveRelativePath(relativePath);
+        return !normalizedPath
+            .Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries)
+            .Any(part => part == "." || part == "..");
+    }
+
+    private static string? TryCreateCollisionObjFromGrid(string? gridPath, string outputObjPath)
+    {
+        if (string.IsNullOrWhiteSpace(gridPath) || !File.Exists(gridPath))
+        {
+            return null;
+        }
+
+        try
+        {
+            if (File.Exists(outputObjPath) &&
+                File.GetLastWriteTimeUtc(outputObjPath) >= File.GetLastWriteTimeUtc(gridPath))
+            {
+                return outputObjPath;
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(outputObjPath) ?? AppContext.BaseDirectory);
+            using FileStream input = File.OpenRead(gridPath);
+            using StreamWriter writer = new(outputObjPath, false);
+            writer.WriteLine("# Generated from Pikmin 2 grid.bin collision");
+            int vertexCount = ReadInt32BigEndian(input);
+            if (vertexCount <= 0 || vertexCount > 1_000_000)
+            {
+                throw new FormatException("Invalid grid.bin vertex count.");
+            }
+
+            for (int i = 0; i < vertexCount; i++)
+            {
+                float x = ReadSingleBigEndian(input);
+                float y = ReadSingleBigEndian(input);
+                float z = ReadSingleBigEndian(input);
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "v {0} {1} {2}", x, y, z));
+            }
+
+            int faceCount = ReadInt32BigEndian(input);
+            if (faceCount < 0 || faceCount > 2_000_000)
+            {
+                throw new FormatException("Invalid grid.bin face count.");
+            }
+
+            uint unsignedVertexCount = (uint)vertexCount;
+            for (int i = 0; i < faceCount; i++)
+            {
+                int v1 = ReadInt32BigEndian(input);
+                int v2 = ReadInt32BigEndian(input);
+                int v3 = ReadInt32BigEndian(input);
+                _ = ReadSingleBigEndian(input);
+                _ = ReadSingleBigEndian(input);
+                _ = ReadSingleBigEndian(input);
+                input.Seek(0x34, SeekOrigin.Current);
+
+                if ((uint)v1 < unsignedVertexCount && (uint)v2 < unsignedVertexCount && (uint)v3 < unsignedVertexCount)
+                {
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "f {0} {1} {2}", v1 + 1, v2 + 1, v3 + 1));
+                }
+            }
+
+            return outputObjPath;
+        }
+        catch
+        {
+            TryDeleteFile(outputObjPath);
+            return null;
+        }
+    }
+
+    private static int ReadInt32BigEndian(Stream stream)
+    {
+        Span<byte> buffer = stackalloc byte[4];
+        ReadExactly(stream, buffer);
+        return BinaryPrimitives.ReadInt32BigEndian(buffer);
+    }
+
+    private static float ReadSingleBigEndian(Stream stream)
+    {
+        int bits = ReadInt32BigEndian(stream);
+        return BitConverter.Int32BitsToSingle(bits);
+    }
+
+    private static void ReadExactly(Stream stream, Span<byte> buffer)
+    {
+        int offset = 0;
+        while (offset < buffer.Length)
+        {
+            int read = stream.Read(buffer[offset..]);
+            if (read == 0)
+            {
+                throw new EndOfStreamException();
+            }
+
+            offset += read;
+        }
     }
 
     private bool TryRunToolkit(string arguments, string workingDirectory)
@@ -740,6 +1039,12 @@ internal sealed class UnitAssetCacheService
 
 internal sealed record CacheRefreshResult(int CreatedImages, int CreatedRoutes);
 internal sealed record CacheProgressInfo(string UnitName, int CompletedUnits, int TotalUnits, string Stage);
+internal enum CaveModelSourceMode
+{
+    TextsGrid,
+    ArcVisual
+}
+
 internal sealed record UnitCacheEntry(
     string UnitName,
     string CacheDirectory,

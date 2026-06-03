@@ -517,6 +517,18 @@ internal sealed class UnitMapView : Control
             float deltaZ = currentWorld.Y - previousWorld.Y;
             if (Math.Abs(deltaX) > 0.0001f || Math.Abs(deltaZ) > 0.0001f)
             {
+                if ((ModifierKeys & Keys.Shift) == Keys.Shift)
+                {
+                    if (Math.Abs(deltaX) >= Math.Abs(deltaZ))
+                    {
+                        deltaZ = 0f;
+                    }
+                    else
+                    {
+                        deltaX = 0f;
+                    }
+                }
+
                 LayoutSpawnMoved?.Invoke(this, new LayoutSpawnMovedEventArgs(_selectedSpawnIndex.Value, deltaX, deltaZ));
             }
         }

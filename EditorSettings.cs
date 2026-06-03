@@ -44,5 +44,6 @@ internal sealed class EditorSettings
     public string DiscRoot { get; set; } = string.Empty;
     public string LastMode { get; set; } = "Field";
     public string Language { get; set; } = "ja-JP";
+    public string CaveModelSource { get; set; } = "TextsGrid";
     public bool UseObjDirectView { get; set; }
 }

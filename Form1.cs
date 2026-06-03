@@ -14,7 +14,7 @@ public partial class Form1 : Form
     private const int HomeConsoleHeight = 714;
     private const int HomeDesignWidth = 1123;
     private const int HomeDesignHeight = 714;
-    private const string ApplicationVersionText = "Version : 2.0a";
+    private const string ApplicationVersionText = "Version : 2.0b";
     private readonly EditorSettingsStore _settingsStore;
     private readonly DataRepository _repository;
     private EditorSettings _settings = new();
@@ -124,6 +124,7 @@ public partial class Form1 : Form
     private HomeImageControl? _pictureBoxHomeDiscLabel;
     private HomeImageControl? _pictureBoxHomeToolkitLabel;
     private ComboBox? _comboBoxHomeLanguage;
+    private ComboBox? _comboBoxHomeCaveModelSource;
     private Label? _labelHomeStatus;
     private ToolStripMenuItem? _homeMenuItem;
     private ToolStripMenuItem? _manualMenuItem;
@@ -434,6 +435,7 @@ public partial class Form1 : Form
         _textBoxHomeDiscRoot = CreateHomeTextBox();
         _textBoxHomeToolkitPath = CreateHomeTextBox();
         _comboBoxHomeLanguage = CreateHomeLanguageComboBox();
+        _comboBoxHomeCaveModelSource = CreateHomeCaveModelSourceComboBox();
         Button discBrowseButton = CreateHomeSmallButton(buttonHomeBrowseDisc_Click);
         Button toolkitBrowseButton = CreateHomeSmallButton(buttonHomeBrowseToolkit_Click);
         Button caveButton = CreateHomeImageButton("Cave_gen_editor_button.png", (_, _) => EnterEditorFromHome(EditorMode.Cave));
@@ -446,6 +448,7 @@ public partial class Form1 : Form
         _homeConsolePanel.Controls.Add(_textBoxHomeDiscRoot);
         _homeConsolePanel.Controls.Add(_textBoxHomeToolkitPath);
         _homeConsolePanel.Controls.Add(_comboBoxHomeLanguage);
+        _homeConsolePanel.Controls.Add(_comboBoxHomeCaveModelSource);
         _homeConsolePanel.Controls.Add(discBrowseButton);
         _homeConsolePanel.Controls.Add(toolkitBrowseButton);
         _homeConsolePanel.Controls.Add(caveButton);
@@ -678,13 +681,15 @@ public partial class Form1 : Form
             _pictureBoxHomeDiscLabel is null ||
             _pictureBoxHomeToolkitLabel is null ||
             _comboBoxHomeLanguage is null ||
+            _comboBoxHomeCaveModelSource is null ||
             _labelHomeStatus is null)
         {
             return;
         }
 
         _labelHomeStatus.Bounds = ScaleHomeBounds(58, 12, 190, 26);
-        _comboBoxHomeLanguage.Bounds = ScaleHomeBounds(800, 12, 260, 30);
+        _comboBoxHomeLanguage.Bounds = ScaleHomeBounds(740, 12, 150, 30);
+        _comboBoxHomeCaveModelSource.Bounds = ScaleHomeBounds(900, 12, 165, 30);
         _pictureBoxHomeDiscLabel.Bounds = ScaleHomeBounds(228, 220, 471, 27);
         _textBoxHomeDiscRoot.Bounds = ScaleHomeBounds(228, 248, 648, 25);
         discBrowseButton.Bounds = ScaleHomeBounds(888, 244, 34, 34);
@@ -760,6 +765,25 @@ public partial class Form1 : Form
         comboBox.Items.Add(new LanguageItem("ja-JP", "日本語"));
         comboBox.Items.Add(new LanguageItem("en", "English"));
         comboBox.SelectedIndexChanged += comboBoxHomeLanguage_SelectedIndexChanged;
+        return comboBox;
+    }
+
+    //-------------------------------------------------------------------------------
+    // ホーム画面用の洞窟 3D 表示ソース選択コンボボックスを作成する処理
+    //-------------------------------------------------------------------------------
+    private ComboBox CreateHomeCaveModelSourceComboBox()
+    {
+        ComboBox comboBox = new()
+        {
+            DropDownStyle = ComboBoxStyle.DropDownList,
+            BackColor = Color.FromArgb(9, 25, 48),
+            ForeColor = Color.FromArgb(93, 207, 248),
+            FlatStyle = FlatStyle.Flat,
+            Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold, GraphicsUnit.Point)
+        };
+        comboBox.Items.Add(new CaveModelSourceItem("TextsGrid", "texts/grid"));
+        comboBox.Items.Add(new CaveModelSourceItem("ArcVisual", "arc visual"));
+        comboBox.SelectedIndexChanged += comboBoxHomeCaveModelSource_SelectedIndexChanged;
         return comboBox;
     }
 
@@ -868,6 +892,11 @@ public partial class Form1 : Form
         {
             SelectHomeLanguageItem(_settings.Language);
         }
+
+        if (_comboBoxHomeCaveModelSource is not null)
+        {
+            SelectHomeCaveModelSourceItem(_settings.CaveModelSource);
+        }
     }
 
     //-------------------------------------------------------------------------------
@@ -891,6 +920,29 @@ public partial class Form1 : Form
         }
 
         _comboBoxHomeLanguage.SelectedIndex = 0;
+    }
+
+    //-------------------------------------------------------------------------------
+    // ホーム画面の洞窟 3D 表示ソース選択を現在設定へ同期する処理
+    //-------------------------------------------------------------------------------
+    private void SelectHomeCaveModelSourceItem(string modelSource)
+    {
+        if (_comboBoxHomeCaveModelSource is null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < _comboBoxHomeCaveModelSource.Items.Count; i++)
+        {
+            if (_comboBoxHomeCaveModelSource.Items[i] is CaveModelSourceItem item &&
+                item.Code.Equals(modelSource, StringComparison.OrdinalIgnoreCase))
+            {
+                _comboBoxHomeCaveModelSource.SelectedIndex = i;
+                return;
+            }
+        }
+
+        _comboBoxHomeCaveModelSource.SelectedIndex = 0;
     }
 
     //-------------------------------------------------------------------------------
@@ -951,6 +1003,20 @@ public partial class Form1 : Form
         Thread.CurrentThread.CurrentUICulture = new CultureInfo(item.Code);
         SaveSettings();
         ApplyLanguageToUi();
+    }
+
+    //-------------------------------------------------------------------------------
+    // ホーム画面の洞窟 3D 表示ソース変更を設定へ保存する処理
+    //-------------------------------------------------------------------------------
+    private void comboBoxHomeCaveModelSource_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        if (_comboBoxHomeCaveModelSource?.SelectedItem is not CaveModelSourceItem item)
+        {
+            return;
+        }
+
+        _settings.CaveModelSource = item.Code;
+        SaveSettings();
     }
 
     //-------------------------------------------------------------------------------
@@ -1045,6 +1111,17 @@ public partial class Form1 : Form
             }
         }
 
+        if (_buttonQuickAdd is not null) _buttonQuickAdd.Text = Localize("QuickAdd");
+        if (_buttonQuickRouteDelete is not null) _buttonQuickRouteDelete.Text = Localize("QuickRouteDelete");
+        if (_buttonQuickDelete is not null) _buttonQuickDelete.Text = Localize("QuickDelete");
+        if (_buttonQuickMove is not null) _buttonQuickMove.Text = Localize("QuickMove");
+        if (_buttonQuickAngle is not null) _buttonQuickAngle.Text = Localize("QuickAngle");
+        if (_buttonQuickRadius is not null) _buttonQuickRadius.Text = "Radius";
+        if (_buttonQuickConnect is not null) _buttonQuickConnect.Text = Localize("QuickConnect");
+        if (_buttonQuickRoomConnect is not null) _buttonQuickRoomConnect.Text = Localize("QuickRoomConnect");
+        if (_buttonQuickSave is not null) _buttonQuickSave.Text = Localize("QuickSave");
+        if (_buttonQuickSaveAll is not null) _buttonQuickSaveAll.Text = Localize("QuickSaveAll");
+
         UpdateModeComboBoxLanguage();
         ConfigureEditorModeUi();
         UpdateRouteEditUi();
@@ -1130,6 +1207,46 @@ public partial class Form1 : Form
             "TipSaveAllCave" => english ? "Save layout / route / waterbox" : "layout/route/waterbox をすべて保存",
             "TipDragMove" => english ? "Drag to move" : "ドラッグして移動",
             "TipSpawnType" => english ? "Spawn Type for new Spawn points" : "追加する Spawn Type",
+            "QuickAdd" => english ? "Add" : "追加",
+            "QuickRouteDelete" => english ? "Delete Link" : "ルート削除",
+            "QuickDelete" => english ? "Delete" : "削除",
+            "QuickMove" => english ? "Move" : "移動",
+            "QuickAngle" => english ? "Angle" : "角度",
+            "QuickConnect" => english ? "Connect" : "接続",
+            "QuickRoomConnect" => english ? "Snap to Connector" : "接続座標へ移動",
+            "QuickSave" => english ? "Save" : "保存",
+            "QuickSaveAll" => english ? "Save All" : "すべて保存",
+            "SaveConfirmTitle" => english ? "Confirm Save" : "保存確認",
+            "SaveCompleteTitle" => english ? "Save Complete" : "保存完了",
+            "SaveFailedTitle" => english ? "Save Failed" : "保存失敗",
+            "SaveFailed" => english ? "Save failed." : "保存に失敗しました．",
+            "FieldObjectRawTitle" => english ? "Field object raw" : "地上 object raw",
+            "FieldObjectAddTitle" => english ? "Add field object" : "地上 object 追加",
+            "FieldObjectDeleteTitle" => english ? "Delete field object" : "地上 object 削除",
+            "RawApplyFailed" => english ? "Failed to apply raw object." : "raw object の反映に失敗しました．",
+            "FieldObjectAddFailed" => english ? "Failed to add field object." : "地上 object の追加に失敗しました．",
+            "FieldObjectDeleteFailed" => english ? "Failed to delete field object." : "地上 object の削除に失敗しました．",
+            "FieldSaveConfirmTitle" => english ? "Confirm Field Map Save" : "地上マップ保存確認",
+            "ConfirmSaveField" => english
+                ? "Overwrite the field map txt files with the current route and generator edits.\nContinue?"
+                : "現在の route と generator の編集内容を地上 map フォルダの txt へ上書きします．\n続行しますか？",
+            "FieldSaveComplete" => english ? "Saved the field map route / generator." : "地上マップの route/generator を保存しました．",
+            "FieldSaveFailed" => english ? "Field map save failed." : "地上マップ保存に失敗しました．",
+            "LogExportTitle" => english ? "Export Log" : "ログ出力",
+            "LogExportComplete" => english ? "Exported the log." : "ログを出力しました．",
+            "LogExportFailed" => english ? "Failed to export the log." : "ログ出力に失敗しました．",
+            "ConfirmSaveCaveTextsOnly" => english
+                ? "Save the current layout / route / waterbox to the cache and overwrite the source unit texts.szs only.\nContinue?"
+                : "現在の layout/route/waterbox をキャッシュへ保存し，元ユニットの texts.szs のみ上書きします．\n続行しますか？",
+            "ConfirmSaveCaveAllArchives" => english
+                ? "Save the current layout / route / waterbox to the cache and overwrite the source unit arc.szs and texts.szs.\nContinue?"
+                : "現在の layout/route/waterbox をキャッシュへ保存し，arc.szs と texts.szs を元ユニットへ上書きします．\n続行しますか？",
+            "SaveCompleteCaveTextsOnly" => english
+                ? "Saved layout / route / waterbox and updated the source unit texts.szs."
+                : "layout/route/waterbox を保存し，元ユニットの texts.szs を更新しました．",
+            "SaveCompleteCaveAllArchives" => english
+                ? "Saved layout / route / waterbox and updated the source unit archives."
+                : "layout/route/waterbox を保存し，元ユニットの szs を更新しました．",
             _ => key
         };
     }
@@ -1658,7 +1775,7 @@ public partial class Form1 : Form
     }
 
     //-------------------------------------------------------------------------------
-    // Ctrl+Z / Ctrl+Y のショートカット入力を処理する処理
+    // Ctrl+Z / Ctrl+Y / Ctrl+S のショートカット入力を処理する処理
     //-------------------------------------------------------------------------------
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
@@ -1672,6 +1789,18 @@ public partial class Form1 : Form
             keyData == (Keys.Control | Keys.Shift | Keys.Z))
         {
             RedoEditorChange();
+            return true;
+        }
+
+        if (keyData == (Keys.Control | Keys.S))
+        {
+            _ = SaveCurrentUnitArchivesAsync();
+            return true;
+        }
+
+        if (keyData == (Keys.Control | Keys.Shift | Keys.S))
+        {
+            _ = SaveCurrentUnitArchivesAsync();
             return true;
         }
 
@@ -3978,6 +4107,7 @@ public partial class Form1 : Form
             _ => 0
         };
         SelectHomeLanguageItem(_settings.Language);
+        SelectHomeCaveModelSourceItem(_settings.CaveModelSource);
         ApplyLanguageToUi();
         SetLoadFormat(LoadFormatKind.None, null);
 
@@ -4490,7 +4620,7 @@ public partial class Form1 : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, $"raw object の反映に失敗しました．\n{ex.Message}", "地上 object raw", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(this, $"{Localize("RawApplyFailed")}\n{ex.Message}", Localize("FieldObjectRawTitle"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             AppendLog($"地上 object raw 反映失敗: {ex.Message}");
         }
     }
@@ -5319,7 +5449,10 @@ public partial class Form1 : Form
                         progressBarCache.Value = Math.Clamp(index, 0, progressBarCache.Maximum);
                     }));
 
-                    UnitCacheEntry cacheEntry = cacheService.EnsureUnitCache(unitName, replacePreviewWithPrettyImage: true);
+                    UnitCacheEntry cacheEntry = cacheService.EnsureUnitCache(
+                        unitName,
+                        replacePreviewWithPrettyImage: true,
+                        modelSourceMode: GetCurrentCaveModelSourceMode());
                     BeginInvoke(new Action(() =>
                     {
                         RefreshTemplateCardImage(cacheEntry.UnitName, cacheEntry.PreviewImagePath);
@@ -6480,8 +6613,19 @@ public partial class Form1 : Form
         _settings.ToolkitPath = textBoxToolkitPath.Text;
         _settings.DiscRoot = textBoxDiscRoot.Text;
         _settings.LastMode = GetCurrentMode().ToString();
+        if (_comboBoxHomeCaveModelSource?.SelectedItem is CaveModelSourceItem item)
+        {
+            _settings.CaveModelSource = item.Code;
+        }
         _settings.UseObjDirectView = false;
         _settingsStore.Save(_settings);
+    }
+
+    private CaveModelSourceMode GetCurrentCaveModelSourceMode()
+    {
+        return _settings.CaveModelSource.Equals("ArcVisual", StringComparison.OrdinalIgnoreCase)
+            ? CaveModelSourceMode.ArcVisual
+            : CaveModelSourceMode.TextsGrid;
     }
 
     //-------------------------------------------------------------------------------
@@ -7293,7 +7437,7 @@ public partial class Form1 : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, $"地上 object の追加に失敗しました．\n{ex.Message}", "地上 object 追加", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(this, $"{Localize("FieldObjectAddFailed")}\n{ex.Message}", Localize("FieldObjectAddTitle"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             AppendLog($"地上 object 追加失敗: {ex.Message}");
         }
     }
@@ -7339,7 +7483,7 @@ public partial class Form1 : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, $"地上 object の削除に失敗しました．\n{ex.Message}", "地上 object 削除", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(this, $"{Localize("FieldObjectDeleteFailed")}\n{ex.Message}", Localize("FieldObjectDeleteTitle"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             AppendLog($"地上 object 削除失敗: {ex.Message}");
         }
     }
@@ -7576,6 +7720,7 @@ public partial class Form1 : Form
         progressBarCache.Minimum = 0;
         progressBarCache.Maximum = 4;
         progressBarCache.Value = 0;
+        CaveModelSourceMode modelSourceMode = GetCurrentCaveModelSourceMode();
         return await Task.Run(() =>
         {
             return cacheService.EnsureUnitCache(unitName, (name, completed, total) =>
@@ -7584,7 +7729,7 @@ public partial class Form1 : Form
                 {
                     UpdateCacheProgress(new CacheProgressInfo(name, completed, total, "キャッシュ準備中"));
                 }));
-            });
+            }, modelSourceMode: modelSourceMode);
         });
     }
 
@@ -7953,8 +8098,8 @@ public partial class Form1 : Form
 
         DialogResult result = MessageBox.Show(
             this,
-            "現在の layout/route/waterbox をキャッシュへ保存し，arc.szs と texts.szs を元ユニットへ上書きします．\n続行しますか？",
-            "保存確認",
+            Localize("ConfirmSaveCaveTextsOnly"),
+            Localize("SaveConfirmTitle"),
             MessageBoxButtons.YesNo,
             MessageBoxIcon.Warning);
         if (result != DialogResult.Yes)
@@ -7985,25 +8130,21 @@ public partial class Form1 : Form
             }
 
             string unitName = _currentPreviewUnitName;
-            UnitArchiveRepackResult repackResult = await Task.Run(() =>
-            {
-                UnitAssetCacheService cacheService = new(
-                    textBoxArcPath.Text,
-                    new Dictionary<string, string>(),
-                    textBoxToolkitPath.Text,
-                    GetCurrentCacheRoot(),
-                    CreatePrettyImageProvider());
-                return cacheService.RepackUnitArchives(unitName);
-            });
+            UnitAssetCacheService cacheService = new(
+                textBoxArcPath.Text,
+                new Dictionary<string, string>(),
+                textBoxToolkitPath.Text,
+                GetCurrentCacheRoot(),
+                CreatePrettyImageProvider());
 
-            AppendLog($"arc.szs 保存完了: {repackResult.ArcArchivePath}");
-            AppendLog($"texts.szs 保存完了: {repackResult.TextsArchivePath}");
-            MessageBox.Show(this, "layout/route/waterbox を保存し，元ユニットの szs を更新しました．", "保存完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            string textsArchivePath = await Task.Run(() => cacheService.RepackTextsArchive(unitName));
+            AppendLog($"texts.szs 保存完了: {textsArchivePath}");
+            MessageBox.Show(this, Localize("SaveCompleteCaveTextsOnly"), Localize("SaveCompleteTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         catch (Exception ex)
         {
             AppendLog($"ユニット保存失敗: {ex.Message}");
-            MessageBox.Show(this, $"保存に失敗しました．\n{ex.Message}", "保存失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(this, $"{Localize("SaveFailed")}\n{ex.Message}", Localize("SaveFailedTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         finally
         {
@@ -8024,8 +8165,8 @@ public partial class Form1 : Form
 
         DialogResult result = MessageBox.Show(
             this,
-            "現在の route と generator の編集内容を地上 map フォルダの txt へ上書きします．\n続行しますか？",
-            "地上マップ保存確認",
+            Localize("ConfirmSaveField"),
+            Localize("FieldSaveConfirmTitle"),
             MessageBoxButtons.YesNo,
             MessageBoxIcon.Warning);
         if (result != DialogResult.Yes)
@@ -8060,12 +8201,12 @@ public partial class Form1 : Form
             UpdateAllPreviewOverlays();
             RefreshUnitSummary();
             AppendLog($"地上マップ保存完了: map={saveData.Name}, route={_currentRoute.Waypoints.Count}, generators={_currentLayout.Spawns.Count}");
-            MessageBox.Show(this, "地上マップの route/generator を保存しました．", "保存完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, Localize("FieldSaveComplete"), Localize("SaveCompleteTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         catch (Exception ex)
         {
             AppendLog($"地上マップ保存失敗: {ex.Message}");
-            MessageBox.Show(this, $"地上マップ保存に失敗しました．\n{ex.Message}", "保存失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(this, $"{Localize("FieldSaveFailed")}\n{ex.Message}", Localize("SaveFailedTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         finally
         {
@@ -8084,11 +8225,11 @@ public partial class Form1 : Form
         try
         {
             File.WriteAllText(outputPath, richTextBoxConsole.Text);
-            MessageBox.Show(this, $"ログを出力しました．\n{outputPath}", "ログ出力", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(this, $"{Localize("LogExportComplete")}\n{outputPath}", Localize("LogExportTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, $"ログ出力に失敗しました．\n{ex.Message}", "ログ出力", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(this, $"{Localize("LogExportFailed")}\n{ex.Message}", Localize("LogExportTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -9031,6 +9172,14 @@ public partial class Form1 : Form
     }
 
     private sealed record LanguageItem(string Code, string Label)
+    {
+        public override string ToString()
+        {
+            return Label;
+        }
+    }
+
+    private sealed record CaveModelSourceItem(string Code, string Label)
     {
         public override string ToString()
         {
