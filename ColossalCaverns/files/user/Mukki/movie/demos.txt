@@ -1,0 +1,2857 @@
+168 	# Config の数
+# g04_初めてお宝発見
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	picklerick
+		demo_name 	g04_初めてお宝発見 
+		end
+	}
+	2 	# position flag 
+	-1070.000000 53.000000 3290.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# g01_引っこ抜き催促デモ
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g01_pick_me 
+		demo_name 	g01_引っこ抜き催促デモ 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g03_赤ピクミンとの出会い
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	ungabunga
+		demo_name 	g03_赤ピクミンとの出会い 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	1 	# message pause count
+	nomap 
+}
+# g1F_黄ピクミンとの出会い
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	oogleboogle
+		demo_name 	g1F_黄ピクミンとの出会い 
+		end
+	}
+	2 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g21_青ピクミンとの出会い
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	poot
+		demo_name 	g21_青ピクミンとの出会い 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g27_白ピクミンとの出会い
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g27_meet_whitepikmin 
+		demo_name 	g27_白ピクミンとの出会い 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g24_黒ピクミンとの出会い
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g24_meet_blackpikmin 
+		demo_name 	g24_黒ピクミンとの出会い 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g38_白ポンガシ草発見
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g38_find_whitepom 
+		demo_name 	g38_白ポンガシ草発見 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g39_黒ポンガシ草発見
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g39_find_blackpom 
+		demo_name 	g39_黒ポンガシ草発見 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g07_初めての洞窟スタート
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g07_cv_gamestart 
+		demo_name 	g07_初めての洞窟スタート 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	5 6 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g08_初めての地上帰還(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g08_first_return 
+		demo_name 	g08_初めての地上帰還(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	0 	# flags 
+	1 6 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# g08_初めての地上帰還(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g08_first_return 
+		demo_name 	g08_初めての地上帰還(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.459961 	# origin 
+	180.000000 	# origin 
+	0 	# flags 
+	1 6 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# g32_mapを回収、帰還(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g32_get_map 
+		demo_name 	g32_mapを回収、帰還(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	0 	# flags 
+	1 6 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# g35_借金返済後ゲーム(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g35_president_gamestart 
+		demo_name 	g35_借金返済後ゲーム(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	0 	# flags 
+	6 6 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# g35_借金返済後ゲーム(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g35_president_gamestart 
+		demo_name 	g35_借金返済後ゲーム(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	0 	# flags 
+	6 6 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# g35_借金返済後ゲーム(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g35_president_gamestart 
+		demo_name 	g35_借金返済後ゲーム(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	0 	# flags 
+	6 6 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# g35_借金返済後ゲーム(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g35_president_gamestart 
+		demo_name 	g35_借金返済後ゲーム(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	0 	# flags 
+	6 6 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# g05_地上の穴発見(tutorial_1)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_cave_t_01 
+		demo_name 	g05_地上の穴発見(tutorial_1) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g05_地上の穴発見(tutorial_2)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_cave_t_02 
+		demo_name 	g05_地上の穴発見(tutorial_2) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g05_地上の穴発見(tutorial_3)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_cave_t_03 
+		demo_name 	g05_地上の穴発見(tutorial_3) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g05_地上の穴発見(forest_1)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_cave_f_01 
+		demo_name 	g05_地上の穴発見(forest_1) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g05_地上の穴発見(forest_2)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_cave_f_02 
+		demo_name 	g05_地上の穴発見(forest_2) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g05_地上の穴発見(forest_3)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_cave_f_03 
+		demo_name 	g05_地上の穴発見(forest_3) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g05_地上の穴発見(forest_4)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_cave_f_04 
+		demo_name 	g05_地上の穴発見(forest_4) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g05_地上の穴発見(yakushima_1)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_cave_y_01 
+		demo_name 	g05_地上の穴発見(yakushima_1) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g05_地上の穴発見(yakushima_2)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_cave_y_02 
+		demo_name 	g05_地上の穴発見(yakushima_2) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g05_地上の穴発見(yakushima_3)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_cave_y_03 
+		demo_name 	g05_地上の穴発見(yakushima_3) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g05_地上の穴発見(yakushima_4)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_cave_y_04 
+		demo_name 	g05_地上の穴発見(yakushima_4) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g05_地上の穴発見(last_1)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_cave_l_01 
+		demo_name 	g05_地上の穴発見(last_1) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g05_地上の穴発見(last_2)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_cave_l_02 
+		demo_name 	g05_地上の穴発見(last_2) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g05_地上の穴発見(last_3)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_cave_l_03 
+		demo_name 	g05_地上の穴発見(last_3) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g0A_地下で初めて穴発見
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g0A_cv_find_hole 
+		demo_name 	g0A_地下で初めて穴発見 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g0B_地下で初めて間欠泉発見
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g0B_cv_find_fountain 
+		demo_name 	g0B_地下で初めて間欠泉発見 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	1 	# message pause count
+	nomap 
+}
+# g18_初めてゲート発見
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	tenacious
+		demo_name 	g18_初めてゲート発見 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	2 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g19_初めて荒廃OBJ発見
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g19_find_rock 
+		demo_name 	g19_初めて荒廃OBJ発見 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g2D_初めて赤エキス発見
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	null
+		demo_name 	g2D_初めて赤エキス発見 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g2E_初めて黒エキス発見
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	noll
+		demo_name 	g2E_初めて黒エキス発見 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g34_初めてミツを吸って成長
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	nell
+		demo_name 	g34_初めてミツを吸って成長 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g1A_初めて赤ドーピング使用
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	chungus
+		demo_name 	g1A_初めて赤ドーピング使用 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g1B_初めて黒ドーピング使用
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	eediot
+		demo_name 	g1B_初めて黒ドーピング使用 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g2B_白ピクミンの毒説明
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g2B_white_poison 
+		demo_name 	g2B_白ピクミンの毒説明 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g09_初めての日没
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g09_first_sunset 
+		demo_name 	g09_初めての日没 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g16_100ピキ超えた
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g16_100_pikmin 
+		demo_name 	g16_100ピキ超えた 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g16_100ピキ超えた(自活あり)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g16_95_pikmin 
+		demo_name 	g16_100ピキ超えた(自活あり) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g2C_赤出し入れ誘導(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g2C_inout_red 
+		demo_name 	g2C_赤出し入れ誘導(tutorial) 
+		end
+	}
+	2 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	14 6 	# pause/draw/fade flag
+	1 	# message pause count
+	tutorial 
+}
+# g2C_赤出し入れ誘導(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g2C_inout_red 
+		demo_name 	g2C_赤出し入れ誘導(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	0 	# flags 
+	6 6 	# pause/draw/fade flag
+	1 	# message pause count
+	forest 
+}
+# g2C_赤出し入れ誘導(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g2C_inout_red 
+		demo_name 	g2C_赤出し入れ誘導(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	0 	# flags 
+	6 6 	# pause/draw/fade flag
+	1 	# message pause count
+	yakushima 
+}
+# g2C_赤出し入れ誘導(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g2C_inout_red 
+		demo_name 	g2C_赤出し入れ誘導(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	0 	# flags 
+	6 6 	# pause/draw/fade flag
+	1 	# message pause count
+	last 
+}
+# g26_黒出し入れ誘導(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g26_inout_black 
+		demo_name 	g26_黒出し入れ誘導(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-137.643005 0.000000 3033.013916 	# origin 
+	238.779999 	# origin 
+	0 	# flags 
+	14 6 	# pause/draw/fade flag
+	1 	# message pause count
+	tutorial 
+}
+# g26_黒出し入れ誘導(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g26_inout_black 
+		demo_name 	g26_黒出し入れ誘導(forest) 
+		end
+	}
+	2 	# position flag 
+	638.354980 -70.000000 2639.885986 	# origin 
+	268.779999 	# origin 
+	0 	# flags 
+	14 6 	# pause/draw/fade flag
+	1 	# message pause count
+	forest 
+}
+# g26_黒出し入れ誘導(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g26_inout_black 
+		demo_name 	g26_黒出し入れ誘導(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	0 	# flags 
+	6 6 	# pause/draw/fade flag
+	1 	# message pause count
+	yakushima 
+}
+# g26_黒出し入れ誘導(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g26_inout_black 
+		demo_name 	g26_黒出し入れ誘導(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	0 	# flags 
+	6 6 	# pause/draw/fade flag
+	1 	# message pause count
+	last 
+}
+# g29_白出し入れ誘導(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g29_inout_white 
+		demo_name 	g29_白出し入れ誘導(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	0 	# flags 
+	14 6 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# g29_白出し入れ誘導(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g29_inout_white 
+		demo_name 	g29_白出し入れ誘導(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	0 	# flags 
+	14 6 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# g29_白出し入れ誘導(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g29_inout_white 
+		demo_name 	g29_白出し入れ誘導(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	0 	# flags 
+	14 6 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# g29_白出し入れ誘導(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g29_inout_white 
+		demo_name 	g29_白出し入れ誘導(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	0 	# flags 
+	14 6 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# s00_コースイン(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s00_coursein 
+		demo_name 	s00_コースイン(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	1 	# flags 
+	6 6 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# s00_コースイン(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s00_coursein 
+		demo_name 	s00_コースイン(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	1 	# flags 
+	6 6 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# s00_コースイン(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s00_coursein 
+		demo_name 	s00_コースイン(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	1 	# flags 
+	6 6 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# s00_コースイン(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s00_coursein 
+		demo_name 	s00_コースイン(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	1 	# flags 
+	6 6 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# s01_デイエンド(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s01_dayend 
+		demo_name 	s01_デイエンド(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	1 	# flags 
+	1 3 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# s01_デイエンド(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s01_dayend 
+		demo_name 	s01_デイエンド(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	1 	# flags 
+	1 3 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# s01_デイエンド(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s01_dayend 
+		demo_name 	s01_デイエンド(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	1 	# flags 
+	1 3 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# s01_デイエンド(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s01_dayend 
+		demo_name 	s01_デイエンド(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	1 	# flags 
+	1 3 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# s03_プレイヤダウン
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s03_orimadown 
+		demo_name 	s03_プレイヤダウン 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	8 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s04_プレイヤ全滅(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s04_dayend_orimadown 
+		demo_name 	s04_プレイヤ全滅(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	1 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# s04_プレイヤ全滅(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s04_dayend_orimadown 
+		demo_name 	s04_プレイヤ全滅(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	1 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# s04_プレイヤ全滅(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s04_dayend_orimadown 
+		demo_name 	s04_プレイヤ全滅(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	1 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# s04_プレイヤ全滅(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s04_dayend_orimadown 
+		demo_name 	s04_プレイヤ全滅(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	1 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# s05_ピクミン全滅
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s05_pikminzero 
+		demo_name 	s05_ピクミン全滅 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s06_ピクミン全滅(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s06_dayend_pikminzero 
+		demo_name 	s06_ピクミン全滅(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	1 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# s06_ピクミン全滅(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s06_dayend_pikminzero 
+		demo_name 	s06_ピクミン全滅(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	1 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# s06_ピクミン全滅(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s06_dayend_pikminzero 
+		demo_name 	s06_ピクミン全滅(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	1 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# s06_ピクミン全滅(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s06_dayend_pikminzero 
+		demo_name 	s06_ピクミン全滅(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	1 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# s21_地上離陸(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s21_dayend_takeoff 
+		demo_name 	s21_地上離陸(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	1 	# flags 
+	6 6 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# s21_地上離陸(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s21_dayend_takeoff 
+		demo_name 	s21_地上離陸(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	1 	# flags 
+	6 6 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# s21_地上離陸(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s21_dayend_takeoff 
+		demo_name 	s21_地上離陸(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	1 	# flags 
+	6 6 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# s21_地上離陸(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s21_dayend_takeoff 
+		demo_name 	s21_地上離陸(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	1 	# flags 
+	6 6 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# s02_デイエンドリザルト
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s02_dayend_result 
+		demo_name 	s02_デイエンドリザルト 
+		end
+	}
+	1 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	2 	# flags 
+	0 6 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s09_穴に飛び込む
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s09_holein 
+		demo_name 	s09_穴に飛び込む 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	1 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s0B_洞窟フロアーイン
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s0B_cv_coursein 
+		demo_name 	s0B_洞窟フロアーイン 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	1 	# flags 
+	5 6 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s0C_洞窟脱出(間欠泉)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s0C_cv_escape 
+		demo_name 	s0C_洞窟脱出(間欠泉) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	1 	# flags 
+	4 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s12_洞窟ギブアップ
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s12_cv_giveup 
+		demo_name 	s12_洞窟ギブアップ 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	1 	# flags 
+	4 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s0E_地上帰還(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s0E_return_cave 
+		demo_name 	s0E_地上帰還(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	1 	# flags 
+	7 6 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# s0E_地上帰還(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s0E_return_cave 
+		demo_name 	s0E_地上帰還(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	1 	# flags 
+	7 6 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# s0E_地上帰還(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s0E_return_cave 
+		demo_name 	s0E_地上帰還(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	1 	# flags 
+	7 6 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# s0E_地上帰還(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s0E_return_cave 
+		demo_name 	s0E_地上帰還(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	1 	# flags 
+	7 6 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# s10_お宝回収(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s10_suck_treasure 
+		demo_name 	s10_お宝回収(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# s10_お宝回収(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s10_suck_treasure 
+		demo_name 	s10_お宝回収(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# s10_お宝回収(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s10_suck_treasure 
+		demo_name 	s10_お宝回収(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# s10_お宝回収(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s10_suck_treasure 
+		demo_name 	s10_お宝回収(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# s22_お宝回収(地下)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s22_cv_suck_treasure
+		demo_name 	s22_お宝回収(地下) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s13_朝いち種蒔き(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s13_pikmin_supply 
+		demo_name 	s13_朝いち種蒔き(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	2 	# flags 
+	14 6 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# s13_朝いち種蒔き(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s13_pikmin_supply 
+		demo_name 	s13_朝いち種蒔き(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	2 	# flags 
+	14 6 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# s13_朝いち種蒔き(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s13_pikmin_supply 
+		demo_name 	s13_朝いち種蒔き(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	2 	# flags 
+	14 6 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# s13_朝いち種蒔き(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s13_pikmin_supply 
+		demo_name 	s13_朝いち種蒔き(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	2 	# flags 
+	14 6 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# s16_アイテム発見(fue_a)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s16_find_item_00 
+		demo_name 	s16_アイテム発見(fue_a) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s16_アイテム発見(fue_b)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s16_find_item_01 
+		demo_name 	s16_アイテム発見(fue_b) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s16_アイテム発見(fue_wide)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s16_find_item_02 
+		demo_name 	s16_アイテム発見(fue_wide) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s16_アイテム発見(fue_pullout)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s16_find_item_03 
+		demo_name 	s16_アイテム発見(fue_pullout) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s16_アイテム発見(light_a)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s16_find_item_04 
+		demo_name 	s16_アイテム発見(light_a) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s16_アイテム発見(suit_powerup)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s16_find_item_05 
+		demo_name 	s16_アイテム発見(suit_powerup) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s16_アイテム発見(suit_fire)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s16_find_item_06 
+		demo_name 	s16_アイテム発見(suit_fire) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s16_アイテム発見(dashboots)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s16_find_item_07 
+		demo_name 	s16_アイテム発見(dashboots) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s16_アイテム発見(radar_a)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s16_find_item_08 
+		demo_name 	s16_アイテム発見(radar_a) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s16_アイテム発見(radar_b)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s16_find_item_09 
+		demo_name 	s16_アイテム発見(radar_b) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s16_アイテム発見(map02)地上
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s16_find_item_10 
+		demo_name 	s16_アイテム発見(map02)地上 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s16_アイテム発見(map01)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s16_find_item_11 
+		demo_name 	s16_アイテム発見(map01) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s16_アイテム発見(key)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s16_find_item_12 
+		demo_name 	s16_アイテム発見(key) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g36_ルーイ発見(倒す前)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g36_find_louie 
+		demo_name 	g36_ルーイ発見(倒す前) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	6 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g37_ルーイ発見(倒した後)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g37_get_louie 
+		demo_name 	g37_ルーイ発見(倒した後) 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	9 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s17_アイテム回収(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s17_suck_equipment 
+		demo_name 	s17_アイテム回収(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# s17_アイテム回収(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s17_suck_equipment 
+		demo_name 	s17_アイテム回収(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# s17_アイテム回収(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s17_suck_equipment 
+		demo_name 	s17_アイテム回収(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# s17_アイテム回収(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s17_suck_equipment 
+		demo_name 	s17_アイテム回収(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# s22_アイテム回収(地下)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s22_cv_suck_equipment 
+		demo_name 	s22_アイテム回収(地下) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s11_初めて赤い実回収(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dope_first_r 
+		demo_name 	s11_初めて赤い実回収(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# s11_初めて赤い実回収(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dope_first_r 
+		demo_name 	s11_初めて赤い実回収(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# s11_初めて赤い実回収(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dope_first_r 
+		demo_name 	s11_初めて赤い実回収(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# s11_初めて赤い実回収(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dope_first_r 
+		demo_name 	s11_初めて赤い実回収(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# s11_赤のビン完成(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dopebin_first_r 
+		demo_name 	s11_赤のビン完成(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# s11_赤のビン完成(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dopebin_first_r 
+		demo_name 	s11_赤のビン完成(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# s11_赤のビン完成(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dopebin_first_r 
+		demo_name 	s11_赤のビン完成(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# s11_赤のビン完成(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dopebin_first_r 
+		demo_name 	s11_赤のビン完成(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# s11_初めて黒い実回収(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dope_first_b 
+		demo_name 	s11_初めて黒い実回収(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# s11_初めて黒い実回収(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dope_first_b 
+		demo_name 	s11_初めて黒い実回収(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# s11_初めて黒い実回収(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dope_first_b 
+		demo_name 	s11_初めて黒い実回収(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# s11_初めて黒い実回収(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dope_first_b 
+		demo_name 	s11_初めて黒い実回収(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# s11_黒のビン完成(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dopebin_first_b 
+		demo_name 	s11_黒のビン完成(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# s11_黒のビン完成(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dopebin_first_b 
+		demo_name 	s11_黒のビン完成(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# s11_黒のビン完成(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dopebin_first_b 
+		demo_name 	s11_黒のビン完成(yakushima) 
+		end
+	}
+	2 	# position flag 
+	-369.325989 80.000000 974.443970 	# origin 
+	99.695000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# s11_黒のビン完成(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s11_dopebin_first_b 
+		demo_name 	s11_黒のビン完成(last) 
+		end
+	}
+	2 	# position flag 
+	-3300.000000 0.000000 -850.000000 	# origin 
+	230.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# e00_初めてのチャレンジスタート
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	e00_E3_cavestart 
+		demo_name 	e00_初めてのチャレンジスタート 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	5 6 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# s16_カギ発見(チャレンジ)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	s16_find_key 
+		demo_name 	s16_カギ発見(チャレンジ) 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g2F_穴出現(チャレンジ)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g2F_appear_hole 
+		demo_name 	g2F_穴出現(チャレンジ) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	1 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# g30_間欠泉出現(チャレンジ)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g30_appear_fountain 
+		demo_name 	g30_間欠泉出現(チャレンジ) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	1 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# ×g00_E3ゲームスタート(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g00_gamestart 
+		demo_name 	×g00_E3ゲームスタート(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# ×g05_地上の穴発見
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g05_find_hole 
+		demo_name 	×g05_地上の穴発見 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# ×g31_カギ発見(チャレンジ）
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g31_2p_find_key 
+		demo_name 	×g31_カギ発見(チャレンジ） 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# ×g00_ゲームスタート(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g00_gamestart 
+		demo_name 	×g00_ゲームスタート(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-357.179993 0.000000 2900.000000 	# origin 
+	150.000000 	# origin 
+	0 	# flags 
+	6 6 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# ×g33_カメラ説明デモ(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g33_camera_demo 
+		demo_name 	×g33_カメラ説明デモ(tutorial) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# ×g02_赤オニョン起動
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g02_boot_onyonR 
+		demo_name 	×g02_赤オニョン起動 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# ×g1E_黄オニョン起動
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g1E_boot_onyonY 
+		demo_name 	×g1E_黄オニョン起動 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# ×g20_青オニョン起動
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	g20_boot_onyonB 
+		demo_name 	×g20_青オニョン起動 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# ★サウンドテスト(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	sound_test 
+		demo_name 	★サウンドテスト(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	1 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# x01_初コースイン(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	x01_gamestart 
+		demo_name 	x01_初コースイン(tutorial) 
+		end
+	}
+	2 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	2 	# flags 
+	7 6 	# pause/draw/fade flag
+	1 	# message pause count
+	tutorial 
+}
+# x01_初コースイン(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	x01_coursein_forest 
+		demo_name 	x01_初コースイン(forest) 
+		end
+	}
+	2 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	2 	# flags 
+	7 6 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# x01_初コースイン(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	x01_coursein_yakushima 
+		demo_name 	x01_初コースイン(yakushima) 
+		end
+	}
+	2 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	2 	# flags 
+	7 6 	# pause/draw/fade flag
+	0 	# message pause count
+	yakushima 
+}
+# x01_初コースイン(last)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	x01_coursein_last 
+		demo_name 	x01_初コースイン(last) 
+		end
+	}
+	2 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	2 	# flags 
+	6 6 	# pause/draw/fade flag
+	0 	# message pause count
+	last 
+}
+# x02_自活赤ピクミン発見
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	AAAAAAAAAAA
+		demo_name 	x02_自活赤ピクミン発見 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	1 	# message pause count
+	nomap 
+}
+# x07_初めてお宝を回収(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	pingas
+		demo_name 	x07_初めてお宝を回収(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-137.643005 0.000000 3033.013916 	# origin 
+	238.779999 	# origin 
+	0 	# flags 
+	9 6 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# x08_初めて死体を回収(地下)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	x08_cv_suck_carcass 
+		demo_name 	x08_初めて死体を回収(地下) 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	2 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# x09_お宝センサーの説明(forest)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	pikachu
+		demo_name 	x09_お宝センサーの説明(forest) 
+		end
+	}
+	2 	# position flag 
+	381.723999 -70.000000 2634.460938 	# origin 
+	180.000000 	# origin 
+	0 	# flags 
+	9 6 	# pause/draw/fade flag
+	0 	# message pause count
+	forest 
+}
+# x12_水が抜けた
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	egg
+		demo_name 	x12_水が抜けた 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	1 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# x03_赤オニョン発見
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	x03_find_red_onyon 
+		demo_name 	x03_赤オニョン発見 
+		end
+	}
+	2 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# x10_黄オニョン発見(yakushima)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	x10_find_yellow_onyon 
+		demo_name 	x10_黄オニョン発見(yakushima) 
+		end
+	}
+	2 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap
+}
+# x11_青オニョン発見
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	x11_find_blue_onyon 
+		demo_name 	x11_青オニョン発見 
+		end
+	}
+	2 # position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap
+}
+# x04_切り替えの説明(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	iamerror
+		demo_name 	x04_切り替えの説明(tutorial) 
+		end
+	}
+	2 	# position flag 
+	-137.643005 0.000000 3033.013916 	# origin 
+	238.779999 	# origin 
+	0 	# flags 
+	6 3 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# x05_ルーイスタート
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	e
+		demo_name 	x05_ルーイスタート 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	1 	# message pause count
+	nomap 
+}
+# x06_合流(tutorial)
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	dunce
+		demo_name 	x06_合流(tutorial) 
+		end
+	}
+	2 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	tutorial 
+}
+# x13_葉っぱチャッピーの説明
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	x13_exp_leafchappy 
+		demo_name 	x13_葉っぱチャッピーの説明 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# x14_白ピクミンの発掘能力説明
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	x14_white_dig 
+		demo_name 	x14_白ピクミンの発掘能力説明 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	1 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# x15_色分けの説明
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	spoon
+		demo_name 	x15_色分けの説明 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# x16_ヒバでピンチ
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	pikifen
+		demo_name 	x16_ヒバでピンチ 
+		end
+	}
+	8 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# x17_沈む壁攻略ガイド
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder  ingot
+		demo_name 	x17_沈む壁攻略ガイド 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# x18_ペレット説明
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	x18_exp_pellet
+		demo_name 	x18_ペレット説明 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# x19_対戦ビー玉
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	x19_vs_bedama 
+		demo_name 	x19_対戦ビー玉 
+		end
+	}
+	4 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	2 	# flags 
+	15 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}
+# x20_黒い人
+{
+	{v0.5} 	# バージョン
+	# MovieConfigTag
+	{
+		folder 	ooooooooooh
+		demo_name 	x20_黒い人 
+		end
+	}
+	16 	# position flag 
+	0.000000 0.000000 0.000000 	# origin 
+	0.000000 	# origin 
+	0 	# flags 
+	0 3 	# pause/draw/fade flag
+	0 	# message pause count
+	nomap 
+}

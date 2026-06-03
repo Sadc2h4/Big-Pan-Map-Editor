@@ -1,0 +1,736 @@
+################################################################################
+#
+# "pikmin数演出トラック定義"
+#		テーブルはトラックの並びです｡
+#		ピクミン数が少ないときに間引き処理を入れるトラックを"1"としてください。
+#
+# "マスクするnote on ID"
+#		テーブルはnote on IDの並びです｡
+#		ピクミン数が少ないときに間引きするnote on IDを"1"としてください。
+#
+################################################################################
+
+cavemetal_00_0.cnd   
+{
+	4 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	2 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	1 0 0 0	# 0~3
+		0 0 1 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavemetal_00_1.cnd   
+{
+	4 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	2 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	1 0 0 0	# 0~3
+		0 0 1 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavemetal_00_2.cnd   
+{
+	4 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	2 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	1 0 0 0	# 0~3
+		0 0 1 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavemetal_00_3.cnd   
+{
+	4 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	2 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	1 0 0 0	# 0~3
+		0 0 1 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavemetal_00_4.cnd   
+{
+	4 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	2 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	1 0 0 0	# 0~3
+		0 0 1 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavemetal_05_0.cnd   #cavemetal_10_0.cnd   
+{
+	5 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavemetal_05_1.cnd   #cavemetal_10_1.cnd   
+{
+	5 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavemetal_05_2.cnd   #cavemetal_10_2.cnd   
+{
+	5 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavemetal_05_3.cnd   #cavemetal_10_3.cnd   
+{
+	5 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavemetal_05_4.cnd   #cavemetal_10_4.cnd   
+{
+	5 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavemetal_10_0.cnd   #cavemetal_20_0.cnd   
+{
+	4 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 1 0	# 0~3
+		0 0 1 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavemetal_10_1.cnd   #cavemetal_20_1.cnd   
+{
+	4 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 1 0	# 0~3
+		0 0 1 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavemetal_10_2.cnd   #cavemetal_20_2.cnd   
+{
+	4 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 1 0	# 0~3
+		0 0 1 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavemetal_10_3.cnd   #cavemetal_20_3.cnd   
+{
+	4 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 1 0	# 0~3
+		0 0 1 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavemetal_10_4.cnd   #cavemetal_20_4.cnd   
+{
+	4 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 1 0	# 0~3
+		0 0 1 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+
+cavesoil_05_0.cnd   #cavesoil_10_0.cnd   
+{
+	5 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavesoil_05_1.cnd   #cavesoil_10_1.cnd   
+{
+	5 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavesoil_05_2.cnd   #cavesoil_10_2.cnd   
+{
+	5 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavesoil_05_3.cnd   #cavesoil_10_3.cnd   
+{
+	5 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavesoil_05_4.cnd   #cavesoil_10_4.cnd   
+{
+	5 	# basic
+	2 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavesoil_10_0.cnd   #cavesoil_20_0.cnd
+{
+	3 	# basic
+	4 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavesoil_10_1.cnd   #cavesoil_20_1.cnd   
+{
+	3 	# basic
+	4 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavesoil_10_2.cnd   #cavesoil_20_2.cnd   
+{
+	3 	# basic
+	4 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavesoil_10_3.cnd   #cavesoil_20_3.cnd   
+{
+	3 	# basic
+	4 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavesoil_10_4.cnd   #cavesoil_20_4.cnd   
+{
+	3 	# basic
+	4 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 0 0 1	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavesoil_00_0.cnd   
+{
+	4 	# basic
+	1 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 1 0 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavesoil_00_1.cnd   
+{
+	4 	# basic
+	1 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 1 0 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavesoil_00_2.cnd   
+{
+	4 	# basic
+	1 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 1 0 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavesoil_00_3.cnd   
+{
+	4 	# basic
+	1 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 1 0 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+cavesoil_00_4.cnd   
+{
+	4 	# basic
+	1 	# event
+	1 	# otakara event
+	1 	# kehai
+	3 	# battle
+	1 	# ground
+	
+	# pikmin数演出トラック定義	#　注：仮です
+	{
+	  	0 0 0 1	# 0~3
+		0 1 0 0	# 4~7
+		0 0 0 0	# 8~11
+		0 0 0 0	# 12~15
+	}
+
+	# マスクするnote on ID
+	{
+		0 0 0 1 	#0~3
+		1 1 1 1 	#4~7
+	}
+}
+
+
+endoffile
+

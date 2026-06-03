@@ -1,0 +1,70 @@
+#
+#	AnimMgr
+#
+	9 	# number of animations
+# attack.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Catfish\anim\attack.bca 
+	attack.bca 
+	17 2 
+	75 3 
+	-1 
+}
+# dead.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Catfish\anim\dead.bca 
+	dead.bca 
+	-1 
+}
+# flick.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Catfish\anim\flick.bca 
+	flick.bca 
+	25 2 
+	47 3 
+	-1 
+}
+# move1.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Catfish\anim\move1.bca 
+	move1.bca 
+	0 0 
+	24 1 
+	-1 
+}
+# wait1.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Catfish\anim\wait1.bca 
+	wait1.bca 
+	-1 
+}
+# type5.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Catfish\anim\type5.bca 
+	type5.bca 
+	10 0 
+	29 1 
+	-1 
+}
+# wait1.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Catfish\anim\wait1.bca 
+	wait1.bca 
+	0 0 
+	29 1 
+	-1 
+}
+# wait1.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Catfish\anim\wait1.bca 
+	wait1.bca 
+	0 0 
+	29 1 
+	-1 
+}
+# waitact2.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Catfish\anim\waitact2.bca 
+	waitact2.bca 
+	-1 
+}

@@ -1,0 +1,1 @@
+for /R %%f in (*.szs) do WSZST Decompress "%%f"

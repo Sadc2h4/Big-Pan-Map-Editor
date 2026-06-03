@@ -1,0 +1,50 @@
+# ƒ„ƒNƒVƒ}‚Ì“´ŒA‚a‚f‚lİ’è
+
+# “´ŒA”=4
+
+4
+
+
+#“´ŒA 0 ƒNƒ‚‚Ìªé
+{
+	5	#ŠK‘w”
+	caveconc_00_0.cnd	# ŠK‘w 0
+	new_04_0.cnd		# ŠK‘w 1
+	caveconc_10_0.cnd	# ŠK‘w 2
+	caveconc_05_0.cnd	# ŠK‘w 3
+	caveconc_05_0.cnd	# ŠK‘w 4
+}
+
+#“´ŒA 1 H_‚Ì‘äŠ
+{
+	6	#ŠK‘w”
+	cavetsumiki_00_0.cnd	# ŠK‘w 0
+	new_08_0.cnd		# ŠK‘w 1
+	cavetsumiki_00_0.cnd	# ŠK‘w 2
+	new_08_1.cnd		# ŠK‘w 3
+	cavetsumiki_00_0.cnd	# ŠK‘w 4
+	new_03_0.cnd		# ŠK‘w 5
+}
+
+#“´ŒA 2 ƒVƒƒƒ[ƒ‹[ƒ€
+{
+	7	#ŠK‘w”
+	cavetile_00_0.cnd	# ŠK‘w 0
+	new_02_0.cnd		# ŠK‘w 1
+	new_02_0.cnd		# ŠK‘w 2
+	caverelax.cnd		# ŠK‘w 3
+	cavetile_00_0.cnd	# ŠK‘w 4
+	new_02_0.cnd		# ŠK‘w 5
+	new_02_0.cnd		# ŠK‘w 6
+}
+
+#“´ŒA 3 …’†‚Ìé
+{
+	5	#ŠK‘w”
+	new_01_0.cnd	# ŠK‘w 0
+	new_01_0.cnd	# ŠK‘w 1
+	new_01_0.cnd	# ŠK‘w 2
+	new_01_0.cnd	# ŠK‘w 3
+	new_01_0.cnd	# ŠK‘w 4
+}
+

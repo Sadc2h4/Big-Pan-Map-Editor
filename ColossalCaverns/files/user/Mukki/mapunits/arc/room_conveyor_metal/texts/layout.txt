@@ -1,0 +1,275 @@
+# BaseGen file
+34 	 # num gens
+# basegen
+{
+	7 	# type [Start]
+	862.0 233.423 936.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	-694.0 -11.11509 -880.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	-766.0 -11.11509 -748.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	-626.0 -11.11509 -748.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	686.0 -10.90129 -580.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	122.0 -11.11509 -656.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	106.0 -11.11509 848.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	114.0 -11.11509 992.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	850.0 233.423 1240.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	1174.0 233.423 1252.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	-1042.0 29.19643 152.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	-1050.0 29.19643 260.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	-1262.0 -11.11509 2052.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	-1122.0 -11.11509 1900.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	-982.0 -9.975791 1296.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	2 	# type [Treasure]
+	-1958.0 -11.11509 1188.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	6 	# type [Plant]
+	-2.0 -11.11509 828.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	6 	# type [Plant]
+	-2.0 -11.11509 996.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	6 	# type [Plant]
+	-1826.0 -11.11509 1296.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	6 	# type [Plant]
+	650.0 -10.90129 -860.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	6 	# type [Plant]
+	930.0 -10.90129 -576.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	6 	# type [Plant]
+	1066.0 -10.90129 -868.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	6 	# type [Plant]
+	1254.0 233.423 840.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	6 	# type [Plant]
+	1250.0 233.423 1084.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	6 	# type [Plant]
+	1034.0 233.423 1216.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	0 	# type [TekiA]
+	-38.0 -11.11509 904.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	0 	# type [TekiA]
+	850.0 -10.90129 -772.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	0 	# type [TekiA]
+	-722.0 -9.975792 716.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	0 	# type [TekiA]
+	-1278.0 -9.975791 1272.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	1 	# type [TekiB]
+	1082.0 233.423 1036.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	1 	# type [TekiB]
+	858.0 -10.90129 -984.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	1 	# type [TekiB]
+	-706.0 -9.975791 1276.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	8 	# type [TekiF]
+	-990.0 -66.547783 1064.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  
+{
+	1 	# type [TekiB]
+	-1190.0 -11.11509 1980.0 # Position 
+	0.000000 	# ang
+	0.000000 	# radius
+	1 	# min num
+	1 	# max num
+}  

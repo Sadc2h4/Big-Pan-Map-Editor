@@ -1,0 +1,81 @@
+#
+#	AnimMgr
+#
+	10 	# number of animations
+# dead1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\kuragedokkuri\motion\dead1.bca 
+	dead1.bca 
+	33 2 
+	93 3 
+	-1 
+}
+# dead2.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\kuragedokkuri\motion\dead2.bca 
+	dead2.bca 
+	33 2 
+	93 3 
+	-1 
+}
+# flick1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\kuragedokkuri\motion\flick1.bca 
+	flick1.bca 
+	16 2 
+	-1 
+}
+# flick2.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\kuragedokkuri\motion\flick2.bca 
+	flick2.bca 
+	20 2 
+	30 3 
+	-1 
+}
+# wait.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\kuragedokkuri\motion\wait.bca 
+	wait.bca 
+	0 0 
+	34 1 
+	-1 
+}
+# move1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\kuragedokkuri\motion\move1.bca 
+	move1.bca 
+	0 0 
+	59 1 
+	-1 
+}
+# move2.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\kuragedokkuri\motion\move2.bca 
+	move2.bca 
+	-1 
+}
+# type1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\kuragedokkuri\motion\type1.bca 
+	type1.bca 
+	32 2 
+	-1 
+}
+# type2.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\kuragedokkuri\motion\type2.bca 
+	type2.bca 
+	0 0 
+	19 1 
+	-1 
+}
+# attack.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\kuragedokkuri\motion\attack.bca 
+	attack.bca 
+	37 2 
+	60 0 
+	67 1 
+	-1 
+}

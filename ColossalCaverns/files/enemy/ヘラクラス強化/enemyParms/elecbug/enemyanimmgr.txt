@@ -1,0 +1,65 @@
+#
+#	AnimMgr
+#
+	8 	# number of animations
+# dead.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\ElecBug\anim\dead.bca 
+	dead.bca 
+	-1 
+}
+# move.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\ElecBug\anim\move.bca 
+	move.bca 
+	4 0 
+	13 1 
+	-1 
+}
+# wait.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\ElecBug\anim\wait.bca 
+	wait.bca 
+	0 0 
+	9 1 
+	-1 
+}
+# charge.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\ElecBug\anim\charge.bca 
+	charge.bca 
+	0 0 
+	9 1 
+	-1 
+}
+# discharge.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\ElecBug\anim\discharge.bca 
+	discharge.bca 
+	8 2 
+	10 0 
+	17 1 
+	-1 
+}
+# turn.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\ElecBug\anim\turn.bca 
+	turn.bca 
+	30 0 
+	69 1 
+	-1 
+}
+# recover.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\ElecBug\anim\recover.bca 
+	recover.bca 
+	-1 
+}
+# carry.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\ElecBug\anim\carry.bca 
+	carry.bca 
+	10 0 
+	29 1 
+	-1 
+}

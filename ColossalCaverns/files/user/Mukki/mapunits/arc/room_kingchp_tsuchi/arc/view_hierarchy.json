@@ -1,0 +1,269 @@
+{
+  "Root": {
+    "Type": "Joint",
+    "Index": 0,
+    "Children": [
+      {
+        "Type": "Material",
+        "Index": 0,
+        "Children": [
+          {
+            "Type": "Shape",
+            "Index": 1,
+            "Children": [
+              {
+                "Type": "Material",
+                "Index": 1,
+                "Children": [
+                  {
+                    "Type": "Shape",
+                    "Index": 5,
+                    "Children": [
+                      {
+                        "Type": "Material",
+                        "Index": 2,
+                        "Children": [
+                          {
+                            "Type": "Shape",
+                            "Index": 6,
+                            "Children": [
+                              {
+                                "Type": "Material",
+                                "Index": 3,
+                                "Children": [
+                                  {
+                                    "Type": "Shape",
+                                    "Index": 7,
+                                    "Children": [
+                                      {
+                                        "Type": "Material",
+                                        "Index": 4,
+                                        "Children": [
+                                          {
+                                            "Type": "Shape",
+                                            "Index": 3,
+                                            "Children": [
+                                              {
+                                                "Type": "Material",
+                                                "Index": 5,
+                                                "Children": [
+                                                  {
+                                                    "Type": "Shape",
+                                                    "Index": 2,
+                                                    "Children": [
+                                                      {
+                                                        "Type": "Material",
+                                                        "Index": 6,
+                                                        "Children": [
+                                                          {
+                                                            "Type": "Shape",
+                                                            "Index": 0,
+                                                            "Children": [
+                                                              {
+                                                                "Type": "Material",
+                                                                "Index": 7,
+                                                                "Children": [
+                                                                  {
+                                                                    "Type": "Shape",
+                                                                    "Index": 4,
+                                                                    "Children": [
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "CloseChild",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      },
+                                                                      {
+                                                                        "Type": "Terminator",
+                                                                        "Index": 0,
+                                                                        "Children": []
+                                                                      }
+                                                                    ]
+                                                                  },
+                                                                  {
+                                                                    "Type": "OpenChild",
+                                                                    "Index": 0,
+                                                                    "Children": []
+                                                                  }
+                                                                ]
+                                                              },
+                                                              {
+                                                                "Type": "OpenChild",
+                                                                "Index": 0,
+                                                                "Children": []
+                                                              }
+                                                            ]
+                                                          },
+                                                          {
+                                                            "Type": "OpenChild",
+                                                            "Index": 0,
+                                                            "Children": []
+                                                          }
+                                                        ]
+                                                      },
+                                                      {
+                                                        "Type": "OpenChild",
+                                                        "Index": 0,
+                                                        "Children": []
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "Type": "OpenChild",
+                                                    "Index": 0,
+                                                    "Children": []
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "Type": "OpenChild",
+                                                "Index": 0,
+                                                "Children": []
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "Type": "OpenChild",
+                                            "Index": 0,
+                                            "Children": []
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "Type": "OpenChild",
+                                        "Index": 0,
+                                        "Children": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "Type": "OpenChild",
+                                    "Index": 0,
+                                    "Children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "Type": "OpenChild",
+                                "Index": 0,
+                                "Children": []
+                              }
+                            ]
+                          },
+                          {
+                            "Type": "OpenChild",
+                            "Index": 0,
+                            "Children": []
+                          }
+                        ]
+                      },
+                      {
+                        "Type": "OpenChild",
+                        "Index": 0,
+                        "Children": []
+                      }
+                    ]
+                  },
+                  {
+                    "Type": "OpenChild",
+                    "Index": 0,
+                    "Children": []
+                  }
+                ]
+              },
+              {
+                "Type": "OpenChild",
+                "Index": 0,
+                "Children": []
+              }
+            ]
+          },
+          {
+            "Type": "OpenChild",
+            "Index": 0,
+            "Children": []
+          }
+        ]
+      },
+      {
+        "Type": "OpenChild",
+        "Index": 0,
+        "Children": []
+      }
+    ]
+  }
+}

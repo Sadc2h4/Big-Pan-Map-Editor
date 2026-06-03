@@ -24,6 +24,7 @@ internal sealed class ObjModelView : Control
     private UnitMapEditMode _editMode;
     private bool _showRadius = true;
     private bool _useFieldObjectIcons;
+    private bool _englishUi;
     private int? _selectedSpawnIndex;
     private int? _selectedRouteWaypointIndex;
     private int? _selectedWaterboxIndex;
@@ -187,6 +188,20 @@ internal sealed class ObjModelView : Control
     public void SetRouteColorHeights(IReadOnlyDictionary<int, float> routeColorHeights)
     {
         _routeColorHeights = routeColorHeights;
+        Invalidate();
+    }
+
+    //-------------------------------------------------------------------------------
+    // 3D ビュー内に描画する文言の言語を切り替える処理
+    //-------------------------------------------------------------------------------
+    public void SetLanguage(bool english)
+    {
+        if (_englishUi == english)
+        {
+            return;
+        }
+
+        _englishUi = english;
         Invalidate();
     }
 
@@ -822,8 +837,12 @@ internal sealed class ObjModelView : Control
         using SolidBrush titleBrush = new(Color.FromArgb(56, 70, 80));
         using SolidBrush bodyBrush = new(Color.FromArgb(96, 96, 96));
 
-        graphics.DrawString("OBJ を読み込めませんでした．", titleFont, titleBrush, new PointF(32, 28));
-        graphics.DrawString("右ドラッグ: 回転  /  中ドラッグ: 平行移動  /  ホイール: ズーム", bodyFont, bodyBrush, new PointF(32, 84));
+        string title = _englishUi ? "Could not load OBJ." : "OBJ を読み込めませんでした．";
+        string controls = _englishUi
+            ? "Right drag: rotate  /  Middle drag: pan  /  Wheel: zoom"
+            : "右ドラッグ: 回転  /  中ドラッグ: 平行移動  /  ホイール: ズーム";
+        graphics.DrawString(title, titleFont, titleBrush, new PointF(32, 28));
+        graphics.DrawString(controls, bodyFont, bodyBrush, new PointF(32, 84));
     }
 
     //-------------------------------------------------------------------------------
@@ -1483,7 +1502,8 @@ internal sealed class ObjModelView : Control
         using GraphicsPath path = CreateRoundedRectangle(overlayRect, 12);
         graphics.FillPath(boxBrush, path);
 
-        string title = string.IsNullOrWhiteSpace(_sceneName) ? "OBJ 3D 表示" : $"OBJ 3D 表示: {_sceneName}";
+        string titlePrefix = _englishUi ? "OBJ 3D View" : "OBJ 3D 表示";
+        string title = string.IsNullOrWhiteSpace(_sceneName) ? titlePrefix : $"{titlePrefix}: {_sceneName}";
         string modeText = _editMode switch
         {
             UnitMapEditMode.MoveRouteWaypoint => "Edit: Move Waypoint",
@@ -1504,7 +1524,10 @@ internal sealed class ObjModelView : Control
 
         graphics.DrawString(title, titleFont, titleBrush, new PointF(32, 30));
         graphics.DrawString($"Zoom: {_zoom:0.00}x  Pitch: {_pitch:0.00}  Yaw: {_yaw:0.00}  OffsetY: {_overlayHeightOffset:0.##}", bodyFont, bodyBrush, new PointF(32, 56));
-        graphics.DrawString($"{modeText} / 左クリック: 選択 / 右ドラッグ: 回転・選択Spawn角度 / 中ドラッグ: 移動", bodyFont, bodyBrush, new PointF(32, 76));
+        string controlText = _englishUi
+            ? $"{modeText} / Left click: select / Right drag: rotate or selected Spawn angle / Middle drag: pan"
+            : $"{modeText} / 左クリック: 選択 / 右ドラッグ: 回転・選択Spawn角度 / 中ドラッグ: 移動";
+        graphics.DrawString(controlText, bodyFont, bodyBrush, new PointF(32, 76));
         if (!string.IsNullOrEmpty(hintText))
         {
             graphics.DrawString(hintText, bodyFont, bodyBrush, new PointF(32, 96));
@@ -1518,15 +1541,15 @@ internal sealed class ObjModelView : Control
     {
         return _editMode switch
         {
-            UnitMapEditMode.MoveWaterbox => "Waterbox: 中央ドラッグでX/Z移動，四隅/辺の白ハンドルでサイズ変更，Ctrlで高さY移動",
-            UnitMapEditMode.AddWaterbox => "Waterbox: 左クリック位置へ既定サイズで追加",
-            UnitMapEditMode.DeleteWaterbox => "Waterbox: 対象を左クリックで削除",
-            UnitMapEditMode.MoveRouteWaypoint => "Waypoint: ドラッグで移動，Shiftで主軸固定，Ctrlで高さY移動",
-            UnitMapEditMode.ConnectRouteWaypoint => "Route: Waypoint同士をドラッグで接続",
-            UnitMapEditMode.DeleteRouteLink => "Route: 接続線を左クリックで削除",
-            UnitMapEditMode.RotateSpawn => "Spawn: 選択Spawnから右ドラッグ方向へ角度変更",
-            UnitMapEditMode.ResizeSpawnRadius => "Spawn: 選択Spawnからドラッグ位置までの距離でRadius変更",
-            UnitMapEditMode.ResizeRouteWaypointRadius => "Waypoint: 選択Waypointからドラッグ位置までの距離でRadius変更",
+            UnitMapEditMode.MoveWaterbox => _englishUi ? "Waterbox: drag center to move X/Z, drag white handles to resize, Ctrl moves Y height" : "Waterbox: 中央ドラッグでX/Z移動，四隅/辺の白ハンドルでサイズ変更，Ctrlで高さY移動",
+            UnitMapEditMode.AddWaterbox => _englishUi ? "Waterbox: left click to add a default-size waterbox" : "Waterbox: 左クリック位置へ既定サイズで追加",
+            UnitMapEditMode.DeleteWaterbox => _englishUi ? "Waterbox: left click a target to delete it" : "Waterbox: 対象を左クリックで削除",
+            UnitMapEditMode.MoveRouteWaypoint => _englishUi ? "Waypoint: drag to move, Shift locks the main axis, Ctrl moves Y height" : "Waypoint: ドラッグで移動，Shiftで主軸固定，Ctrlで高さY移動",
+            UnitMapEditMode.ConnectRouteWaypoint => _englishUi ? "Route: drag between waypoints to connect them" : "Route: Waypoint同士をドラッグで接続",
+            UnitMapEditMode.DeleteRouteLink => _englishUi ? "Route: left click a connection line to delete it" : "Route: 接続線を左クリックで削除",
+            UnitMapEditMode.RotateSpawn => _englishUi ? "Spawn: right drag from the selected Spawn to change its angle" : "Spawn: 選択Spawnから右ドラッグ方向へ角度変更",
+            UnitMapEditMode.ResizeSpawnRadius => _englishUi ? "Spawn: drag from the selected Spawn to set Radius by distance" : "Spawn: 選択Spawnからドラッグ位置までの距離でRadius変更",
+            UnitMapEditMode.ResizeRouteWaypointRadius => _englishUi ? "Waypoint: drag from the selected Waypoint to set Radius by distance" : "Waypoint: 選択Waypointからドラッグ位置までの距離でRadius変更",
             _ => string.Empty
         };
     }

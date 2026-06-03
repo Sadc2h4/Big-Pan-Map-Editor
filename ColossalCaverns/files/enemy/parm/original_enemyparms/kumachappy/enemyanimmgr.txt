@@ -1,0 +1,72 @@
+#
+#	AnimMgr
+#
+	9 	# number of animations
+# attack.bca
+{
+	Z:\conversion\enemy\yamashita\chappy\data\attack.bca 
+	attack.bca 
+	10 2 
+	33 3 
+	-1 
+}
+# dead.bca
+{
+	Z:\conversion\enemy\yamashita\chappy\data\dead.bca 
+	dead.bca 
+	38 2 
+	-1 
+}
+# flick.bca
+{
+	Z:\conversion\enemy\yamashita\chappy\data\flick.bca 
+	flick.bca 
+	35 2 
+	-1 
+}
+# move1.bca
+{
+	Z:\conversion\enemy\yamashita\chappy\data\move1.bca 
+	move1.bca 
+	5 0 
+	33 1 
+	-1 
+}
+# type5.bca
+{
+	Z:\conversion\enemy\yamashita\chappy\data\type5.bca 
+	type5.bca 
+	10 0 
+	29 1 
+	-1 
+}
+# wait2.bca
+{
+	Z:\conversion\enemy\yamashita\chappy\data\wait2.bca 
+	wait2.bca 
+	-1 
+}
+# waitact1.bca
+{
+	Z:\conversion\enemy\yamashita\chappy\data\waitact1.bca 
+	waitact1.bca 
+	7 0 
+	20 1 
+	-1 
+}
+# waitact2.bca
+{
+	Z:\conversion\enemy\yamashita\chappy\data\waitact2.bca 
+	waitact2.bca 
+	4 2 
+	-1 
+}
+# rebirth.bca
+{
+	Z:\conversion\enemy\yamashita\chappy\data\rebirth.bca 
+	rebirth.bca 
+	58 2 
+	75 3 
+	80 4 
+	-1 
+}

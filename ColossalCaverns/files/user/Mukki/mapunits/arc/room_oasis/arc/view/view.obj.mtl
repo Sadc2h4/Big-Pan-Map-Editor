@@ -1,0 +1,81 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v3.1.29665513)
+
+newmtl okesabi_v-material
+kd 1 1 1
+ka 0.596078 0.596078 0.596078
+illum 1
+map_kd C:\Users\catso\Documents\★Emulator\dolphin-master-5.0-14081-x64\Pikmin2_洞窟大探検_ランダム強化\files\user\Mukki\mapunits\arc\room_oasis\arc\view\canyon wall.png
+
+newmtl Material_002-material
+kd 1 1 1
+ka 0.596078 0.596078 0.596078
+illum 1
+map_kd C:\Users\catso\Documents\★Emulator\dolphin-master-5.0-14081-x64\Pikmin2_洞窟大探検_ランダム強化\files\user\Mukki\mapunits\arc\room_oasis\arc\view\canyon wall.png
+
+newmtl Material_001-material
+kd 1 1 1
+ka 0.596078 0.596078 0.596078
+illum 1
+map_kd C:\Users\catso\Documents\★Emulator\dolphin-master-5.0-14081-x64\Pikmin2_洞窟大探検_ランダム強化\files\user\Mukki\mapunits\arc\room_oasis\arc\view\20-smooth-beach-sand-seamless.png
+
+newmtl touki_v-material
+kd 1 1 1
+ka 0.596078 0.596078 0.596078
+illum 1
+map_kd C:\Users\catso\Documents\★Emulator\dolphin-master-5.0-14081-x64\Pikmin2_洞窟大探検_ランダム強化\files\user\Mukki\mapunits\arc\room_oasis\arc\view\canyon wall.png
+
+newmtl Material-material
+kd 1 1 1
+ka 0.596078 0.596078 0.596078
+illum 1
+map_kd C:\Users\catso\Documents\★Emulator\dolphin-master-5.0-14081-x64\Pikmin2_洞窟大探検_ランダム強化\files\user\Mukki\mapunits\arc\room_oasis\arc\view\canyon ground.png
+
+newmtl Material_003-material
+kd 1 1 1
+ka 0.596078 0.596078 0.596078
+illum 1
+map_kd C:\Users\catso\Documents\★Emulator\dolphin-master-5.0-14081-x64\Pikmin2_洞窟大探検_ランダム強化\files\user\Mukki\mapunits\arc\room_oasis\arc\view\oasis grass.png
+
+newmtl bridge_alltex_v-material
+kd 1 1 1
+ka 0.596078 0.596078 0.596078
+illum 1
+map_kd C:\Users\catso\Documents\★Emulator\dolphin-master-5.0-14081-x64\Pikmin2_洞窟大探検_ランダム強化\files\user\Mukki\mapunits\arc\room_oasis\arc\view\bridge_alltex0417_s3tc.png
+
+newmtl bridge_alltex_v_3_-material
+kd 1 1 1
+ka 0.596078 0.596078 0.596078
+illum 1
+map_kd C:\Users\catso\Documents\★Emulator\dolphin-master-5.0-14081-x64\Pikmin2_洞窟大探検_ランダム強化\files\user\Mukki\mapunits\arc\room_oasis\arc\view\bridge_alltex0417_s3tc.png
+
+newmtl bridge_alltex_v_5_-material
+kd 1 1 1
+ka 0.596078 0.596078 0.596078
+illum 1
+map_kd C:\Users\catso\Documents\★Emulator\dolphin-master-5.0-14081-x64\Pikmin2_洞窟大探検_ランダム強化\files\user\Mukki\mapunits\arc\room_oasis\arc\view\bridge_alltex0417_s3tc.png
+
+newmtl bridge_alltex_v_7_-material
+kd 1 1 1
+ka 0.596078 0.596078 0.596078
+illum 1
+map_kd C:\Users\catso\Documents\★Emulator\dolphin-master-5.0-14081-x64\Pikmin2_洞窟大探検_ランダム強化\files\user\Mukki\mapunits\arc\room_oasis\arc\view\bridge_alltex0417_s3tc.png
+
+newmtl bridge_alltex_v_9_-material
+kd 1 1 1
+ka 0.596078 0.596078 0.596078
+illum 1
+map_kd C:\Users\catso\Documents\★Emulator\dolphin-master-5.0-14081-x64\Pikmin2_洞窟大探検_ランダム強化\files\user\Mukki\mapunits\arc\room_oasis\arc\view\bridge_alltex0417_s3tc.png
+
+newmtl bridge_alltex_v_11_-material
+kd 1 1 1
+ka 0.596078 0.596078 0.596078
+illum 1
+map_kd C:\Users\catso\Documents\★Emulator\dolphin-master-5.0-14081-x64\Pikmin2_洞窟大探検_ランダム強化\files\user\Mukki\mapunits\arc\room_oasis\arc\view\bridge_alltex0417_s3tc.png
+
+newmtl bridge_alltex_v_13_-material
+kd 1 1 1
+ka 0.596078 0.596078 0.596078
+illum 1
+map_kd C:\Users\catso\Documents\★Emulator\dolphin-master-5.0-14081-x64\Pikmin2_洞窟大探検_ランダム強化\files\user\Mukki\mapunits\arc\room_oasis\arc\view\bridge_alltex0417_s3tc.png
+

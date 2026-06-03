@@ -1,0 +1,47 @@
+#
+#	AnimMgr
+#
+	6	# number of animations
+# dead.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\tamagomushi\motion\dead.bca 
+	dead.bca 
+	-1 
+}
+# dive.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\tamagomushi\motion\dive.bca 
+	dive.bca 
+	-1 
+}
+# move.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\tamagomushi\motion\move.bca 
+	move.bca 
+	0 0 
+	9 1 
+	-1 
+}
+# set.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\tamagomushi\motion\set.bca 
+	set.bca
+	2 2 
+	-1 
+}
+# wait.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\tamagomushi\motion\wait.bca 
+	wait.bca 
+	0 0	 
+	14 1 
+	-1 
+}
+# carry.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\tamagomushi\motion\carry.bca 
+	carry.bca
+	10 0	 
+	29 1  
+	-1 
+}

@@ -1,0 +1,80 @@
+#
+#	AnimMgr
+#
+	11 	# number of animations
+# dead.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Mar\anim\dead.bca 
+	dead.bca 
+	-1 
+}
+# dead2.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Mar\anim\dead2.bca 
+	dead2.bca 
+	-1 
+}
+# damage.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Mar\anim\damage.bca 
+	damage.bca 
+	15 2 
+	-1 
+}
+# flick.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Mar\anim\flick.bca 
+	flick.bca 
+	25 2 
+	-1 
+}
+# wait2.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Mar\anim\wait2.bca 
+	wait2.bca 
+	0 0 
+	39 1 
+	-1 
+}
+# move1.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Mar\anim\move1.bca 
+	move1.bca 
+	0 0 
+	39 1 
+	-1 
+}
+# move2.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Mar\anim\move2.bca 
+	move2.bca 
+	-1 
+}
+# type1.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Mar\anim\type1.bca 
+	type1.bca 
+	30 2 
+	-1 
+}
+# type2.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Mar\anim\type2.bca 
+	type2.bca 
+	5 0 
+	19 1 
+	-1 
+}
+# attack.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Mar\anim\attack.bca 
+	attack.bca 
+	50 2 
+	-1 
+}
+# laugh.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Mar\anim\laugh.bca 
+	laugh.bca 
+	-1 
+}

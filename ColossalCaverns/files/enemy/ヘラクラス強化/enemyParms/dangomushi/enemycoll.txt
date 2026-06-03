@@ -1,0 +1,183 @@
+19 		# child count
+200.000000 	# radius
+{none} 		# id
+{____} 		# code
+0.000000 0.000000 15.000000 # offset
+0 		# joint index
+0 		# attribute
+# child
+{
+	1 		# child count
+	30.000000 	# radius
+	{haR0} 		# id
+	{_t__} 		# code
+	60.000000 -5.000000 -10.000000 # offset
+	10 		# joint index
+	0 		# attribute
+	# child
+	{
+		1 		# child count
+		30.000000 	# radius
+		{haR1} 		# id
+		{_t__} 		# code
+		0.000000 0.000000 -10.000000 # offset
+		10 		# joint index
+		0 		# attribute
+		# child
+		{
+			1 		# child count
+			25.000000 	# radius
+			{haR2} 		# id
+			{_t__} 		# code
+			0.000000 0.000000 -10.000000 # offset
+			9 		# joint index
+			0 		# attribute
+			# child
+			{
+				1 		# child count
+				15.000000 	# radius
+				{haR3} 		# id
+				{_t__} 		# code
+				0.000000 0.000000 -5.000000 # offset
+				8 		# joint index
+				0 		# attribute
+				# child
+				{
+					0 		# child count
+					10.000000 	# radius
+					{haR4} 		# id
+					{_t__} 		# code
+					25.000000 0.000000 0.000000 # offset
+					7 		# joint index
+					0 		# attribute
+				}
+			}
+		}
+	}
+	0 		# child count
+	30.000000 	# radius
+	{heaL} 		# id
+	{_t__} 		# code
+	40.000000 -12.500000 -25.000000 # offset
+	2 		# joint index
+	0 		# attribute
+	0 		# child count
+	30.000000 	# radius
+	{heaR} 		# id
+	{_t__} 		# code
+	40.000000 -12.500000 25.000000 # offset
+	2 		# joint index
+	0 		# attribute
+	0 		# child count
+	20.000000 	# radius
+	{heaC} 		# id
+	{_t__} 		# code
+	20.000000 0.000000 0.000000 # offset
+	2 		# joint index
+	0 		# attribute
+	0 		# child count
+	35.000000 	# radius
+	{baC0} 		# id
+	{_t__} 		# code
+	0.000000 -10.000000 0.000000 # offset
+	1 		# joint index
+	0 		# attribute
+	0 		# child count
+	20.000000 	# radius
+	{baL0} 		# id
+	{_t__} 		# code
+	0.000000 -25.000000 -30.000000 # offset
+	1 		# joint index
+	0 		# attribute
+	0 		# child count
+	20.000000 	# radius
+	{baR0} 		# id
+	{_t__} 		# code
+	0.000000 -25.000000 30.000000 # offset
+	1 		# joint index
+	0 		# attribute
+	0 		# child count
+	25.000000 	# radius
+	{taC0} 		# id
+	{_t__} 		# code
+	0.000000 0.000000 0.000000 # offset
+	12 		# joint index
+	0 		# attribute
+	0 		# child count
+	15.000000 	# radius
+	{taL0} 		# id
+	{_t__} 		# code
+	15.000000 -20.000000 25.000000 # offset
+	12 		# joint index
+	0 		# attribute
+	0 		# child count
+	15.000000 	# radius
+	{taR0} 		# id
+	{_t__} 		# code
+	15.000000 -20.000000 -25.000000 # offset
+	12 		# joint index
+	0 		# attribute
+	0 		# child count
+	30.000000 	# radius
+	{taC1} 		# id
+	{_t__} 		# code
+	0.000000 0.000000 0.000000 # offset
+	13 		# joint index
+	0 		# attribute
+	0 		# child count
+	15.000000 	# radius
+	{taL1} 		# id
+	{_t__} 		# code
+	15.000000 -10.000000 15.000000 # offset
+	13 		# joint index
+	0 		# attribute
+	0 		# child count
+	15.000000 	# radius
+	{taR1} 		# id
+	{_t__} 		# code
+	15.000000 -10.000000 -15.000000 # offset
+	13 		# joint index
+	0 		# attribute
+	0 		# child count
+	15.000000 	# radius
+	{taC2} 		# id
+	{_t__} 		# code
+	15.000000 5.000000 0.000000 # offset
+	14 		# joint index
+	0 		# attribute
+	0 		# child count
+	10.000000 	# radius
+	{taL2} 		# id
+	{_t__} 		# code
+	20.000000 -5.000000 15.000000 # offset
+	14 		# joint index
+	0 		# attribute
+	0 		# child count
+	10.000000 	# radius
+	{taR2} 		# id
+	{_t__} 		# code
+	20.000000 -5.000000 -15.000000 # offset
+	14 		# joint index
+	0 		# attribute
+	0 		# child count
+	20.000000 	# radius
+	{taC3} 		# id
+	{_t__} 		# code
+	10.000000 0.000000 0.000000 # offset
+	15 		# joint index
+	0 		# attribute
+	0 		# child count
+	25.000000 	# radius
+	{bod0} 		# id
+	{st__} 		# code
+	2.500000 15.000000 0.000000 # offset
+	11 		# joint index
+	0 		# attribute
+	0 		# child count
+	25.000000 	# radius
+	{bod1} 		# id
+	{st__} 		# code
+	2.500000 -10.000000 0.000000 # offset
+	11 		# joint index
+	0 		# attribute
+}

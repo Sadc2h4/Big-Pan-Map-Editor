@@ -1,0 +1,173 @@
+	2pbattle.bms
+	85
+
+	a_iron.bms
+	50
+
+	a_zawinul01.bms
+	50
+
+	caveboss.bms
+	50
+
+	caveconc.bms
+	50
+
+	caveglass.bms
+	40
+
+	new_00.bms
+	50
+
+	cavemetal.bms
+	45
+
+	caverelax.bms
+	60
+
+	cavesoil.bms
+	35
+
+	cavetile.bms
+	45
+
+	cavetsumiki.bms
+	50
+
+	comp_result.bms
+	50
+
+	c_menu.bms		
+	50
+
+	c_result.bms	
+	50
+
+	ff_annihi.bms	
+	50
+
+	ff_doped.bms	
+	50
+
+	ff_doping.bms	
+	50
+
+	ff_keyget.bms	
+	50
+
+	ff_playerdown.bms
+	50
+
+	ff_treasureget.bms
+	50
+
+	forest.bms			
+	60
+
+	f_result.bms		
+	50
+
+	hiscore.bms			
+	50
+
+	id_test.bms			
+	50
+
+	last.bms			
+	40
+
+	m_boss.bms			
+	50
+	
+	m_boss2.bms			
+	50
+
+	n_tutorial.bms		
+	35
+
+	result.bms			
+	50
+
+	se.bms				
+	120
+
+	u_result.bms		
+	50
+
+	worldmap.bms		
+	40
+
+	yakushima.bms		
+	40
+	
+	yakushima2.bms		
+	70
+
+	cavekeyget.bms
+	50
+
+	l_boss.bms
+	50
+
+	book.bms
+	50
+	
+	battle_t.bms
+	127
+
+	new_00.bms
+	60
+
+	new_01.bms
+	55
+	
+	new_02.bms
+	50
+	
+	new_03.bms
+	75
+	
+	new_04.bms
+	50+5
+	
+	new_05.bms
+	50
+	
+	new_06.bms
+	50
+	
+	new_07.bms
+	50
+	
+	new_08.bms
+	60
+	
+	new_09.bms
+	70
+	
+	new_10.bms
+	70
+	
+	new_11.bms
+	70
+	
+	new_12.bms
+	70
+	
+	new_13.bms
+	70
+	
+	kuro_pre.bms
+	50
+	
+	kuro_post.bms
+	72
+
+	worldmap_intro.bms
+	40
+	
+	n_tutorial_1stday.bms
+	50
+
+	endoffile
+

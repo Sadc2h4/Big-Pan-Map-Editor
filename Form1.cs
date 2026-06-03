@@ -1040,6 +1040,7 @@ public partial class Form1 : Form
         labelDiscRoot.Text = Localize("ReferenceRoot");
         labelLoadFormat.Text = Localize("LoadFormat");
         labelMode.Text = Localize("Mode");
+        textBoxLoadFormat.Text = GetLoadFormatLabel(_currentLoadFormat);
         buttonBrowseToolkit.Text = Localize("Browse");
         buttonBrowseDisc.Text = Localize("Browse");
         buttonPrepareCache.Text = Localize("PrepareCaveCache");
@@ -1058,6 +1059,7 @@ public partial class Form1 : Form
         if (_groupBoxReferenceUnit is not null)
         {
             _groupBoxReferenceUnit.Text = Localize("ReferenceInfo");
+            ApplyReferenceUnitLabelLanguage(_groupBoxReferenceUnit);
         }
 
         if (_groupBoxSelection is not null)
@@ -1080,7 +1082,9 @@ public partial class Form1 : Form
             _groupBoxWaterboxInspector.Text = Localize("WaterboxEditor");
         }
 
-        if (_labelInspectorSelection is not null && _labelInspectorSelection.Text == "未選択")
+        if (_labelInspectorSelection is not null &&
+            (string.Equals(_labelInspectorSelection.Text, "未選択", StringComparison.Ordinal) ||
+             string.Equals(_labelInspectorSelection.Text, "No selection", StringComparison.Ordinal)))
         {
             _labelInspectorSelection.Text = Localize("NoSelection");
         }
@@ -1111,16 +1115,18 @@ public partial class Form1 : Form
             }
         }
 
-        if (_buttonQuickAdd is not null) _buttonQuickAdd.Text = Localize("QuickAdd");
-        if (_buttonQuickRouteDelete is not null) _buttonQuickRouteDelete.Text = Localize("QuickRouteDelete");
-        if (_buttonQuickDelete is not null) _buttonQuickDelete.Text = Localize("QuickDelete");
-        if (_buttonQuickMove is not null) _buttonQuickMove.Text = Localize("QuickMove");
-        if (_buttonQuickAngle is not null) _buttonQuickAngle.Text = Localize("QuickAngle");
-        if (_buttonQuickRadius is not null) _buttonQuickRadius.Text = "Radius";
-        if (_buttonQuickConnect is not null) _buttonQuickConnect.Text = Localize("QuickConnect");
-        if (_buttonQuickRoomConnect is not null) _buttonQuickRoomConnect.Text = Localize("QuickRoomConnect");
-        if (_buttonQuickSave is not null) _buttonQuickSave.Text = Localize("QuickSave");
-        if (_buttonQuickSaveAll is not null) _buttonQuickSaveAll.Text = Localize("QuickSaveAll");
+        SetQuickIconButtonText(_buttonQuickAdd, Localize("QuickAdd"));
+        SetQuickIconButtonText(_buttonQuickRouteDelete, Localize("QuickRouteDelete"));
+        SetQuickIconButtonText(_buttonQuickDelete, Localize("QuickDelete"));
+        SetQuickIconButtonText(_buttonQuickMove, Localize("QuickMove"));
+        SetQuickIconButtonText(_buttonQuickAngle, Localize("QuickAngle"));
+        SetQuickIconButtonText(_buttonQuickRadius, "Radius");
+        SetQuickIconButtonText(_buttonQuickConnect, Localize("QuickConnect"));
+        SetQuickIconButtonText(_buttonQuickRoomConnect, Localize("QuickRoomConnect"));
+        SetQuickIconButtonText(_buttonQuickSave, Localize("QuickSave"));
+        SetQuickIconButtonText(_buttonQuickSaveAll, Localize("QuickSaveAll"));
+        ApplyLanguageToPreviewViews();
+        ApplyLocalizedAuxiliaryText();
 
         UpdateModeComboBoxLanguage();
         ConfigureEditorModeUi();
@@ -1174,6 +1180,9 @@ public partial class Form1 : Form
             "PrepareAllUnitCache" => english ? "Prepare all unit caches" : "全ユニットのキャッシュを作成",
             "ExportConsoleLog" => english ? "Export console log" : "コンソールログ出力",
             "ReferenceInfo" => english ? "Reference Information" : "参照情報",
+            "ReferenceArc" => "arc",
+            "ReferenceUnitCache" => english ? "Unit cache" : "ユニットキャッシュ",
+            "ReferenceImageCache" => english ? "Image cache" : "画像キャッシュ",
             "SelectedPoint" => english ? "Selected Point" : "選択中のポイント",
             "SpawnEditor" => english ? "Spawn Editor" : "Spawn 編集",
             "WaypointEditor" => english ? "Waypoint Editor" : "Waypoint 編集",
@@ -1235,6 +1244,26 @@ public partial class Form1 : Form
             "LogExportTitle" => english ? "Export Log" : "ログ出力",
             "LogExportComplete" => english ? "Exported the log." : "ログを出力しました．",
             "LogExportFailed" => english ? "Failed to export the log." : "ログ出力に失敗しました．",
+            "BulkCacheConfirm" => english
+                ? "Create caches for all {0} units.\nThis may take a very long time. Continue?"
+                : "全 {0} ユニットのキャッシュを作成します．\n処理には非常に時間がかかる場合があります．実行しますか？",
+            "BulkCacheTitle" => english ? "Create All Unit Caches" : "全ユニットキャッシュ作成",
+            "ToolkitMissingMessage" => english
+                ? "Hocotate_Toolkit.exe is not set or is invalid.\nSet the toolkit path first."
+                : "Hocotate_Toolkit.exe の参照先が未設定か無効です．\n先にツールの参照先を設定してください．",
+            "ToolkitMissingTitle" => english ? "Toolkit Missing" : "Toolkit 未設定",
+            "ToolkitStatusReady" => "Hocotate_Toolkit: OK",
+            "ToolkitStatusMissing" => english ? "Hocotate_Toolkit: Not set" : "Hocotate_Toolkit: 未設定",
+            "ViewTitleCave" => english ? "Cave Unit Mode" : "洞窟ユニットモード",
+            "ViewTitleField" => english ? "Field Map Mode" : "地上マップモード",
+            "SearchUnitPlaceholder" => english ? "Search units" : "ユニット名で検索",
+            "LoadFormatDiscExtractData" => english ? "Disc extracted data" : "ディスク抽出データ",
+            "LoadFormatArcFilesFolder" => english ? "arc / Files folder" : "arc / Files フォルダ",
+            "LoadFormatDirectFiles" => english ? "Individual files / single unit" : "個別ファイル / 単体ユニット",
+            "LoadFormatNone" => english ? "Not loaded" : "未読込",
+            "UnitSetArcDirect" => english ? "Direct arc reference" : "arc 直参照",
+            "UnitSetObjDirect" => english ? "Direct OBJ reference" : "OBJ 直接参照",
+            "UnitSetArchiveDirect" => english ? "Direct arc.szs/texts.szs reference" : "arc.szs/texts.szs 直参照",
             "ConfirmSaveCaveTextsOnly" => english
                 ? "Save the current layout / route / waterbox to the cache and overwrite the source unit texts.szs only.\nContinue?"
                 : "現在の layout/route/waterbox をキャッシュへ保存し，元ユニットの texts.szs のみ上書きします．\n続行しますか？",
@@ -1249,6 +1278,88 @@ public partial class Form1 : Form
                 : "layout/route/waterbox を保存し，元ユニットの szs を更新しました．",
             _ => key
         };
+    }
+
+    //-------------------------------------------------------------------------------
+    // 補助的な状態表示テキストを現在言語へ反映する処理
+    //-------------------------------------------------------------------------------
+    private void ApplyLocalizedAuxiliaryText()
+    {
+        if (_textBoxUnitSearch is not null)
+        {
+            _textBoxUnitSearch.PlaceholderText = Localize("SearchUnitPlaceholder");
+        }
+
+        textBoxUnitSet.Text = GetLocalizedUnitSetStatusText(textBoxUnitSet.Text);
+    }
+
+    //-------------------------------------------------------------------------------
+    // 参照情報パネル内のラベルを現在言語へ反映する処理
+    //-------------------------------------------------------------------------------
+    private void ApplyReferenceUnitLabelLanguage(Control parent)
+    {
+        foreach (Control control in parent.Controls)
+        {
+            if (control is Label label && label.Tag is string key)
+            {
+                label.Text = Localize(key);
+            }
+
+            if (control.HasChildren)
+            {
+                ApplyReferenceUnitLabelLanguage(control);
+            }
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitSet 欄の状態表示を現在言語へ変換する処理
+    //-------------------------------------------------------------------------------
+    private string GetLocalizedUnitSetStatusText(string currentText)
+    {
+        if (string.Equals(currentText, "arc 直参照", StringComparison.Ordinal) ||
+            string.Equals(currentText, "Direct arc reference", StringComparison.Ordinal))
+        {
+            return Localize("UnitSetArcDirect");
+        }
+
+        if (string.Equals(currentText, "OBJ 直接参照", StringComparison.Ordinal) ||
+            string.Equals(currentText, "Direct OBJ reference", StringComparison.Ordinal))
+        {
+            return Localize("UnitSetObjDirect");
+        }
+
+        if (string.Equals(currentText, "arc.szs/texts.szs 直参照", StringComparison.Ordinal) ||
+            string.Equals(currentText, "Direct arc.szs/texts.szs reference", StringComparison.Ordinal))
+        {
+            return Localize("UnitSetArchiveDirect");
+        }
+
+        return currentText;
+    }
+
+    //-------------------------------------------------------------------------------
+    // アイコンがあるミニコントローラーボタンでは文字を表示しない処理
+    //-------------------------------------------------------------------------------
+    private static void SetQuickIconButtonText(Button? button, string fallbackText)
+    {
+        if (button is null)
+        {
+            return;
+        }
+
+        button.AccessibleName = fallbackText;
+        button.Text = button.Image is null ? fallbackText : string.Empty;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 現在の言語設定をプレビュー描画へ反映する処理
+    //-------------------------------------------------------------------------------
+    private void ApplyLanguageToPreviewViews()
+    {
+        bool english = _settings.Language.Equals("en", StringComparison.OrdinalIgnoreCase);
+        _unitMapView.SetLanguage(english);
+        _objModelView.SetLanguage(english);
     }
 
     //-------------------------------------------------------------------------------
@@ -2003,7 +2114,7 @@ public partial class Form1 : Form
         _groupBoxReferenceUnit = new GroupBox
         {
             Dock = DockStyle.Fill,
-            Text = "参照ユニット情報"
+            Text = Localize("ReferenceInfo")
         };
 
         TableLayoutPanel layout = new()
@@ -2020,9 +2131,9 @@ public partial class Form1 : Form
             layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 31F));
         }
 
-        _textBoxReferenceArc = AddReferencePathRow(layout, 0, "arc");
-        _textBoxReferenceUnitCache = AddReferencePathRow(layout, 1, "ユニットキャッシュ");
-        _textBoxReferenceImageCache = AddReferencePathRow(layout, 2, "画像キャッシュ");
+        _textBoxReferenceArc = AddReferencePathRow(layout, 0, "ReferenceArc");
+        _textBoxReferenceUnitCache = AddReferencePathRow(layout, 1, "ReferenceUnitCache");
+        _textBoxReferenceImageCache = AddReferencePathRow(layout, 2, "ReferenceImageCache");
 
         _groupBoxReferenceUnit.Controls.Add(layout);
         tableLayoutPanelSidebar.Controls.Add(_groupBoxReferenceUnit, 0, 2);
@@ -2032,13 +2143,14 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     // 参照パス表示の 1 行を作成する処理
     //-------------------------------------------------------------------------------
-    private TextBox AddReferencePathRow(TableLayoutPanel layout, int rowIndex, string labelText)
+    private TextBox AddReferencePathRow(TableLayoutPanel layout, int rowIndex, string labelKey)
     {
         Label label = new()
         {
             Anchor = AnchorStyles.Left,
             AutoSize = true,
-            Text = labelText
+            Text = Localize(labelKey),
+            Tag = labelKey
         };
         TextBox textBox = new()
         {
@@ -2329,7 +2441,7 @@ public partial class Form1 : Form
         _labelInspectorSelection = new Label
         {
             AutoSize = true,
-            Text = "未選択",
+            Text = Localize("NoSelection"),
             Font = new Font("Yu Gothic UI", 10F, FontStyle.Bold)
         };
         selectionLayout.Controls.Add(_labelInspectorSelection);
@@ -2605,7 +2717,7 @@ public partial class Form1 : Form
             {
                 Dock = DockStyle.Fill,
                 Margin = new Padding(3, 4, 3, 4),
-                PlaceholderText = "ユニット名で検索"
+                PlaceholderText = Localize("SearchUnitPlaceholder")
             };
             _textBoxUnitSearch.TextChanged += textBoxUnitSearch_TextChanged;
             tableLayoutPanelTemplates.Controls.Add(_textBoxUnitSearch, 0, 1);
@@ -4780,7 +4892,7 @@ public partial class Form1 : Form
     {
         bool showRadius = _checkBoxRadiusOverlay?.Checked != false;
         _unitMapView.SetRadiusVisible(showRadius);
-        _unitMapView.SetViewTitle(GetCurrentMode() == EditorMode.Field ? "地上マップモード" : "洞窟ユニットモード");
+        _unitMapView.SetViewTitle(GetCurrentMode() == EditorMode.Field ? Localize("ViewTitleField") : Localize("ViewTitleCave"));
         _unitMapView.SetUseFieldObjectIcons(GetCurrentMode() == EditorMode.Field);
         _unitMapView.SetRouteColorHeights(BuildRouteColorHeights(_currentRoute));
         LayoutFile layout = checkBoxSpawnOverlay.Checked
@@ -4980,7 +5092,7 @@ public partial class Form1 : Form
             {
                 _labelInspectorSelection.Text = hasWaypoint
                     ? $"Waypoint #{waypoint!.Index}"
-                    : hasWaterbox ? $"Waterbox #{_selectedWaterboxIndex!.Value}" : "未選択";
+                    : hasWaterbox ? $"Waterbox #{_selectedWaterboxIndex!.Value}" : Localize("NoSelection");
             }
 
             if (hasWaypoint)
@@ -5417,8 +5529,8 @@ public partial class Form1 : Form
 
         DialogResult result = MessageBox.Show(
             this,
-            $"全 {unitNames.Count} ユニットのキャッシュを作成します．\n処理には非常に時間がかかる場合があります．実行しますか？",
-            "全ユニットキャッシュ作成",
+            string.Format(CultureInfo.CurrentCulture, Localize("BulkCacheConfirm"), unitNames.Count),
+            Localize("BulkCacheTitle"),
             MessageBoxButtons.YesNo,
             MessageBoxIcon.Warning);
         if (result != DialogResult.Yes)
@@ -5509,7 +5621,7 @@ public partial class Form1 : Form
     private void ApplyToolkitState(bool showWarning)
     {
         bool ready = File.Exists(textBoxToolkitPath.Text);
-        labelToolkitStatus.Text = ready ? "Hocotate_Toolkit: OK" : "Hocotate_Toolkit: 未設定";
+        labelToolkitStatus.Text = ready ? Localize("ToolkitStatusReady") : Localize("ToolkitStatusMissing");
         labelToolkitStatus.ForeColor = ready ? Color.DarkGreen : Color.DarkRed;
         buttonBrowseDisc.Enabled = ready;
         buttonPrepareCache.Enabled = ready && GetCurrentMode() == EditorMode.Cave;
@@ -5522,8 +5634,8 @@ public partial class Form1 : Form
         {
             MessageBox.Show(
                 this,
-                "Hocotate_Toolkit.exe の参照先が未設定か無効です．\n先にツールの参照先を設定してください．",
-                "Toolkit Missing",
+                Localize("ToolkitMissingMessage"),
+                Localize("ToolkitMissingTitle"),
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Warning);
         }
@@ -5633,7 +5745,7 @@ public partial class Form1 : Form
             {
                 SetPathStatus(textBoxArcPath, arcPath);
                 SetPathStatus(textBoxUnitsPath, unitsDir);
-                textBoxUnitSet.Text = "arc 直参照";
+                textBoxUnitSet.Text = Localize("UnitSetArcDirect");
             }
 
             LoadFormatKind resolvedFormat = hasDiscExtractFolders
@@ -5701,7 +5813,7 @@ public partial class Form1 : Form
 
         SetPathStatus(textBoxArcPath, Path.GetDirectoryName(selectedPath));
         SetPathStatus(textBoxUnitsPath, null);
-        textBoxUnitSet.Text = "OBJ 直接参照";
+        textBoxUnitSet.Text = Localize("UnitSetObjDirect");
         labelTemplateRoot.Text = $"OBJ: {selectedPath}";
         _currentSummaryLines = new List<string> { "OBJ ファイルのみを直接表示しています．" };
         RefreshConsoleOutput();
@@ -5736,7 +5848,7 @@ public partial class Form1 : Form
         _lastFieldTextsRoot = null;
         SetPathStatus(textBoxArcPath, arcRoot);
         SetPathStatus(textBoxUnitsPath, selectedPath);
-        textBoxUnitSet.Text = "arc.szs/texts.szs 直参照";
+        textBoxUnitSet.Text = Localize("UnitSetArchiveDirect");
         _currentCaveInfoDirectory = null;
         _currentSummaryLines = new List<string> { $"{unitName} の arc.szs/texts.szs を直接展開して表示します．" };
         RefreshConsoleOutput();
@@ -5883,7 +5995,7 @@ public partial class Form1 : Form
             _lastCaveUnitsPath = caveUnitsRoot;
             SetPathStatus(textBoxArcPath, caveArcRoot);
             SetPathStatus(textBoxUnitsPath, caveUnitsRoot);
-            textBoxUnitSet.Text = "arc 直参照";
+            textBoxUnitSet.Text = Localize("UnitSetArcDirect");
             return;
         }
 
@@ -5923,14 +6035,14 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     // 読込形式の表示名を取得する処理
     //-------------------------------------------------------------------------------
-    private static string GetLoadFormatLabel(LoadFormatKind formatKind)
+    private string GetLoadFormatLabel(LoadFormatKind formatKind)
     {
         return formatKind switch
         {
-            LoadFormatKind.DiscExtractData => "ディスク抽出データ",
-            LoadFormatKind.ArcFilesFolder => "arc / Files フォルダ",
-            LoadFormatKind.DirectFiles => "個別ファイル / 単体ユニット",
-            _ => "未読込"
+            LoadFormatKind.DiscExtractData => Localize("LoadFormatDiscExtractData"),
+            LoadFormatKind.ArcFilesFolder => Localize("LoadFormatArcFilesFolder"),
+            LoadFormatKind.DirectFiles => Localize("LoadFormatDirectFiles"),
+            _ => Localize("LoadFormatNone")
         };
     }
 

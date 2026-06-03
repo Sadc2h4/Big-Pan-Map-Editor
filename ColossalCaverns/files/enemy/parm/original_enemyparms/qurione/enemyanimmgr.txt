@@ -1,0 +1,39 @@
+#
+#	AnimMgr
+#
+	5 	# number of animations
+# wait.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Qurione\anim\waitl.bca 
+	waitl.bca 
+	0 0 
+	99 1 
+	-1 
+}
+# damage.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Qurione\anim\damage.bca 
+	damage.bca 
+	5 2 
+	-1 
+}
+# run.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Qurione\anim\run.bca 
+	run.bca 
+	0 0 
+	9 1 
+	-1 
+}
+# appear1.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Qurione\anim\appear1.bca 
+	appear1.bca 
+	-1 
+}
+# hide1.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Qurione\anim\hide1.bca 
+	hide1.bca 
+	-1 
+}

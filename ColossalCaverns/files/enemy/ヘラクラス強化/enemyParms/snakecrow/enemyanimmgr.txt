@@ -1,0 +1,117 @@
+#
+#	AnimMgr
+#
+	13 	# number of animations
+# dead.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\hebihina\motion\dead.bca 
+	dead.bca 
+	67 2 
+	75 2 
+	110 5 
+	131 3 
+	143 4 
+	149 4 
+	-1 
+}
+# appear1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\hebihina\motion\appear1.bca 
+	appear1.bca 
+	14 2 
+	-1 
+}
+# appear2.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\hebihina\motion\appear2.bca 
+	appear2.bca 
+	20 2 
+	58 3 
+	115 4 
+	141 5 
+	-1 
+}
+# dive.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\hebihina\motion\dive.bca 
+	dive.bca 
+	12 2 
+	28 3 
+	-1 
+}
+# hit_near.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\hebihina\motion\hit_near.bca 
+	hit_near.bca 
+	33 2 
+	36 3 
+	48 4 
+	-1 
+}
+# hit.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\hebihina\motion\hit.bca 
+	hit.bca 
+	32 2 
+	34 3 
+	48 4 
+	-1 
+}
+# hit_far.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\hebihina\motion\hit_far.bca 
+	hit_far.bca 
+	32 2 
+	36 3 
+	48 4 
+	-1 
+}
+# hit_r.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\hebihina\motion\hit_r.bca 
+	hit_r.bca 
+	28 2 
+	32 3 
+	48 4 
+	-1 
+}
+# hit_l.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\hebihina\motion\hit_l.bca 
+	hit_l.bca 
+	28 2 
+	32 3 
+	48 4 
+	-1 
+}
+# wait1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\hebihina\motion\wait1.bca 
+	wait1.bca 
+	0 0 
+	49 1 
+	-1 
+}
+# waitact1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\hebihina\motion\waitact1.bca 
+	waitact1.bca 
+	42 2 
+	-1 
+}
+# waitact2.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\hebihina\motion\waitact2.bca 
+	waitact2.bca 
+	0 0 
+	19 1 
+	-1 
+}
+# type5.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\hebihina\motion\type5.bca 
+	type5.bca 
+	10 0 
+	29 1 
+	-1 
+}

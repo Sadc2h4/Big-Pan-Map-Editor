@@ -1,0 +1,19 @@
+#
+#	AnimMgr
+#
+	2 	# number of animations
+# hit_start.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\bomb\motion\hit_start.bca 
+	hit_start.bca 
+	10 2
+	-1 
+}
+# hit_loop.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\bomb\motion\hit_loop.bca 
+	hit_loop.bca 
+	0 0 
+	7 1 
+	-1 
+}

@@ -1,0 +1,18 @@
+#
+#	AnimMgr
+#
+	2 	# number of animations
+# wait.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Hiba\anim\wait.bca 
+	wait.bca 
+	-1 
+}
+# attack.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Hiba\anim\attack.bca 
+	attack.bca 
+	0 0 
+	3 1 
+	-1 
+}

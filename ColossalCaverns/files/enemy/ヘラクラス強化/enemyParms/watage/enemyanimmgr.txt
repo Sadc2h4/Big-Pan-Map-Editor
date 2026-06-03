@@ -1,0 +1,10 @@
+#
+#	AnimMgr
+#
+	1 	# number of animations
+# watage.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\watage\motion\watage.bca 
+	watage.bca 
+	-1 
+}

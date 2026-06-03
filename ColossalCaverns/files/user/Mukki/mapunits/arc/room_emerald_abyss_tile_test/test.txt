@@ -1,0 +1,136 @@
+{v0.1}
+0.0 0.0 0.0 
+0.0
+6
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	144 194 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 青オニヨン 
+	165.264768 0.0 -665.5 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 -135.000000 0.000000 # rotation 
+		{0001} # item local version 
+		0 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.3} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	131 73 131 73 131 67 131 107 130 147 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 # オオイヌｓ 
+	165.264768 -22.771414 -430.1 # Position 
+	0.0 0 0.0 # Offset 
+	{teki} {0005} 	49 
+	0 # Teki Birth Type 
+	1 # Teki Number 
+	180.000000 # Face Direction 
+	1 # 0: Point, 1: Circle 
+	100.000000 # appear radius 
+	0.000000 # enemy size 
+	0 # Treasure item code 
+	3 # Pellet color 
+	1 # Pellet size 
+	1 # Pellet Min 
+	8 # Pellet Max 
+	0.000000 # Pellet Min 
+	{????}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.3} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	131 73 131 73 131 67 131 107 130 147 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 # オオイヌｓ 
+	132.264768 -20.092111 -381.7 # Position 
+	0.0 0 0.0 # Offset 
+	{teki} {0005} 	49 
+	0 # Teki Birth Type 
+	1 # Teki Number 
+	180.000000 # Face Direction 
+	1 # 0: Point, 1: Circle 
+	100.000000 # appear radius 
+	0.000000 # enemy size 
+	0 # Treasure item code 
+	3 # Pellet color 
+	1 # Pellet size 
+	1 # Pellet Min 
+	8 # Pellet Max 
+	0.000000 # Pellet Min 
+	{????}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.3} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	131 73 131 73 131 67 131 107 130 147 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 # オオイヌｓ 
+	196.064768 -19.83985 -377.3 # Position 
+	0.0 0 0.0 # Offset 
+	{teki} {0005} 	49 
+	0 # Teki Birth Type 
+	1 # Teki Number 
+	180.000000 # Face Direction 
+	1 # 0: Point, 1: Circle 
+	100.000000 # appear radius 
+	0.000000 # enemy size 
+	0 # Treasure item code 
+	3 # Pellet color 
+	1 # Pellet size 
+	1 # Pellet Min 
+	8 # Pellet Max 
+	0.000000 # Pellet Min 
+	{????}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	144 212 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 赤オニヨン 
+	288.464768 13.483012 302.5 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 31.120001 0.000000 # rotation 
+		{0001} # item local version 
+		1 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	-28.335232 69.473296 -337.7 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}

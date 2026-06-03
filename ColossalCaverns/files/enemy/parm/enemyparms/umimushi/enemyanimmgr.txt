@@ -1,0 +1,90 @@
+#
+#	AnimMgr
+#
+	11 	# number of animations
+# attack1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\umimusi\motion\attack1.bca 
+	attack1.bca 
+	25 2
+	39 3
+	40 4 
+	50 5
+	66 6 
+	-1 
+}
+# dead1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\umimusi\motion\dead1.bca 
+	dead1.bca 
+	83 2
+	110 3
+	113 4
+	-1 
+}
+# eat1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\umimusi\motion\eat1.bca 
+	eat1.bca 
+	-1 
+}
+# flick1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\umimusi\motion\flick1.bca 
+	flick1.bca 
+	9 2 
+	-1 
+}
+# run1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\umimusi\motion\run1.bca 
+	run1.bca 
+	0 0 
+	59 1 
+	-1 
+}
+# search1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\umimusi\motion\search1.bca 
+	search1.bca 
+	48 2 
+	-1 
+}
+# srun1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\umimusi\motion\srun1.bca 
+	srun1.bca 
+	0 0 
+	39 1 
+	-1 
+}
+# sturn1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\umimusi\motion\sturn1.bca 
+	sturn1.bca 
+	0 0 
+	39 1 
+	-1 
+}
+# type5.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\umimusi\motion\type5.bca 
+	type5.bca 
+	10 0 
+	29 1 
+	-1 
+}
+
+# outview1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\umimusi\motion\outview1.bca 
+	outview1.bca 
+	-1 
+}
+
+# fsearch1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\umimusi\motion\fsearch1.bca 
+	fsearch1.bca 
+	-1 
+}

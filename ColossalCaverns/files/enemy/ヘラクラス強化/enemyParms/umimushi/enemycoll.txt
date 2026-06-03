@@ -1,0 +1,38 @@
+4 		# child count
+180.000000 	# radius
+{root} 		# id
+{____} 		# code
+0.000000 0.000000 0.000000 # offset
+0 		# joint index
+0 		# attribute
+# child
+{
+	0 		# child count
+	80.000000 	# radius
+	{head} 		# id
+	{____} 		# code
+	0.000000 -20.000000 0.000000 # offset
+	1 		# joint index
+	0 		# attribute
+	0 		# child count
+	40.000000 	# radius
+	{kuti} 		# id
+	{____} 		# code
+	15.000000 -14.000000 0.000000 # offset
+	14 		# joint index
+	0 		# attribute
+	0 		# child count
+	25.000000 	# radius
+	{ketu} 		# id
+	{____} 		# code
+	-80.000000 -12.000000 0.000000 # offset
+	18 		# joint index
+	0 		# attribute
+	0 		# child count
+	10.000000 	# radius
+	{weak} 		# id
+	{st__} 		# code
+	-12.000000 2.500000 0.000000 # offset
+	24 		# joint index
+	0 		# attribute
+}

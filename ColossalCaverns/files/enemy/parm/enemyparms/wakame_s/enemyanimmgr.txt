@@ -1,0 +1,10 @@
+#
+#	AnimMgr
+#
+	1 	# number of animations
+# wakame_s.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\wakame_s\motion\wakame_s.bca 
+	wakame_s.bca 
+	-1 
+}

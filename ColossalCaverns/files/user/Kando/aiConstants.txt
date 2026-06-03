@@ -1,0 +1,11 @@
+#
+#
+#
+
+gravity			560.0
+dopecount		10
+debt			10000
+camera_angle		290.0
+
+end
+

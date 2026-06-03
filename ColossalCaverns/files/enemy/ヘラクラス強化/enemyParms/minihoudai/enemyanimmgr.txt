@@ -1,0 +1,68 @@
+#
+#	AnimMgr
+#
+	8 	# number of animations
+# walk.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\chibihoudai\motion\walk.bca 
+	walk.bca 
+	10 0 
+	18 2 
+	25 1 
+	-1 
+}
+# search1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\chibihoudai\motion\search1.bca 
+	search1.bca 
+	-1 
+}
+# turn1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\chibihoudai\motion\turn1.bca 
+	turn1.bca 
+	5 0 
+	16 1 
+	-1 
+}
+# attack1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\chibihoudai\motion\attack1.bca 
+	attack1.bca 
+	11 2 
+	22 3 
+	25 4 
+	32 5 
+	-1 
+}
+# flick1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\chibihoudai\motion\flick1.bca 
+	flick1.bca 
+	10 2 
+	-1 
+}
+# dead1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\chibihoudai\motion\dead1.bca 
+	dead1.bca 
+	32 2 
+	52 3 
+	-1 
+}
+# type5.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\chibihoudai\motion\type5.bca 
+	type5.bca 
+	10 0 
+	29 1 
+	-1 
+}
+# rebirth.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\chibihoudai\motion\rebirth.bca 
+	rebirth.bca 
+	32 2 
+	45 3 
+	-1 
+}

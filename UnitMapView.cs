@@ -37,6 +37,7 @@ internal sealed class UnitMapView : Control
     private UnitMapEditMode _editMode;
     private bool _showRadius = true;
     private bool _useFieldObjectIcons;
+    private bool _englishUi;
     private string _viewTitle = "洞窟ユニットモード";
     private int? _selectedRouteWaypointIndex;
     private int? _selectedSpawnIndex;
@@ -174,11 +175,33 @@ internal sealed class UnitMapView : Control
     }
 
     //-------------------------------------------------------------------------------
+    // 2D ビュー内に描画する文言の言語を切り替える処理
+    //-------------------------------------------------------------------------------
+    public void SetLanguage(bool english)
+    {
+        if (_englishUi == english)
+        {
+            return;
+        }
+
+        _englishUi = english;
+        if (string.Equals(_viewTitle, "洞窟ユニットモード", StringComparison.Ordinal) ||
+            string.Equals(_viewTitle, "Cave Unit Mode", StringComparison.Ordinal))
+        {
+            _viewTitle = _englishUi ? "Cave Unit Mode" : "洞窟ユニットモード";
+        }
+
+        Invalidate();
+    }
+
+    //-------------------------------------------------------------------------------
     // 2D ビュー左上に表示するモード名を切り替える処理
     //-------------------------------------------------------------------------------
     public void SetViewTitle(string title)
     {
-        string nextTitle = string.IsNullOrWhiteSpace(title) ? "洞窟ユニットモード" : title;
+        string nextTitle = string.IsNullOrWhiteSpace(title)
+            ? (_englishUi ? "Cave Unit Mode" : "洞窟ユニットモード")
+            : title;
         if (string.Equals(_viewTitle, nextTitle, StringComparison.Ordinal))
         {
             return;
@@ -1053,15 +1076,15 @@ internal sealed class UnitMapView : Control
     {
         return _editMode switch
         {
-            UnitMapEditMode.MoveWaterbox => "Waterbox: 中央ドラッグで移動，四隅/辺の白ハンドルでサイズ変更",
-            UnitMapEditMode.AddWaterbox => "Waterbox: 左クリック位置へ既定サイズで追加",
-            UnitMapEditMode.DeleteWaterbox => "Waterbox: 対象を左クリックで削除",
-            UnitMapEditMode.MoveRouteWaypoint => "Waypoint: ドラッグで移動，Shiftで主軸固定，Ctrlで高さY移動",
-            UnitMapEditMode.ConnectRouteWaypoint => "Route: Waypoint同士をドラッグで接続",
-            UnitMapEditMode.DeleteRouteLink => "Route: 接続線を左クリックで削除",
-            UnitMapEditMode.RotateSpawn => "Spawn: 選択Spawnから右ドラッグ方向へ角度変更",
-            UnitMapEditMode.ResizeSpawnRadius => "Spawn: 選択Spawnからドラッグ位置までの距離でRadius変更",
-            UnitMapEditMode.ResizeRouteWaypointRadius => "Waypoint: 選択Waypointからドラッグ位置までの距離でRadius変更",
+            UnitMapEditMode.MoveWaterbox => _englishUi ? "Waterbox: drag the center to move, drag white corner/edge handles to resize" : "Waterbox: 中央ドラッグで移動，四隅/辺の白ハンドルでサイズ変更",
+            UnitMapEditMode.AddWaterbox => _englishUi ? "Waterbox: left click to add a default-size waterbox" : "Waterbox: 左クリック位置へ既定サイズで追加",
+            UnitMapEditMode.DeleteWaterbox => _englishUi ? "Waterbox: left click a target to delete it" : "Waterbox: 対象を左クリックで削除",
+            UnitMapEditMode.MoveRouteWaypoint => _englishUi ? "Waypoint: drag to move, Shift locks the main axis, Ctrl moves Y height" : "Waypoint: ドラッグで移動，Shiftで主軸固定，Ctrlで高さY移動",
+            UnitMapEditMode.ConnectRouteWaypoint => _englishUi ? "Route: drag between waypoints to connect them" : "Route: Waypoint同士をドラッグで接続",
+            UnitMapEditMode.DeleteRouteLink => _englishUi ? "Route: left click a connection line to delete it" : "Route: 接続線を左クリックで削除",
+            UnitMapEditMode.RotateSpawn => _englishUi ? "Spawn: right drag from the selected Spawn to change its angle" : "Spawn: 選択Spawnから右ドラッグ方向へ角度変更",
+            UnitMapEditMode.ResizeSpawnRadius => _englishUi ? "Spawn: drag from the selected Spawn to set Radius by distance" : "Spawn: 選択Spawnからドラッグ位置までの距離でRadius変更",
+            UnitMapEditMode.ResizeRouteWaypointRadius => _englishUi ? "Waypoint: drag from the selected Waypoint to set Radius by distance" : "Waypoint: 選択Waypointからドラッグ位置までの距離でRadius変更",
             _ => string.Empty
         };
     }

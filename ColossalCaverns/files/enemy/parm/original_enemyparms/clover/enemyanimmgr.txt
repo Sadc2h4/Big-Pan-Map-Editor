@@ -1,0 +1,10 @@
+#
+#	AnimMgr
+#
+	1 	# number of animations
+# clover.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\clover\motion\clover.bca 
+	clover.bca 
+	-1 
+}
