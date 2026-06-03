@@ -1,5 +1,0 @@
-s = open("texts.szs").read()
-s = s.replace('4 	# type', '2 	# type')
-f = open("texts.szs", 'w')
-f.write(s)
-f.close()
