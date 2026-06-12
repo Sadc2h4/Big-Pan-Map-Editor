@@ -580,7 +580,7 @@ partial class Form1
         panelPreview.Location = new Point(352, 0);
         panelPreview.Name = "panelPreview";
         panelPreview.Padding = new Padding(16);
-        panelPreview.Size = new Size(456, 956);
+        panelPreview.Size = new Size(432, 956);
         panelPreview.TabIndex = 0;
         // 
         // pictureBoxPreview
@@ -714,9 +714,9 @@ partial class Form1
         panelInspectorShell.Controls.Add(panelInspectorPanelHost);
         panelInspectorShell.Controls.Add(panelInspectorTabHost);
         panelInspectorShell.Dock = DockStyle.Right;
-        panelInspectorShell.Location = new Point(808, 0);
+        panelInspectorShell.Location = new Point(784, 0);
         panelInspectorShell.Name = "panelInspectorShell";
-        panelInspectorShell.Size = new Size(348, 956);
+        panelInspectorShell.Size = new Size(372, 956);
         panelInspectorShell.TabIndex = 1;
         // 
         // panelInspectorPanelHost
@@ -727,7 +727,7 @@ partial class Form1
         panelInspectorPanelHost.Location = new Point(28, 0);
         panelInspectorPanelHost.Name = "panelInspectorPanelHost";
         panelInspectorPanelHost.Padding = new Padding(12);
-        panelInspectorPanelHost.Size = new Size(320, 956);
+        panelInspectorPanelHost.Size = new Size(344, 956);
         panelInspectorPanelHost.TabIndex = 0;
         // 
         // panelInspectorContent
@@ -736,7 +736,7 @@ partial class Form1
         panelInspectorContent.Dock = DockStyle.Fill;
         panelInspectorContent.Location = new Point(12, 12);
         panelInspectorContent.Name = "panelInspectorContent";
-        panelInspectorContent.Size = new Size(296, 932);
+        panelInspectorContent.Size = new Size(320, 932);
         panelInspectorContent.TabIndex = 0;
         // 
         // panelInspectorTabHost

@@ -87,8 +87,9 @@ internal static class LayoutParser
         [0] = "Teki A",
         [1] = "Teki B",
         [2] = "Item",
-        [4] = "Hole/Geyser",
-        [5] = "Hole/Geyser",
+        [3] = "Unused",
+        [4] = "Hole/Geyser",  // ゲーム側 BaseGen::CaveGenType では 4 が HoleOrGeyser
+        [5] = "Joint",        // 5 は Joint(DoorSeam) であり Hole/Geyser ではない
         [6] = "Plant",
         [7] = "Start",
         [8] = "Teki F"

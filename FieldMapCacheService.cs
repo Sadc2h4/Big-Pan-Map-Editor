@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Buffers.Binary;
+using System.Globalization;
 
 namespace PikminUnitEditor;
 
@@ -34,7 +36,10 @@ internal sealed class FieldMapCacheService
     //-------------------------------------------------------------------------------
     // 指定地上マップの表示用キャッシュを用意する処理
     //-------------------------------------------------------------------------------
-    public FieldMapCacheEntry EnsureFieldMapCache(string mapName, Action<string, int, int>? progressCallback = null)
+    public FieldMapCacheEntry EnsureFieldMapCache(
+        string mapName,
+        Action<string, int, int>? progressCallback = null,
+        CaveModelSourceMode modelSourceMode = CaveModelSourceMode.TextsGrid)
     {
         progressCallback?.Invoke(mapName, 0, 4);
         Directory.CreateDirectory(_fieldCacheDir);
@@ -47,27 +52,42 @@ internal sealed class FieldMapCacheService
         Directory.CreateDirectory(cacheDir);
 
         progressCallback?.Invoke(mapName, 1, 4);
-        string? arcArchivePath = ResolveMapArchivePath(mapName, "arc.szs");
-        if (arcArchivePath is not null)
-        {
-            EnsureArchiveExtracted(arcArchivePath, arcExtractDir);
-        }
-
-        progressCallback?.Invoke(mapName, 2, 4);
         string? textsArchivePath = ResolveMapArchivePath(mapName, "texts.szs");
         if (textsArchivePath is not null)
         {
             EnsureArchiveExtracted(textsArchivePath, textsExtractDir);
         }
 
-        FieldModelPaths modelPaths = ResolveModelPaths(arcExtractDir);
-        if ((modelPaths.ObjPath is null || modelPaths.MtlPath is null) && modelPaths.BmdPath is not null)
+        progressCallback?.Invoke(mapName, 2, 4);
+        FieldModelPaths modelPaths;
+        if (modelSourceMode == CaveModelSourceMode.TextsGrid)
         {
-            modelPaths = ConvertBmdModel(modelPaths.BmdPath, arcExtractDir);
+            string? gridPath = FindFirstExistingPathOrNull(
+                Path.Combine(textsExtractDir, "grid.bin"),
+                Path.Combine(textsExtractDir, "text", "grid.bin"),
+                Path.Combine(_fieldMapRoot, mapName, "texts", "grid.bin"));
+            string? gridObjPath = TryCreateCollisionObjFromGrid(gridPath, Path.Combine(cacheDir, "collision", "grid.obj"));
+            modelPaths = new FieldModelPaths(gridObjPath, null, null, null);
+        }
+        else
+        {
+            string? arcArchivePath = ResolveMapArchivePath(mapName, "arc.szs");
+            if (arcArchivePath is not null)
+            {
+                EnsureArchiveExtracted(arcArchivePath, arcExtractDir);
+            }
+
+            modelPaths = ResolveModelPaths(arcExtractDir);
+            if ((modelPaths.ObjPath is null || modelPaths.MtlPath is null) && modelPaths.BmdPath is not null)
+            {
+                modelPaths = ConvertBmdModel(modelPaths.BmdPath, arcExtractDir);
+            }
         }
 
         progressCallback?.Invoke(mapName, 3, 4);
-        if (ShouldRenderPreviewImage(imagePath, modelPaths.ObjPath, modelPaths.MtlPath, modelPaths.DaePath))
+        bool allowPreviewImage = modelSourceMode != CaveModelSourceMode.TextsGrid;
+        if (allowPreviewImage &&
+            ShouldRenderPreviewImage(imagePath, modelPaths.ObjPath, modelPaths.MtlPath, modelPaths.DaePath))
         {
             TryRenderPreviewImage(modelPaths.ObjPath, modelPaths.MtlPath, modelPaths.DaePath, imagePath);
         }
@@ -86,7 +106,7 @@ internal sealed class FieldMapCacheService
             cacheDir,
             modelPaths.ObjPath,
             modelPaths.MtlPath,
-            File.Exists(imagePath) ? imagePath : null,
+            allowPreviewImage && File.Exists(imagePath) ? imagePath : null,
             waterboxPath);
     }
 
@@ -187,11 +207,9 @@ internal sealed class FieldMapCacheService
         try
         {
             if (!string.IsNullOrWhiteSpace(objPath) &&
-                !string.IsNullOrWhiteSpace(mtlPath) &&
-                File.Exists(objPath) &&
-                File.Exists(mtlPath))
+                File.Exists(objPath))
             {
-                ObjTopDownRenderer.RenderAuto(objPath, mtlPath, imagePath);
+                ObjTopDownRenderer.RenderAuto(objPath, mtlPath ?? string.Empty, imagePath);
                 return;
             }
 
@@ -306,6 +324,130 @@ internal sealed class FieldMapCacheService
     private static string? FindFirstExistingPathOrNull(params string[] candidates)
     {
         return candidates.FirstOrDefault(File.Exists);
+    }
+
+    //-------------------------------------------------------------------------------
+    // grid.bin から 3D 表示用の collision OBJ を作成する処理
+    //-------------------------------------------------------------------------------
+    private static string? TryCreateCollisionObjFromGrid(string? gridPath, string outputObjPath)
+    {
+        if (string.IsNullOrWhiteSpace(gridPath) || !File.Exists(gridPath))
+        {
+            return null;
+        }
+
+        try
+        {
+            if (File.Exists(outputObjPath) &&
+                File.GetLastWriteTimeUtc(outputObjPath) >= File.GetLastWriteTimeUtc(gridPath))
+            {
+                return outputObjPath;
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(outputObjPath) ?? AppContext.BaseDirectory);
+            using FileStream input = File.OpenRead(gridPath);
+            using StreamWriter writer = new(outputObjPath, false);
+            writer.WriteLine("# Generated from Pikmin 2 grid.bin collision");
+            int vertexCount = ReadInt32BigEndian(input);
+            if (vertexCount <= 0 || vertexCount > 1_000_000)
+            {
+                throw new FormatException("Invalid grid.bin vertex count.");
+            }
+
+            for (int i = 0; i < vertexCount; i++)
+            {
+                float x = ReadSingleBigEndian(input);
+                float y = ReadSingleBigEndian(input);
+                float z = ReadSingleBigEndian(input);
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "v {0} {1} {2}", x, y, z));
+            }
+
+            int faceCount = ReadInt32BigEndian(input);
+            if (faceCount < 0 || faceCount > 2_000_000)
+            {
+                throw new FormatException("Invalid grid.bin face count.");
+            }
+
+            uint unsignedVertexCount = (uint)vertexCount;
+            for (int i = 0; i < faceCount; i++)
+            {
+                int v1 = ReadInt32BigEndian(input);
+                int v2 = ReadInt32BigEndian(input);
+                int v3 = ReadInt32BigEndian(input);
+                _ = ReadSingleBigEndian(input);
+                _ = ReadSingleBigEndian(input);
+                _ = ReadSingleBigEndian(input);
+                input.Seek(0x34, SeekOrigin.Current);
+
+                if ((uint)v1 < unsignedVertexCount && (uint)v2 < unsignedVertexCount && (uint)v3 < unsignedVertexCount)
+                {
+                    writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "f {0} {1} {2}", v1 + 1, v2 + 1, v3 + 1));
+                }
+            }
+
+            return outputObjPath;
+        }
+        catch
+        {
+            TryDeleteFile(outputObjPath);
+            return null;
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // Big endian の Int32 を読み込む処理
+    //-------------------------------------------------------------------------------
+    private static int ReadInt32BigEndian(Stream stream)
+    {
+        Span<byte> buffer = stackalloc byte[4];
+        ReadExactly(stream, buffer);
+        return BinaryPrimitives.ReadInt32BigEndian(buffer);
+    }
+
+    //-------------------------------------------------------------------------------
+    // Big endian の Single を読み込む処理
+    //-------------------------------------------------------------------------------
+    private static float ReadSingleBigEndian(Stream stream)
+    {
+        Span<byte> buffer = stackalloc byte[4];
+        ReadExactly(stream, buffer);
+        int bits = BinaryPrimitives.ReadInt32BigEndian(buffer);
+        return BitConverter.Int32BitsToSingle(bits);
+    }
+
+    //-------------------------------------------------------------------------------
+    // 指定バイト数を不足なく読み込む処理
+    //-------------------------------------------------------------------------------
+    private static void ReadExactly(Stream stream, Span<byte> buffer)
+    {
+        int readTotal = 0;
+        while (readTotal < buffer.Length)
+        {
+            int read = stream.Read(buffer[readTotal..]);
+            if (read == 0)
+            {
+                throw new EndOfStreamException();
+            }
+
+            readTotal += read;
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // 失敗時に一時生成ファイルを削除する処理
+    //-------------------------------------------------------------------------------
+    private static void TryDeleteFile(string path)
+    {
+        try
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+        catch
+        {
+        }
     }
 
     //-------------------------------------------------------------------------------

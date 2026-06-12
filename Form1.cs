@@ -14,7 +14,9 @@ public partial class Form1 : Form
     private const int HomeConsoleHeight = 714;
     private const int HomeDesignWidth = 1123;
     private const int HomeDesignHeight = 714;
-    private const string ApplicationVersionText = "Version : 2.0b";
+    private const int DwmwaCaptionColor = 35;
+    private const int DwmwaTextColor = 36;
+    private const string ApplicationVersionText = "Version : 2.1a";
     private readonly EditorSettingsStore _settingsStore;
     private readonly DataRepository _repository;
     private EditorSettings _settings = new();
@@ -32,6 +34,7 @@ public partial class Form1 : Form
     private ObjScene? _currentObjScene;
     private RectangleF _currentModelBounds = RectangleF.Empty;
     private UnitDefinition? _currentUnitDefinition;
+    private string? _currentUnitDefinitionSourcePath;
     private readonly UnitMapView _unitMapView;
     private readonly ObjModelView _objModelView;
     private UnitMapEditMode _currentEditMode = UnitMapEditMode.Navigate;
@@ -45,11 +48,15 @@ public partial class Form1 : Form
     private Label? _labelInspectorSelection;
     private NumericUpDown? _numericFieldDay;
     private Label? _labelFieldActiveFiles;
-    private ComboBox? _comboBoxFieldAddFile;
-    private ComboBox? _comboBoxFieldAddType;
-    private Button? _buttonFieldAddSpawnMode;
     private TextBox? _textBoxFieldObjectRaw;
     private Button? _buttonApplyFieldObjectRaw;
+    private NumericUpDown? _numericFieldConsoleDay;
+    private Label? _labelFieldConsoleActiveFiles;
+    private ComboBox? _comboBoxFieldConsoleAddFile;
+    private ComboBox? _comboBoxFieldConsoleAddType;
+    private Button? _buttonFieldConsoleAddSpawnMode;
+    private TextBox? _textBoxFieldConsoleObjectRaw;
+    private Button? _buttonApplyFieldConsoleObjectRaw;
     private Button? _buttonAddSpawn;
     private Button? _buttonDeleteSpawn;
     private Button? _buttonAddWaypoint;
@@ -81,18 +88,32 @@ public partial class Form1 : Form
     private NumericUpDown? _numericWaterboxZ2;
     private Button? _buttonApplyWaterbox;
     private GroupBox? _groupBoxWaterboxInspector;
+    private GroupBox? _groupBoxUnitConnectionInspector;
+    private NumericUpDown? _numericUnitConnectionDx;
+    private NumericUpDown? _numericUnitConnectionDz;
+    private ComboBox? _comboBoxUnitConnectionKind;
+    private TextBox? _textBoxUnitConnectionFlags;
+    private ComboBox? _comboBoxUnitConnectionDoorIndex;
+    private ComboBox? _comboBoxUnitConnectionDoorDirection;
+    private NumericUpDown? _numericUnitConnectionDoorOffset;
+    private NumericUpDown? _numericUnitConnectionDoorWaypoint;
+    private int? _selectedUnitConnectionDoorIndex;
     private bool _inspectorUpdating;
     private QuickToolTarget _quickToolTarget = QuickToolTarget.Spawn;
     private Panel? _quickToolWindow;
+    private Form? _quickToolForm;
     private Panel? _quickToolGrip;
     private Panel? _quickToolContentPanel;
     private Button? _buttonQuickToolMinimize;
     private Button? _buttonQuickSpawn;
     private Button? _buttonQuickRoute;
     private Button? _buttonQuickWaterbox;
+    private Button? _buttonQuickUnitConnect;
     private Button? _buttonQuickAdd;
+    private Button? _buttonQuickUnitConnectionAddDoor;
     private Button? _buttonQuickRouteDelete;
     private Button? _buttonQuickDelete;
+    private Button? _buttonQuickUnitConnectionDeleteDoor;
     private Button? _buttonQuickMove;
     private Button? _buttonQuickAngle;
     private Button? _buttonQuickRadius;
@@ -101,6 +122,7 @@ public partial class Form1 : Form
     private Button? _buttonQuickSave;
     private Button? _buttonQuickSaveAll;
     private Panel? _fieldConsoleWindow;
+    private Form? _fieldConsoleForm;
     private Panel? _fieldConsoleGrip;
     private Panel? _fieldConsoleContentPanel;
     private Button? _buttonFieldConsoleMinimize;
@@ -109,11 +131,13 @@ public partial class Form1 : Form
     private ComboBox? _comboBoxQuickSpawnType;
     private CheckBox? _checkBoxRadiusOverlay;
     private CheckBox? _checkBoxWaterboxOverlay;
+    private CheckBox? _checkBoxUnitConnectionOverlay;
     private Button? _buttonPrepareAllUnitCache;
     private TextBox? _textBoxUnitSearch;
     private PictureBox? _pictureBoxModeBanner;
     private GroupBox? _groupBoxReferenceUnit;
     private TextBox? _textBoxReferenceArc;
+    private TextBox? _textBoxReferenceAllUnits;
     private TextBox? _textBoxReferenceUnitCache;
     private TextBox? _textBoxReferenceImageCache;
     private Button? _buttonExportLog;
@@ -140,10 +164,12 @@ public partial class Form1 : Form
     private ToolTip? _quickToolTip;
     private bool _quickToolDragging;
     private Point _quickToolDragOffset;
+    private Point _quickToolDragScreenOffset;
     private bool _quickToolMinimized;
     private Size _quickToolExpandedSize;
     private bool _fieldConsoleDragging;
     private Point _fieldConsoleDragOffset;
+    private Point _fieldConsoleDragScreenOffset;
     private bool _fieldConsoleMinimized;
     private Size _fieldConsoleExpandedSize;
     private bool _leftPaneCollapsed;
@@ -151,7 +177,7 @@ public partial class Form1 : Form
     private bool _rightPaneCollapsed;
     private int _expandedLeftPaneWidth = 520;
     private int _expandedMapUnitPaneWidth = 352;
-    private int _expandedRightPaneWidth = 320;
+    private int _expandedRightPaneWidth = 372;
     private List<string> _currentSummaryLines = new();
     private readonly List<ConsoleEntry> _consoleEntries = new();
     private readonly Dictionary<string, Panel> _templateCardPanels = new(StringComparer.OrdinalIgnoreCase);
@@ -160,10 +186,12 @@ public partial class Form1 : Form
     private readonly Stack<EditorSnapshot> _redoStack = new();
     private bool _applyingHistory;
     private bool _continuousEditUndoRecorded;
+    private bool _routeHeightDragInProgress;
     private string? _currentCaveInfoDirectory;
     private LoadFormatKind _currentLoadFormat = LoadFormatKind.None;
     private string? _currentCacheRootOverride;
     private bool _bulkCacheRunning;
+    private bool _detachedToolWindowsAllowed;
     private bool _previewSceneResetRequired = true;
     private bool _currentPreviewImageIsPretty;
     private int _currentFieldDay;
@@ -177,12 +205,17 @@ public partial class Form1 : Form
     [DllImport("user32.dll")]
     private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(IntPtr hWnd, int attribute, ref int attributeValue, int attributeSize);
+
     private static readonly (int TypeId, string Label)[] SpawnTypeOptions =
     {
         (0, "Teki A"),
         (1, "Teki B"),
         (2, "Item"),
-        (5, "Hole/Geyser"),
+        (3, "Unused"),
+        (4, "Hole/Geyser"),  // ゲーム側 BaseGen::CaveGenType では 4 が HoleOrGeyser
+        (5, "Joint"),        // 5 は Joint(DoorSeam) であり Hole/Geyser ではない
         (6, "Plant"),
         (7, "Start"),
         (8, "Teki F")
@@ -213,6 +246,7 @@ public partial class Form1 : Form
         _unitMapView.RouteWaypointLinked += UnitMapView_RouteWaypointLinked;
         _unitMapView.RouteWaypointLinkDeleted += UnitMapView_RouteWaypointLinkDeleted;
         _unitMapView.WaterboxSelectionChanged += Preview_WaterboxSelectionChanged;
+        _unitMapView.UnitConnectionSelectionChanged += Preview_UnitConnectionSelectionChanged;
         _unitMapView.WaterboxMoved += Preview_WaterboxMoved;
         _unitMapView.WaterboxResized += Preview_WaterboxResized;
         _unitMapView.OverlayDragStarted += Preview_OverlayDragStarted;
@@ -229,6 +263,7 @@ public partial class Form1 : Form
         _objModelView.RouteWaypointLinked += ObjModelView_RouteWaypointLinked;
         _objModelView.RouteWaypointLinkDeleted += ObjModelView_RouteWaypointLinkDeleted;
         _objModelView.WaterboxSelectionChanged += Preview_WaterboxSelectionChanged;
+        _objModelView.UnitConnectionSelectionChanged += Preview_UnitConnectionSelectionChanged;
         _objModelView.WaterboxMoved += Preview_WaterboxMoved;
         _objModelView.WaterboxResized += Preview_WaterboxResized;
         _objModelView.WaterboxHeightMoved += Preview_WaterboxHeightMoved;
@@ -257,68 +292,90 @@ public partial class Form1 : Form
     }
 
     //-------------------------------------------------------------------------------
-    // アプリ全体の配色とフォントを統一するテーマ適用処理
+    // アプリ全体の配色とフォントをホーム画面と統一するテーマ適用処理
     //-------------------------------------------------------------------------------
     private void ApplyApplicationTheme()
     {
         Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
+        BackColor = UiTheme.BackgroundDeep;
+
+        // メニューバー
+        menuStrip1.BackColor = UiTheme.HeaderBack;
+        menuStrip1.ForeColor = UiTheme.TextMain;
+        foreach (ToolStripItem item in menuStrip1.Items)
+        {
+            item.ForeColor = UiTheme.TextMain;
+        }
 
         // サイドバー
-        panelSidebarScroll.BackColor = Color.FromArgb(243, 245, 250);
-        tableLayoutPanelSidebar.BackColor = Color.FromArgb(243, 245, 250);
-        groupBoxCommon.ForeColor = Color.FromArgb(30, 42, 68);
+        panelSidebarScroll.BackColor = UiTheme.PanelBack;
+        tableLayoutPanelSidebar.BackColor = UiTheme.PanelBack;
+        groupBoxCommon.ForeColor = UiTheme.AccentCyan;
         groupBoxCommon.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
-        groupBoxDisc.ForeColor = Color.FromArgb(30, 42, 68);
+        groupBoxDisc.ForeColor = UiTheme.AccentCyan;
         groupBoxDisc.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
-        groupBoxFloorSummary.ForeColor = Color.FromArgb(30, 42, 68);
+        groupBoxFloorSummary.ForeColor = UiTheme.AccentCyan;
         groupBoxFloorSummary.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
 
         // GroupBox 内 label フォントを通常サイズへ
         tableLayoutPanelCommon.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
         tableLayoutPanelDisc.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Regular, GraphicsUnit.Point);
 
-        // コンソール
+        // コンソール (内容表示は黒背景の方が見やすいというフィードバックに対応)
         richTextBoxConsole.Font = new Font("Consolas", 10F, FontStyle.Regular, GraphicsUnit.Point);
-        richTextBoxConsole.BackColor = Color.FromArgb(18, 22, 30);
+        richTextBoxConsole.BackColor = Color.Black;
         richTextBoxConsole.ForeColor = Color.FromArgb(190, 210, 240);
 
-        // 参照ボタン (Browse 系) をフラットに
-        StyleActionButton(buttonBrowseToolkit, Color.FromArgb(230, 234, 242), Color.FromArgb(170, 185, 210));
-        StyleActionButton(buttonBrowseDisc, Color.FromArgb(230, 234, 242), Color.FromArgb(170, 185, 210));
-        if (_buttonBrowsePrimaryReference is not null)
-        {
-            StyleActionButton(_buttonBrowsePrimaryReference, Color.FromArgb(230, 234, 242), Color.FromArgb(170, 185, 210));
-        }
-
-        if (_buttonBrowseSecondaryReference is not null)
-        {
-            StyleActionButton(_buttonBrowseSecondaryReference, Color.FromArgb(230, 234, 242), Color.FromArgb(170, 185, 210));
-        }
+        // プレビュー背景とマップユニットエリア
+        panelPreview.BackColor = UiTheme.CanvasBack;
+        panelMapUnitHost.BackColor = UiTheme.PanelBack;
 
         // 右インスペクタ背景
-        panelInspectorPanelHost.BackColor = Color.FromArgb(240, 243, 250);
-        panelInspectorContent.BackColor = Color.FromArgb(240, 243, 250);
+        panelInspectorPanelHost.BackColor = UiTheme.PanelBack;
+        panelInspectorContent.BackColor = UiTheme.PanelBack;
 
         // 右グリップ/タブ
-        panelInspectorTabHost.BackColor = Color.FromArgb(55, 65, 90);
-        buttonToggleRightPane.ForeColor = Color.FromArgb(210, 220, 240);
-        buttonToggleRightPane.BackColor = Color.FromArgb(55, 65, 90);
+        panelInspectorTabHost.BackColor = UiTheme.HeaderBack;
+        buttonToggleRightPane.ForeColor = UiTheme.AccentCyan;
+        buttonToggleRightPane.BackColor = UiTheme.HeaderBack;
         buttonToggleRightPane.FlatStyle = FlatStyle.Flat;
         buttonToggleRightPane.FlatAppearance.BorderSize = 0;
 
         // 左グリップ/タブ
-        panelLeftTabHost.BackColor = Color.FromArgb(55, 65, 90);
-        buttonToggleLeftPane.ForeColor = Color.FromArgb(210, 220, 240);
-        buttonToggleLeftPane.BackColor = Color.FromArgb(55, 65, 90);
+        panelLeftTabHost.BackColor = UiTheme.HeaderBack;
+        buttonToggleLeftPane.ForeColor = UiTheme.AccentCyan;
+        buttonToggleLeftPane.BackColor = UiTheme.HeaderBack;
         buttonToggleLeftPane.FlatStyle = FlatStyle.Flat;
         buttonToggleLeftPane.FlatAppearance.BorderSize = 0;
 
         // マップユニット折りたたみタブ
-        panelMapUnitTabHost.BackColor = Color.FromArgb(55, 65, 90);
-        buttonToggleMapUnitPane.ForeColor = Color.FromArgb(210, 220, 240);
-        buttonToggleMapUnitPane.BackColor = Color.FromArgb(55, 65, 90);
+        panelMapUnitTabHost.BackColor = UiTheme.HeaderBack;
+        buttonToggleMapUnitPane.ForeColor = UiTheme.AccentCyan;
+        buttonToggleMapUnitPane.BackColor = UiTheme.HeaderBack;
         buttonToggleMapUnitPane.FlatStyle = FlatStyle.Flat;
         buttonToggleMapUnitPane.FlatAppearance.BorderSize = 0;
+
+        // サイドバー/インスペクタ/マップユニットエリア配下の入力系へ一括適用
+        UiTheme.ApplyDarkThemeRecursive(panelSidebarScroll);
+        UiTheme.ApplyDarkThemeRecursive(panelInspectorPanelHost);
+        UiTheme.ApplyDarkThemeRecursive(panelMapUnitHost);
+
+        // 一括適用後にコンソール配色を再確定 (RichTextBox の個別色を維持)
+        richTextBoxConsole.BackColor = Color.Black;
+        richTextBoxConsole.ForeColor = Color.FromArgb(190, 210, 240);
+
+        // 参照ボタン (Browse 系) はホーム画面ボタン風の明色スタイル
+        UiTheme.StyleLightButton(buttonBrowseToolkit);
+        UiTheme.StyleLightButton(buttonBrowseDisc);
+        if (_buttonBrowsePrimaryReference is not null)
+        {
+            UiTheme.StyleLightButton(_buttonBrowsePrimaryReference);
+        }
+
+        if (_buttonBrowseSecondaryReference is not null)
+        {
+            UiTheme.StyleLightButton(_buttonBrowseSecondaryReference);
+        }
 
         // 動的グループのテーマは追加生成後に適用
         ApplyDynamicGroupTheme();
@@ -326,27 +383,56 @@ public partial class Form1 : Form
 
     //-------------------------------------------------------------------------------
     // 動的生成した GroupBox / Inspector グループのスタイルを適用する処理
+    // 編集グループはミニコントローラーのモード色と対応させる
     //-------------------------------------------------------------------------------
     private void ApplyDynamicGroupTheme()
     {
-        if (_groupBoxSpawnInspector is not null)
-        {
-            _groupBoxSpawnInspector.ForeColor = Color.FromArgb(30, 42, 68);
-            _groupBoxSpawnInspector.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
-            _groupBoxSpawnInspector.BackColor = Color.FromArgb(240, 243, 250);
-        }
-
-        if (_groupBoxWaypointInspector is not null)
-        {
-            _groupBoxWaypointInspector.ForeColor = Color.FromArgb(30, 42, 68);
-            _groupBoxWaypointInspector.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
-            _groupBoxWaypointInspector.BackColor = Color.FromArgb(240, 243, 250);
-        }
+        ApplyInspectorGroupModeColor(_groupBoxSpawnInspector, UiTheme.SpawnModeAccent, UiTheme.SpawnModeBack);
+        ApplyInspectorGroupModeColor(_groupBoxWaypointInspector, UiTheme.RouteModeAccent, UiTheme.RouteModeBack);
+        ApplyInspectorGroupModeColor(_groupBoxWaterboxInspector, UiTheme.WaterboxModeAccent, UiTheme.WaterboxModeBack);
+        ApplyInspectorGroupModeColor(_groupBoxUnitConnectionInspector, UiTheme.UnitConnectModeAccent, UiTheme.UnitConnectModeBack);
 
         if (_groupBoxReferenceUnit is not null)
         {
-            _groupBoxReferenceUnit.ForeColor = Color.FromArgb(30, 42, 68);
+            _groupBoxReferenceUnit.ForeColor = UiTheme.AccentCyan;
             _groupBoxReferenceUnit.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // Inspector の編集グループへミニコントローラー対応のモード色を適用する処理
+    //-------------------------------------------------------------------------------
+    private static void ApplyInspectorGroupModeColor(GroupBox? groupBox, Color accentColor, Color backColor)
+    {
+        if (groupBox is null)
+        {
+            return;
+        }
+
+        groupBox.ForeColor = accentColor;
+        groupBox.Font = new Font("Yu Gothic UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point);
+        groupBox.BackColor = backColor;
+        ApplyInspectorGroupChildBackColor(groupBox, backColor);
+    }
+
+    //-------------------------------------------------------------------------------
+    // 編集グループ内のコンテナ背景をモード色へ合わせ，文字を明色へ戻す処理
+    //-------------------------------------------------------------------------------
+    private static void ApplyInspectorGroupChildBackColor(Control control, Color backColor)
+    {
+        foreach (Control child in control.Controls)
+        {
+            if (child is TableLayoutPanel or FlowLayoutPanel or Panel)
+            {
+                child.BackColor = backColor;
+            }
+
+            if (child is Label)
+            {
+                child.ForeColor = UiTheme.TextMain;                // グループの ForeColor 継承で文字色がアクセント色にならないようにする
+            }
+
+            ApplyInspectorGroupChildBackColor(child, backColor);
         }
     }
 
@@ -690,12 +776,12 @@ public partial class Form1 : Form
         _labelHomeStatus.Bounds = ScaleHomeBounds(58, 12, 190, 26);
         _comboBoxHomeLanguage.Bounds = ScaleHomeBounds(740, 12, 150, 30);
         _comboBoxHomeCaveModelSource.Bounds = ScaleHomeBounds(900, 12, 165, 30);
-        _pictureBoxHomeDiscLabel.Bounds = ScaleHomeBounds(228, 220, 471, 27);
-        _textBoxHomeDiscRoot.Bounds = ScaleHomeBounds(228, 248, 648, 25);
-        discBrowseButton.Bounds = ScaleHomeBounds(888, 244, 34, 34);
-        _pictureBoxHomeToolkitLabel.Bounds = ScaleHomeBounds(228, 286, 471, 27);
-        _textBoxHomeToolkitPath.Bounds = ScaleHomeBounds(228, 318, 648, 25);
-        toolkitBrowseButton.Bounds = ScaleHomeBounds(888, 314, 34, 34);
+        _pictureBoxHomeToolkitLabel.Bounds = ScaleHomeBounds(228, 220, 471, 27);
+        _textBoxHomeToolkitPath.Bounds = ScaleHomeBounds(228, 248, 648, 25);
+        toolkitBrowseButton.Bounds = ScaleHomeBounds(888, 244, 34, 34);
+        _pictureBoxHomeDiscLabel.Bounds = ScaleHomeBounds(228, 286, 471, 27);
+        _textBoxHomeDiscRoot.Bounds = ScaleHomeBounds(228, 318, 648, 25);
+        discBrowseButton.Bounds = ScaleHomeBounds(888, 314, 34, 34);
         caveButton.Bounds = ScaleHomeBounds(228, 392, 315, 98);
         fieldButton.Bounds = ScaleHomeBounds(582, 392, 315, 98);
         toolkitButton.Bounds = ScaleHomeBounds(228, 516, 315, 98);
@@ -956,8 +1042,11 @@ public partial class Form1 : Form
         }
 
         StoreEditorWindowPlacement();
+        _detachedToolWindowsAllowed = false;
         ApplyHomeWindowSize();
         RefreshHomeScreen();
+        _quickToolForm?.Hide();
+        _fieldConsoleForm?.Hide();
         _homeOverlayPanel.Visible = true;
         _homeOverlayPanel.BringToFront();
         LayoutHomeConsolePanel();
@@ -981,9 +1070,17 @@ public partial class Form1 : Form
         _settings.DiscRoot = textBoxDiscRoot.Text;
         _settings.ToolkitPath = textBoxToolkitPath.Text;
         comboBoxMode.SelectedIndex = mode == EditorMode.Cave ? 1 : 0;
+        _detachedToolWindowsAllowed = false;
         SaveSettings();
         ApplyToolkitState(showWarning: false);
+        if (!string.IsNullOrWhiteSpace(textBoxDiscRoot.Text) &&
+            (Directory.Exists(textBoxDiscRoot.Text) || File.Exists(textBoxDiscRoot.Text)))
+        {
+            await ResolveDiscPathsAsync(textBoxDiscRoot.Text);
+        }
+
         _homeOverlayPanel!.Visible = false;
+        _detachedToolWindowsAllowed = true;
         RestoreEditorWindowPlacement();
         ConfigureEditorModeUi();
         await LoadEditorSourcesWithBusyAsync("Loading editor...");
@@ -1081,6 +1178,10 @@ public partial class Form1 : Form
         {
             _groupBoxWaterboxInspector.Text = Localize("WaterboxEditor");
         }
+        if (_groupBoxUnitConnectionInspector is not null)
+        {
+            _groupBoxUnitConnectionInspector.Text = Localize("UnitConnectionEditor");
+        }
 
         if (_labelInspectorSelection is not null &&
             (string.Equals(_labelInspectorSelection.Text, "未選択", StringComparison.Ordinal) ||
@@ -1095,6 +1196,10 @@ public partial class Form1 : Form
         if (_checkBoxWaterboxOverlay is not null)
         {
             _checkBoxWaterboxOverlay.Text = Localize("ShowWater");
+        }
+        if (_checkBoxUnitConnectionOverlay is not null)
+        {
+            _checkBoxUnitConnectionOverlay.Text = Localize("ShowUnitConnection");
         }
 
         if (_quickToolTip is not null)
@@ -1162,6 +1267,7 @@ public partial class Form1 : Form
             "ShowSpawn" => english ? "Show spawns" : "スポーンを表示",
             "ShowRoute" => english ? "Show routes" : "ルートを表示",
             "ShowWater" => english ? "Show water" : "水を表示",
+            "ShowUnitConnection" => english ? "Show connections" : "接続を表示",
             "FieldModeName" => english ? "Field Map" : "地上マップ",
             "CaveModeName" => english ? "Cave Unit" : "洞窟ユニット",
             "CaveReference" => english ? "Cave Reference" : "洞窟参照",
@@ -1181,12 +1287,14 @@ public partial class Form1 : Form
             "ExportConsoleLog" => english ? "Export console log" : "コンソールログ出力",
             "ReferenceInfo" => english ? "Reference Information" : "参照情報",
             "ReferenceArc" => "arc",
+            "ReferenceAllUnits" => "all_units",
             "ReferenceUnitCache" => english ? "Unit cache" : "ユニットキャッシュ",
             "ReferenceImageCache" => english ? "Image cache" : "画像キャッシュ",
             "SelectedPoint" => english ? "Selected Point" : "選択中のポイント",
             "SpawnEditor" => english ? "Spawn Editor" : "Spawn 編集",
             "WaypointEditor" => english ? "Waypoint Editor" : "Waypoint 編集",
             "WaterboxEditor" => english ? "Waterbox Editor" : "Waterbox 編集",
+            "UnitConnectionEditor" => english ? "Unit Connection Editor" : "UnitConnection 編集",
             "NoSelection" => english ? "No selection" : "未選択",
             "MiniController" => english ? "Mini Controller" : "ミニコントローラー",
             "FieldGeneratorConsole" => english ? "Field Generator Console" : "地上 generator コンソール",
@@ -1208,10 +1316,13 @@ public partial class Form1 : Form
             "TipRouteConnect" => english ? "Connect route waypoints" : "Route接続",
             "TipRoomConnect" => english ? "Move selected Waypoint to nearest connection point" : "選択Waypointを最寄り接続座標へ移動",
             "TipRadiusOverlay" => english ? "Show Spawn / Route Radius circles" : "Spawn / Route の Radius 円を表示",
+            "TipUnitConnectionMode" => english ? "Switch to Unit Connection edit mode" : "UnitConnection編集モードへ切替",
+            "TipUnitConnectionOverlay" => english ? "Show Unit Connection points from unit definition" : "ユニット定義の接続ポイントを表示",
             "TipSaveField" => english ? "Save field route / generator" : "地上 route/generator 保存",
             "TipSaveLayout" => english ? "Save layout.txt" : "layout.txt 保存",
             "TipSaveRoute" => english ? "Save route.txt" : "route.txt 保存",
             "TipSaveWaterbox" => english ? "Save waterbox.txt" : "waterbox.txt 保存",
+            "TipSaveUnitConnection" => english ? "Save Unit Connection definition" : "UnitConnection 定義保存",
             "TipSaveAllField" => english ? "Save field route / generator" : "地上 route/generator を保存",
             "TipSaveAllCave" => english ? "Save layout / route / waterbox" : "layout/route/waterbox をすべて保存",
             "TipDragMove" => english ? "Drag to move" : "ドラッグして移動",
@@ -1496,7 +1607,7 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     // ホーム画面から Hocotate Toolkit の exe を選択する処理
     //-------------------------------------------------------------------------------
-    private void buttonHomeBrowseToolkit_Click(object? sender, EventArgs e)
+    private async void buttonHomeBrowseToolkit_Click(object? sender, EventArgs e)
     {
         using OpenFileDialog dialog = new()
         {
@@ -1518,6 +1629,12 @@ public partial class Form1 : Form
         _settings.ToolkitPath = dialog.FileName;
         SaveSettings();
         ApplyToolkitState(showWarning: false);
+        if (!string.IsNullOrWhiteSpace(textBoxDiscRoot.Text) &&
+            (Directory.Exists(textBoxDiscRoot.Text) || File.Exists(textBoxDiscRoot.Text)))
+        {
+            await ResolveDiscPathsAsync(textBoxDiscRoot.Text);
+        }
+
         RefreshHomeScreen();
     }
 
@@ -2030,6 +2147,7 @@ public partial class Form1 : Form
 
         RecordUndoSnapshot();
         _continuousEditUndoRecorded = true;
+        _routeHeightDragInProgress = false;
     }
 
     //-------------------------------------------------------------------------------
@@ -2037,7 +2155,47 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     private void Preview_OverlayDragEnded(object? sender, EventArgs e)
     {
+        SnapSelectedOverlayPointToGroundAfterDrag();
         _continuousEditUndoRecorded = false;
+        _routeHeightDragInProgress = false;
+    }
+
+    //-------------------------------------------------------------------------------
+    // ドラッグ終了時に選択中ポイントの Y を地面高さへ吸着させる処理
+    //-------------------------------------------------------------------------------
+    private void SnapSelectedOverlayPointToGroundAfterDrag()
+    {
+        if (_selectedSpawnIndex is not null &&
+            _selectedSpawnIndex.Value >= 0 &&
+            _selectedSpawnIndex.Value < _currentLayout.Spawns.Count)
+        {
+            List<LayoutSpawn> updatedSpawns = _currentLayout.Spawns.ToList();
+            LayoutSpawn spawn = updatedSpawns[_selectedSpawnIndex.Value];
+            float groundY = GetGroundHeightOrFallback(spawn.X, spawn.Z, spawn.Y);
+            if (Math.Abs(groundY - spawn.Y) >= 0.001f)
+            {
+                updatedSpawns[_selectedSpawnIndex.Value] = spawn with { Y = groundY };
+                _currentLayout = new LayoutFile(updatedSpawns);
+                UpdateAllPreviewOverlays();
+            }
+
+            return;
+        }
+
+        if (!_routeHeightDragInProgress &&
+            _selectedRouteWaypointIndex is not null &&
+            _currentRoute.Waypoints.TryGetValue(_selectedRouteWaypointIndex.Value, out RouteWaypoint? waypoint))
+        {
+            float groundY = GetGroundHeightOrFallback(waypoint.X, waypoint.Z, waypoint.Y);
+            if (Math.Abs(groundY - waypoint.Y) >= 0.001f)
+            {
+                Dictionary<int, RouteWaypoint> updatedWaypoints = _currentRoute.Waypoints
+                    .ToDictionary(entry => entry.Key, entry => entry.Value);
+                updatedWaypoints[waypoint.Index] = waypoint with { Y = groundY };
+                _currentRoute = new RouteFile(updatedWaypoints);
+                UpdateAllPreviewOverlays();
+            }
+        }
     }
 
     //-------------------------------------------------------------------------------
@@ -2073,7 +2231,7 @@ public partial class Form1 : Form
         tableLayoutPanelSidebar.RowStyles.Clear();
         tableLayoutPanelSidebar.RowStyles.Add(new RowStyle(SizeType.Absolute, 276F));
         tableLayoutPanelSidebar.RowStyles.Add(new RowStyle(SizeType.Absolute, 194F));
-        tableLayoutPanelSidebar.RowStyles.Add(new RowStyle(SizeType.Absolute, 130F));
+        tableLayoutPanelSidebar.RowStyles.Add(new RowStyle(SizeType.Absolute, 162F));
         tableLayoutPanelSidebar.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         tableLayoutPanelSidebar.RowCount = 4;
         tableLayoutPanelCommon.RowCount = 6;
@@ -2126,14 +2284,15 @@ public partial class Form1 : Form
         layout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 92F));
         layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
         layout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 36F));
-        for (int row = 0; row < 3; row++)
+        for (int row = 0; row < 4; row++)
         {
             layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 31F));
         }
 
         _textBoxReferenceArc = AddReferencePathRow(layout, 0, "ReferenceArc");
-        _textBoxReferenceUnitCache = AddReferencePathRow(layout, 1, "ReferenceUnitCache");
-        _textBoxReferenceImageCache = AddReferencePathRow(layout, 2, "ReferenceImageCache");
+        _textBoxReferenceAllUnits = AddReferencePathRow(layout, 1, "ReferenceAllUnits");
+        _textBoxReferenceUnitCache = AddReferencePathRow(layout, 2, "ReferenceUnitCache");
+        _textBoxReferenceImageCache = AddReferencePathRow(layout, 3, "ReferenceImageCache");
 
         _groupBoxReferenceUnit.Controls.Add(layout);
         tableLayoutPanelSidebar.Controls.Add(_groupBoxReferenceUnit, 0, 2);
@@ -2180,6 +2339,7 @@ public partial class Form1 : Form
         string? unitName = GetSelectedTemplateName();
         string? cacheRoot = GetCurrentCacheRoot();
         string? arcUnitPath;
+        string? allUnitsPath;
         string? unitCachePath;
         string? imageCachePath;
 
@@ -2189,6 +2349,7 @@ public partial class Form1 : Form
             arcUnitPath = !string.IsNullOrWhiteSpace(unitName) && !string.IsNullOrWhiteSpace(fieldMapRoot)
                 ? Path.Combine(fieldMapRoot, unitName)
                 : fieldMapRoot;
+            allUnitsPath = null;
             unitCachePath = !string.IsNullOrWhiteSpace(unitName) && cacheRoot is not null
                 ? Path.Combine(cacheRoot, "地上キャッシュ", unitName)
                 : cacheRoot is null ? null : Path.Combine(cacheRoot, "地上キャッシュ");
@@ -2201,6 +2362,7 @@ public partial class Form1 : Form
             arcUnitPath = !string.IsNullOrWhiteSpace(unitName) && Directory.Exists(textBoxArcPath.Text)
                 ? Path.Combine(textBoxArcPath.Text, unitName)
                 : null;
+            allUnitsPath = GetCurrentAllUnitsPath();
             unitCachePath = !string.IsNullOrWhiteSpace(unitName) && cacheRoot is not null
                 ? Path.Combine(cacheRoot, "ユニットキャッシュ", unitName)
                 : null;
@@ -2210,8 +2372,24 @@ public partial class Form1 : Form
         }
 
         SetReferencePath(_textBoxReferenceArc, arcUnitPath);
+        SetReferencePath(_textBoxReferenceAllUnits, allUnitsPath);
         SetReferencePath(_textBoxReferenceUnitCache, unitCachePath);
         SetReferencePath(_textBoxReferenceImageCache, imageCachePath);
+    }
+
+    //-------------------------------------------------------------------------------
+    // 現在の洞窟 units ルートから all_units.txt のパスを取得する処理
+    //-------------------------------------------------------------------------------
+    private string? GetCurrentAllUnitsPath()
+    {
+        string? unitsRoot = GetCurrentCaveUnitsRoot();
+        if (string.IsNullOrWhiteSpace(unitsRoot))
+        {
+            return null;
+        }
+
+        string path = Path.Combine(unitsRoot, "all_units.txt");
+        return File.Exists(path) ? path : null;
     }
 
     //-------------------------------------------------------------------------------
@@ -2285,7 +2463,8 @@ public partial class Form1 : Form
 
         bool exists = !string.IsNullOrWhiteSpace(path) && (Directory.Exists(path) || File.Exists(path));
         textBox.Text = string.IsNullOrWhiteSpace(path) ? "-" : path;
-        textBox.BackColor = exists ? Color.Honeydew : Color.MistyRose;
+        textBox.BackColor = exists ? Color.FromArgb(12, 48, 34) : Color.FromArgb(58, 22, 28);   // 存在=暗緑 / 不在=暗赤
+        textBox.ForeColor = exists ? Color.FromArgb(170, 235, 200) : Color.FromArgb(245, 170, 165);
     }
 
     //-------------------------------------------------------------------------------
@@ -2359,7 +2538,7 @@ public partial class Form1 : Form
             Dock = DockStyle.Fill,
             Margin = new Padding(0, 6, 0, 0),
             SizeMode = PictureBoxSizeMode.Zoom,
-            BackColor = Color.FromArgb(245, 243, 236)
+            BackColor = UiTheme.PanelBack
         };
         tableLayoutPanelCommon.Controls.Add(_pictureBoxModeBanner, 1, 5);
         tableLayoutPanelCommon.SetColumnSpan(_pictureBoxModeBanner, 2);
@@ -2381,6 +2560,7 @@ public partial class Form1 : Form
         {
             QuickToolTarget.Spawn => "Layout_editor_banner.png",
             QuickToolTarget.Route => "Route_editor_banner.png",
+            QuickToolTarget.UnitConnect => "Unit_Connection_banner.png",
             _ => "WaterBox_editor_banner.png"
         };
         string? imagePath = FindFileInParentDirectories("ボタン用アイコン", fileName);
@@ -2450,11 +2630,13 @@ public partial class Form1 : Form
         _groupBoxSpawnInspector = BuildSpawnInspector();
         _groupBoxWaypointInspector = BuildWaypointInspector();
         _groupBoxWaterboxInspector = BuildWaterboxInspector();
+        _groupBoxUnitConnectionInspector = BuildUnitConnectionInspector();
 
         inspectorLayout.Controls.Add(_groupBoxSelection);
         inspectorLayout.Controls.Add(_groupBoxSpawnInspector);
         inspectorLayout.Controls.Add(_groupBoxWaypointInspector);
         inspectorLayout.Controls.Add(_groupBoxWaterboxInspector);
+        inspectorLayout.Controls.Add(_groupBoxUnitConnectionInspector);
     }
 
     //-------------------------------------------------------------------------------
@@ -2533,11 +2715,11 @@ public partial class Form1 : Form
 
         _fieldConsoleWindow = new Panel
         {
-            Size = new Size(660, 460),
+            Size = new Size(660, 432),
             Location = new Point(64, 188),
             Padding = new Padding(8),
             BorderStyle = BorderStyle.FixedSingle,
-            BackColor = Color.FromArgb(238, 241, 248),
+            BackColor = UiTheme.PanelBack,
             Visible = false
         };
         _fieldConsoleExpandedSize = _fieldConsoleWindow.Size;
@@ -2550,7 +2732,7 @@ public partial class Form1 : Form
             Dock = DockStyle.Top,
             Height = 28,
             Cursor = Cursors.SizeAll,
-            BackColor = Color.FromArgb(196, 205, 224)
+            BackColor = UiTheme.HeaderBack
         };
         _fieldConsoleGrip.Paint += FieldConsoleGrip_Paint;
         _fieldConsoleGrip.MouseDown += FieldConsoleWindow_MouseDown;
@@ -2564,7 +2746,7 @@ public partial class Form1 : Form
         {
             Dock = DockStyle.Fill,
             Padding = new Padding(8),
-            BackColor = Color.FromArgb(238, 241, 248)
+            BackColor = UiTheme.PanelBack
         };
 
         TableLayoutPanel layout = new()
@@ -2581,15 +2763,15 @@ public partial class Form1 : Form
         layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 38F));
 
-        _numericFieldDay = new NumericUpDown
+        _numericFieldConsoleDay = new NumericUpDown
         {
             Dock = DockStyle.Fill,
             Minimum = 0,
             Maximum = 999,
             Increment = 1
         };
-        _numericFieldDay.ValueChanged += numericFieldDay_ValueChanged;
-        _labelFieldActiveFiles = new Label
+        _numericFieldConsoleDay.ValueChanged += numericFieldDay_ValueChanged;
+        _labelFieldConsoleActiveFiles = new Label
         {
             Dock = DockStyle.Fill,
             AutoEllipsis = false,
@@ -2603,13 +2785,13 @@ public partial class Form1 : Form
             Margin = Padding.Empty,
             Padding = Padding.Empty
         };
-        _comboBoxFieldAddFile = new ComboBox
+        _comboBoxFieldConsoleAddFile = new ComboBox
         {
             DropDownStyle = ComboBoxStyle.DropDownList,
             Width = 210,
             Margin = new Padding(0, 3, 6, 0)
         };
-        _comboBoxFieldAddType = new ComboBox
+        _comboBoxFieldConsoleAddType = new ComboBox
         {
             DropDownStyle = ComboBoxStyle.DropDownList,
             Width = 160,
@@ -2617,22 +2799,22 @@ public partial class Form1 : Form
         };
         foreach ((FieldAddTemplateKind kind, string label) in FieldAddTemplateOptions)
         {
-            _comboBoxFieldAddType.Items.Add(new FieldAddTemplateItem(kind, label));
+            _comboBoxFieldConsoleAddType.Items.Add(new FieldAddTemplateItem(kind, label));
         }
 
-        if (_comboBoxFieldAddType.Items.Count > 0)
+        if (_comboBoxFieldConsoleAddType.Items.Count > 0)
         {
-            _comboBoxFieldAddType.SelectedIndex = 0;
+            _comboBoxFieldConsoleAddType.SelectedIndex = 0;
         }
 
-        _buttonFieldAddSpawnMode = CreateActionButton("クリック追加", buttonAddSpawn_Click);
-        _buttonFieldAddSpawnMode.Width = 110;
-        _buttonFieldAddSpawnMode.Height = 30;
-        _buttonFieldAddSpawnMode.Margin = new Padding(0, 3, 0, 0);
-        addRow.Controls.Add(_comboBoxFieldAddFile);
-        addRow.Controls.Add(_comboBoxFieldAddType);
-        addRow.Controls.Add(_buttonFieldAddSpawnMode);
-        _textBoxFieldObjectRaw = new TextBox
+        _buttonFieldConsoleAddSpawnMode = CreateActionButton("クリック追加", buttonAddSpawn_Click);
+        _buttonFieldConsoleAddSpawnMode.Width = 110;
+        _buttonFieldConsoleAddSpawnMode.Height = 30;
+        _buttonFieldConsoleAddSpawnMode.Margin = new Padding(0, 3, 0, 0);
+        addRow.Controls.Add(_comboBoxFieldConsoleAddFile);
+        addRow.Controls.Add(_comboBoxFieldConsoleAddType);
+        addRow.Controls.Add(_buttonFieldConsoleAddSpawnMode);
+        _textBoxFieldConsoleObjectRaw = new TextBox
         {
             Dock = DockStyle.Fill,
             Multiline = true,
@@ -2640,25 +2822,30 @@ public partial class Form1 : Form
             WordWrap = false,
             Font = new Font("Consolas", 9.5F, FontStyle.Regular, GraphicsUnit.Point)
         };
-        _buttonApplyFieldObjectRaw = CreateActionButton("選択 object raw 反映", buttonApplyFieldObjectRaw_Click);
-        _buttonApplyFieldObjectRaw.Dock = DockStyle.Left;
-        _buttonApplyFieldObjectRaw.Width = 180;
+        _buttonApplyFieldConsoleObjectRaw = CreateActionButton("選択 object raw 反映", buttonApplyFieldObjectRaw_Click);
+        _buttonApplyFieldConsoleObjectRaw.Dock = DockStyle.Left;
+        _buttonApplyFieldConsoleObjectRaw.Width = 180;
 
         layout.Controls.Add(new Label { Anchor = AnchorStyles.Left, AutoSize = true, Text = "経過日数" }, 0, 0);
-        layout.Controls.Add(_numericFieldDay, 1, 0);
+        layout.Controls.Add(_numericFieldConsoleDay, 1, 0);
         layout.Controls.Add(new Label { Anchor = AnchorStyles.Left | AnchorStyles.Top, AutoSize = true, Text = "対象" }, 0, 1);
-        layout.Controls.Add(_labelFieldActiveFiles, 1, 1);
+        layout.Controls.Add(_labelFieldConsoleActiveFiles, 1, 1);
         layout.Controls.Add(new Label { Anchor = AnchorStyles.Left, AutoSize = true, Text = "追加" }, 0, 2);
         layout.Controls.Add(addRow, 1, 2);
         layout.Controls.Add(new Label { Anchor = AnchorStyles.Left | AnchorStyles.Top, AutoSize = true, Text = "Raw" }, 0, 3);
-        layout.Controls.Add(_textBoxFieldObjectRaw, 1, 3);
-        layout.Controls.Add(_buttonApplyFieldObjectRaw, 1, 4);
+        layout.Controls.Add(_textBoxFieldConsoleObjectRaw, 1, 3);
+        layout.Controls.Add(_buttonApplyFieldConsoleObjectRaw, 1, 4);
 
         _fieldConsoleContentPanel.Controls.Add(layout);
         _fieldConsoleWindow.Controls.Add(_fieldConsoleContentPanel);
-        _fieldConsoleWindow.Controls.Add(_fieldConsoleGrip);
-        panelPreview.Controls.Add(_fieldConsoleWindow);
-        _fieldConsoleWindow.BringToFront();
+        UiTheme.ApplyDarkThemeRecursive(_fieldConsoleWindow);      // ラベルと入力欄をダークテーマへ
+        _fieldConsoleGrip.BackColor = UiTheme.HeaderBack;          // 一括適用で潰れたヘッダー色を再設定
+        if (_buttonFieldConsoleMinimize is not null)
+        {
+            UiTheme.StyleLightButton(_buttonFieldConsoleMinimize); // 最小化ボタンは明色スタイルへ戻す
+        }
+
+        _fieldConsoleForm = CreateDetachedToolForm(Localize("FieldGeneratorConsole"), _fieldConsoleWindow, new Point(180, 180));
     }
 
     //-------------------------------------------------------------------------------
@@ -2767,9 +2954,8 @@ public partial class Form1 : Form
         AddInspectorRow(layout, 3, "Z", _numericSpawnZ);
         AddInspectorRow(layout, 4, "Angle", _numericSpawnAngle);
         AddInspectorRow(layout, 5, "Radius", _numericSpawnRadius);
-        AddInspectorRow(layout, 6, "MinCount", _numericSpawnMinCount);
-        AddInspectorRow(layout, 7, "MaxCount", _numericSpawnMaxCount);
-        layout.Controls.Add(_buttonApplySpawn, 0, 8);
+        AddInspectorPairRow(layout, 6, "Min", _numericSpawnMinCount, "Max", _numericSpawnMaxCount);
+        layout.Controls.Add(_buttonApplySpawn, 0, 7);
         layout.SetColumnSpan(_buttonApplySpawn, 2);
         _buttonApplySpawn.Visible = false;
         AttachSpawnInspectorAutoApplyEvents();
@@ -2838,19 +3024,101 @@ public partial class Form1 : Form
         _numericWaterboxY2 = CreateCoordinateEditor();
         _numericWaterboxZ2 = CreateCoordinateEditor();
         _buttonApplyWaterbox = CreateActionButton("Waterbox反映", buttonApplyWaterbox_Click);
-        AddInspectorRow(layout, 0, "X1", _numericWaterboxX1);
-        AddInspectorRow(layout, 1, "Y1", _numericWaterboxY1);
-        AddInspectorRow(layout, 2, "Z1", _numericWaterboxZ1);
-        AddInspectorRow(layout, 3, "X2", _numericWaterboxX2);
-        AddInspectorRow(layout, 4, "Y2", _numericWaterboxY2);
-        AddInspectorRow(layout, 5, "Z2", _numericWaterboxZ2);
-        layout.Controls.Add(_buttonApplyWaterbox, 0, 6);
+        AddInspectorPairRow(layout, 0, "X1", _numericWaterboxX1, "X2", _numericWaterboxX2);
+        AddInspectorPairRow(layout, 1, "Y1", _numericWaterboxY1, "Y2", _numericWaterboxY2);
+        AddInspectorPairRow(layout, 2, "Z1", _numericWaterboxZ1, "Z2", _numericWaterboxZ2);
+        layout.Controls.Add(_buttonApplyWaterbox, 0, 3);
         layout.SetColumnSpan(_buttonApplyWaterbox, 2);
         _buttonApplyWaterbox.Visible = false;
         AttachWaterboxInspectorAutoApplyEvents();
 
         groupBox.Controls.Add(layout);
         return groupBox;
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection 定義を編集する UI を作成する処理
+    //-------------------------------------------------------------------------------
+    private GroupBox BuildUnitConnectionInspector()
+    {
+        GroupBox groupBox = new()
+        {
+            Dock = DockStyle.Top,
+            Text = "UnitConnection 編集",
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink
+        };
+
+        TableLayoutPanel layout = CreateInspectorTable();
+        _numericUnitConnectionDx = CreateUnitConnectionIntegerEditor(1, 64);
+        _numericUnitConnectionDz = CreateUnitConnectionIntegerEditor(1, 64);
+        _comboBoxUnitConnectionKind = new ComboBox
+        {
+            Dock = DockStyle.Fill,
+            DropDownStyle = ComboBoxStyle.DropDownList
+        };
+        _comboBoxUnitConnectionKind.Items.AddRange(new object[] { "0: Cap", "1: Room", "2: Hallway" });
+        _textBoxUnitConnectionFlags = new TextBox { Dock = DockStyle.Fill };
+        _comboBoxUnitConnectionDoorIndex = new ComboBox
+        {
+            Dock = DockStyle.Fill,
+            DropDownStyle = ComboBoxStyle.DropDownList
+        };
+        _comboBoxUnitConnectionDoorDirection = new ComboBox
+        {
+            Dock = DockStyle.Fill,
+            DropDownStyle = ComboBoxStyle.DropDownList
+        };
+        _comboBoxUnitConnectionDoorDirection.Items.AddRange(new object[]
+        {
+            new UnitConnectionDirectionItem(0, "0: Up"),
+            new UnitConnectionDirectionItem(1, "1: Right"),
+            new UnitConnectionDirectionItem(2, "2: Down"),
+            new UnitConnectionDirectionItem(3, "3: Left")
+        });
+        _numericUnitConnectionDoorOffset = CreateUnitConnectionIntegerEditor(0, 64);
+        _numericUnitConnectionDoorWaypoint = CreateUnitConnectionIntegerEditor(0, 999);
+
+        AddInspectorPairRow(layout, 0, "dX", _numericUnitConnectionDx, "dZ", _numericUnitConnectionDz);
+        AddInspectorRow(layout, 1, "room type", _comboBoxUnitConnectionKind);
+        AddInspectorRow(layout, 2, "room flags", _textBoxUnitConnectionFlags);
+        AddInspectorRow(layout, 3, "Door", _comboBoxUnitConnectionDoorIndex);
+        AddInspectorPairRow(layout, 4, "direction", _comboBoxUnitConnectionDoorDirection, "offset", _numericUnitConnectionDoorOffset);
+        AddInspectorRow(layout, 5, "waypoint", _numericUnitConnectionDoorWaypoint);
+        AttachUnitConnectionInspectorAutoApplyEvents();
+        groupBox.Controls.Add(layout);
+        return groupBox;
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection 用の整数入力欄を作成する処理
+    //-------------------------------------------------------------------------------
+    private static NumericUpDown CreateUnitConnectionIntegerEditor(int minimum, int maximum)
+    {
+        return new NumericUpDown
+        {
+            Dock = DockStyle.Fill,
+            DecimalPlaces = 0,
+            Minimum = minimum,
+            Maximum = maximum,
+            Increment = 1
+        };
+    }
+
+    private sealed record UnitConnectionDoorItem(int DoorIndex)
+    {
+        public override string ToString()
+        {
+            return $"Door {DoorIndex}";
+        }
+    }
+
+    private sealed record UnitConnectionDirectionItem(int Direction, string Label)
+    {
+        public override string ToString()
+        {
+            return Label;
+        }
     }
 
     //-------------------------------------------------------------------------------
@@ -2928,6 +3196,46 @@ public partial class Form1 : Form
         }
     }
 
+    //-------------------------------------------------------------------------------
+    // UnitConnection 編集欄の変更を即時反映するイベントを設定する処理
+    //-------------------------------------------------------------------------------
+    private void AttachUnitConnectionInspectorAutoApplyEvents()
+    {
+        if (_textBoxUnitConnectionFlags is not null)
+        {
+            _textBoxUnitConnectionFlags.Leave += UnitConnectionInspectorValueChanged;
+        }
+
+        if (_comboBoxUnitConnectionKind is not null)
+        {
+            _comboBoxUnitConnectionKind.SelectedIndexChanged += UnitConnectionInspectorValueChanged;
+        }
+
+        if (_comboBoxUnitConnectionDoorIndex is not null)
+        {
+            _comboBoxUnitConnectionDoorIndex.SelectedIndexChanged += UnitConnectionDoorIndexChanged;
+        }
+
+        if (_comboBoxUnitConnectionDoorDirection is not null)
+        {
+            _comboBoxUnitConnectionDoorDirection.SelectedIndexChanged += UnitConnectionInspectorValueChanged;
+        }
+
+        foreach (NumericUpDown? editor in new[]
+        {
+            _numericUnitConnectionDx,
+            _numericUnitConnectionDz,
+            _numericUnitConnectionDoorOffset,
+            _numericUnitConnectionDoorWaypoint
+        })
+        {
+            if (editor is not null)
+            {
+                editor.ValueChanged += UnitConnectionInspectorValueChanged;
+            }
+        }
+    }
+
     private static TableLayoutPanel CreateInspectorTable()
     {
         TableLayoutPanel layout = new()
@@ -2951,6 +3259,7 @@ public partial class Form1 : Form
             Dock = DockStyle.Fill,
             Text = text
         };
+        UiTheme.StyleDarkButton(button);
         button.Click += onClick;
         return button;
     }
@@ -2969,11 +3278,11 @@ public partial class Form1 : Form
 
         _quickToolWindow = new Panel
         {
-            Size = new Size(620, 196),
+            Size = new Size(620, 168),
             Location = new Point(56, 700),
             Padding = new Padding(8),
             BorderStyle = BorderStyle.FixedSingle,
-            BackColor = Color.FromArgb(225, 242, 232)
+            BackColor = UiTheme.SpawnModeBack
         };
         _quickToolWindow.MouseDown += QuickToolWindow_MouseDown;
         _quickToolWindow.MouseMove += QuickToolWindow_MouseMove;
@@ -2985,7 +3294,7 @@ public partial class Form1 : Form
             Height = 28,
             Margin = Padding.Empty,
             Cursor = Cursors.SizeAll,
-            BackColor = Color.FromArgb(196, 224, 207)
+            BackColor = UiTheme.SpawnModeHeader
         };
         _quickToolGrip.Paint += QuickToolGrip_Paint;
         _quickToolGrip.MouseDown += QuickToolWindow_MouseDown;
@@ -2993,13 +3302,15 @@ public partial class Form1 : Form
         _quickToolGrip.MouseUp += QuickToolWindow_MouseUp;
         _quickToolTip.SetToolTip(_quickToolGrip, Localize("TipDragMove"));
         _buttonQuickToolMinimize = CreateWindowMinimizeButton(QuickToolMinimizeButton_Click);
+        _buttonQuickToolMinimize.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+        _buttonQuickToolMinimize.Location = new Point(4, 3);
         _quickToolGrip.Controls.Add(_buttonQuickToolMinimize);
 
         _quickToolContentPanel = new Panel
         {
             Dock = DockStyle.Fill,
             Padding = new Padding(8, 8, 8, 8),
-            BackColor = Color.FromArgb(225, 242, 232)
+            BackColor = UiTheme.SpawnModeBack
         };
         _quickToolContentPanel.MouseDown += QuickToolWindow_MouseDown;
         _quickToolContentPanel.MouseMove += QuickToolWindow_MouseMove;
@@ -3012,7 +3323,7 @@ public partial class Form1 : Form
             RowCount = 3,
             Margin = Padding.Empty,
             Padding = Padding.Empty,
-            BackColor = Color.FromArgb(225, 242, 232)
+            BackColor = UiTheme.SpawnModeBack
         };
         quickToolLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
         quickToolLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 42F));
@@ -3048,9 +3359,11 @@ public partial class Form1 : Form
         _buttonQuickSpawn = CreateQuickModeButton("Spawn", QuickToolTarget.Spawn);
         _buttonQuickRoute = CreateQuickModeButton("Route", QuickToolTarget.Route);
         _buttonQuickWaterbox = CreateQuickModeButton("Waterbox", QuickToolTarget.Waterbox);
+        _buttonQuickUnitConnect = CreateQuickModeButton("Unit Connect", QuickToolTarget.UnitConnect);
         modeRow.Controls.Add(_buttonQuickSpawn);
         modeRow.Controls.Add(_buttonQuickRoute);
         modeRow.Controls.Add(_buttonQuickWaterbox);
+        modeRow.Controls.Add(_buttonQuickUnitConnect);
         checkBoxObjDirectView.Parent?.Controls.Remove(checkBoxObjDirectView);
         checkBoxObjDirectView.AutoSize = true;
         checkBoxObjDirectView.Margin = new Padding(8, 9, 8, 0);
@@ -3077,10 +3390,19 @@ public partial class Form1 : Form
             Margin = new Padding(8, 3, 0, 0)
         };
         _checkBoxWaterboxOverlay.CheckedChanged += (_, _) => UpdateAllPreviewOverlays();
+        _checkBoxUnitConnectionOverlay = new CheckBox
+        {
+            AutoSize = true,
+            Checked = true,
+            Text = "接続を表示",
+            Margin = new Padding(8, 3, 0, 0)
+        };
+        _checkBoxUnitConnectionOverlay.CheckedChanged += (_, _) => UpdateAllPreviewOverlays();
         optionRow.Controls.Add(checkBoxSpawnOverlay);
         optionRow.Controls.Add(checkBoxRouteOverlay);
         optionRow.Controls.Add(_checkBoxRadiusOverlay);
         optionRow.Controls.Add(_checkBoxWaterboxOverlay);
+        optionRow.Controls.Add(_checkBoxUnitConnectionOverlay);
 
         FlowLayoutPanel buttonRow = new()
         {
@@ -3096,6 +3418,8 @@ public partial class Form1 : Form
         _buttonQuickAdd = CreateQuickIconButton("pen_icon.png", "追加", buttonQuickAdd_Click);
         _buttonQuickRouteDelete = CreateQuickIconButton("Route_Delete_icon.png", "ルート削除", buttonQuickRouteDelete_Click);
         _buttonQuickDelete = CreateQuickIconButton("Eraser_icon.png", "削除", buttonQuickDelete_Click);
+        _buttonQuickUnitConnectionAddDoor = CreateQuickIconButton("pen_icon.png", "Door追加", buttonUnitConnectionAddDoor_Click);
+        _buttonQuickUnitConnectionDeleteDoor = CreateQuickIconButton("Eraser_icon.png", "Door削除", buttonUnitConnectionDeleteDoor_Click);
         _buttonQuickMove = CreateQuickIconButton("move_icon.png", "移動", buttonQuickMove_Click);
         _buttonQuickAngle = CreateQuickIconButton("angle_icon.png", "角度", buttonQuickAngle_Click);
         _buttonQuickRadius = CreateQuickIconButton("radius_icon.png", "Radius", buttonQuickRadius_Click);
@@ -3112,6 +3436,8 @@ public partial class Form1 : Form
         buttonRow.Controls.Add(_buttonQuickConnect);
         buttonRow.Controls.Add(_buttonQuickRouteDelete);
         buttonRow.Controls.Add(_buttonQuickRoomConnect);
+        buttonRow.Controls.Add(_buttonQuickUnitConnectionAddDoor);
+        buttonRow.Controls.Add(_buttonQuickUnitConnectionDeleteDoor);
         buttonRow.Controls.Add(_buttonQuickSave);
         buttonRow.Controls.Add(_buttonQuickSaveAll);
         buttonRow.Controls.Add(_comboBoxQuickSpawnType);
@@ -3121,11 +3447,40 @@ public partial class Form1 : Form
         quickToolLayout.Controls.Add(buttonRow, 0, 2);
         _quickToolContentPanel.Controls.Add(quickToolLayout);
         _quickToolWindow.Controls.Add(_quickToolContentPanel);
-        _quickToolWindow.Controls.Add(_quickToolGrip);
-        panelPreview.Controls.Add(_quickToolWindow);
         _quickToolExpandedSize = _quickToolWindow.Size;
-        _quickToolWindow.BringToFront();
+        _quickToolForm = CreateDetachedToolForm(Localize("MiniController"), _quickToolWindow, new Point(120, 120));
         UpdateQuickToolWindowState();
+    }
+
+    //-------------------------------------------------------------------------------
+    // プレビュー外へ分離したツールウィンドウを作成する処理
+    //-------------------------------------------------------------------------------
+    private Form CreateDetachedToolForm(string title, Panel contentPanel, Point offsetFromMainWindow)
+    {
+        Form form = new()
+        {
+            Text = title,
+            FormBorderStyle = FormBorderStyle.Sizable,
+            ShowInTaskbar = false,
+            StartPosition = FormStartPosition.Manual,
+            ClientSize = contentPanel.Size,
+            MinimizeBox = true,
+            MaximizeBox = false,
+            MinimumSize = new Size(260, 90)
+        };
+        form.Location = new Point(Location.X + offsetFromMainWindow.X, Location.Y + offsetFromMainWindow.Y);
+        form.FormClosing += (_, e) =>
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                form.Hide();
+            }
+        };
+
+        contentPanel.Dock = DockStyle.Fill;
+        form.Controls.Add(contentPanel);
+        return form;
     }
 
     //-------------------------------------------------------------------------------
@@ -3136,7 +3491,7 @@ public partial class Form1 : Form
         Button button = new()
         {
             Text = text,
-            Width = 94,
+            Width = target == QuickToolTarget.UnitConnect ? 116 : 94,
             Height = 34,
             FlatStyle = FlatStyle.Flat,
             Margin = new Padding(0, 0, 4, 0),
@@ -3191,10 +3546,11 @@ public partial class Form1 : Form
             FlatStyle = FlatStyle.Flat,
             Text = "-",
             Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold),
-            BackColor = Color.FromArgb(248, 250, 253),
-            ForeColor = Color.FromArgb(30, 42, 68),
+            BackColor = UiTheme.LightButtonBack,
+            ForeColor = UiTheme.TextOnLight,
             TabStop = false
         };
+        button.FlatAppearance.BorderColor = UiTheme.LightButtonBorder;
         button.FlatAppearance.BorderSize = 1;
         button.Click += onClick;
         return button;
@@ -3210,7 +3566,10 @@ public partial class Form1 : Form
             Width = 108,
             Height = 28,
             DropDownStyle = ComboBoxStyle.DropDownList,
-            Margin = new Padding(0, 10, 0, 0)
+            Margin = new Padding(0, 10, 0, 0),
+            BackColor = UiTheme.InputBack,
+            ForeColor = UiTheme.TextMain,
+            FlatStyle = FlatStyle.Flat
         };
 
         foreach ((int typeId, string label) in SpawnTypeOptions)
@@ -3278,7 +3637,8 @@ public partial class Form1 : Form
             _quickToolTarget = target;
             if ((_quickToolTarget == QuickToolTarget.Spawn && !IsSpawnQuickMode(_currentEditMode)) ||
                 (_quickToolTarget == QuickToolTarget.Route && !IsRouteQuickMode(_currentEditMode)) ||
-                (_quickToolTarget == QuickToolTarget.Waterbox && !IsWaterboxQuickMode(_currentEditMode)))
+                (_quickToolTarget == QuickToolTarget.Waterbox && !IsWaterboxQuickMode(_currentEditMode)) ||
+                _quickToolTarget == QuickToolTarget.UnitConnect)
             {
                 _currentEditMode = UnitMapEditMode.Navigate;
                 _unitMapView.SetEditMode(_currentEditMode);
@@ -3303,7 +3663,7 @@ public partial class Form1 : Form
         {
             buttonAddWaypoint_Click(sender, e);
         }
-        else
+        else if (_quickToolTarget == QuickToolTarget.Waterbox)
         {
             buttonAddWaterbox_Click(sender, e);
         }
@@ -3322,7 +3682,7 @@ public partial class Form1 : Form
         {
             buttonDeleteWaypoint_Click(sender, e);
         }
-        else
+        else if (_quickToolTarget == QuickToolTarget.Waterbox)
         {
             buttonDeleteWaterbox_Click(sender, e);
         }
@@ -3419,7 +3779,7 @@ public partial class Form1 : Form
         {
             buttonRouteMoveMode_Click(sender, e);
         }
-        else
+        else if (_quickToolTarget == QuickToolTarget.Waterbox)
         {
             buttonWaterboxMoveMode_Click(sender, e);
         }
@@ -3488,15 +3848,15 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     // 簡易操作から現在対象の編集ファイルを保存する処理
     //-------------------------------------------------------------------------------
-    private void buttonQuickSave_Click(object? sender, EventArgs e)
+    private async void buttonQuickSave_Click(object? sender, EventArgs e)
     {
-        if (_quickToolTarget == QuickToolTarget.Spawn)
+        if (_quickToolTarget == QuickToolTarget.UnitConnect)
         {
-            buttonSaveLayout_Click(sender, e);
+            await SaveCurrentUnitDefinitionAsync();
         }
         else
         {
-            buttonSaveRoute_Click(sender, e);
+            await SaveCurrentUnitArchivesAsync();
         }
     }
 
@@ -3505,6 +3865,12 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     private async void buttonQuickSaveAll_Click(object? sender, EventArgs e)
     {
+        if (_quickToolTarget == QuickToolTarget.UnitConnect)
+        {
+            await SaveCurrentUnitDefinitionAsync();
+            return;
+        }
+
         await SaveCurrentUnitArchivesAsync();
     }
 
@@ -3523,6 +3889,12 @@ public partial class Form1 : Form
         {
             Control source = sender as Control ?? _quickToolWindow;
             _quickToolDragOffset = _quickToolWindow.PointToClient(source.PointToScreen(e.Location));
+            if (_quickToolForm is not null)
+            {
+                Point screenPoint = source.PointToScreen(e.Location);
+                _quickToolDragScreenOffset = new Point(screenPoint.X - _quickToolForm.Left, screenPoint.Y - _quickToolForm.Top);
+            }
+
             _quickToolWindow.Capture = true;
         }
     }
@@ -3551,7 +3923,15 @@ public partial class Form1 : Form
         }
 
         UpdateFloatingWindowMinimizeButtons();
-        ClampQuickToolWindowToPreview();
+        if (_quickToolForm is not null)
+        {
+            _quickToolForm.ClientSize = _quickToolWindow.Size;
+        }
+        else
+        {
+            ClampQuickToolWindowToPreview();
+        }
+
         _quickToolGrip.Invalidate();
     }
 
@@ -3566,6 +3946,13 @@ public partial class Form1 : Form
         }
 
         Control source = sender as Control ?? _quickToolWindow;
+        if (_quickToolForm is not null)
+        {
+            Point screenPoint = source.PointToScreen(e.Location);
+            _quickToolForm.Location = new Point(screenPoint.X - _quickToolDragScreenOffset.X, screenPoint.Y - _quickToolDragScreenOffset.Y);
+            return;
+        }
+
         Point parentPoint = panelPreview.PointToClient(source.PointToScreen(e.Location));
         int x = Math.Clamp(parentPoint.X - _quickToolDragOffset.X, 0, Math.Max(0, panelPreview.ClientSize.Width - _quickToolWindow.Width));
         int y = Math.Clamp(parentPoint.Y - _quickToolDragOffset.Y, 0, Math.Max(0, panelPreview.ClientSize.Height - _quickToolWindow.Height));
@@ -3627,6 +4014,12 @@ public partial class Form1 : Form
         Control source = sender as Control ?? _fieldConsoleWindow;
         _fieldConsoleDragging = true;
         _fieldConsoleDragOffset = _fieldConsoleWindow.PointToClient(source.PointToScreen(e.Location));
+        if (_fieldConsoleForm is not null)
+        {
+            Point screenPoint = source.PointToScreen(e.Location);
+            _fieldConsoleDragScreenOffset = new Point(screenPoint.X - _fieldConsoleForm.Left, screenPoint.Y - _fieldConsoleForm.Top);
+        }
+
         _fieldConsoleWindow.Capture = true;
     }
 
@@ -3641,6 +4034,13 @@ public partial class Form1 : Form
         }
 
         Control source = sender as Control ?? _fieldConsoleWindow;
+        if (_fieldConsoleForm is not null)
+        {
+            Point screenPoint = source.PointToScreen(e.Location);
+            _fieldConsoleForm.Location = new Point(screenPoint.X - _fieldConsoleDragScreenOffset.X, screenPoint.Y - _fieldConsoleDragScreenOffset.Y);
+            return;
+        }
+
         Point parentPoint = panelPreview.PointToClient(source.PointToScreen(e.Location));
         int x = Math.Clamp(parentPoint.X - _fieldConsoleDragOffset.X, 0, Math.Max(0, panelPreview.ClientSize.Width - _fieldConsoleWindow.Width));
         int y = Math.Clamp(parentPoint.Y - _fieldConsoleDragOffset.Y, 0, Math.Max(0, panelPreview.ClientSize.Height - _fieldConsoleWindow.Height));
@@ -3683,7 +4083,15 @@ public partial class Form1 : Form
         }
 
         UpdateFloatingWindowMinimizeButtons();
-        ClampFieldConsoleWindowToPreview();
+        if (_fieldConsoleForm is not null)
+        {
+            _fieldConsoleForm.ClientSize = _fieldConsoleWindow.Size;
+        }
+        else
+        {
+            ClampFieldConsoleWindowToPreview();
+        }
+
         _fieldConsoleGrip?.Invalidate();
     }
 
@@ -3708,16 +4116,10 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     private void QuickToolGrip_Paint(object? sender, PaintEventArgs e)
     {
-        string title = Localize("MiniController");
-        string text = _quickToolMinimized ? $"{title}  ..." : title;
-        using Font font = new("Yu Gothic UI", 9F, FontStyle.Bold);
-        TextRenderer.DrawText(
-            e.Graphics,
-            text,
-            font,
-            new Rectangle(8, 4, Math.Max(0, e.ClipRectangle.Width - 42), 20),
-            Color.FromArgb(30, 42, 68),
-            TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
+        if (_buttonQuickToolMinimize is not null)
+        {
+            _buttonQuickToolMinimize.Location = new Point(4, 3);
+        }
     }
 
     //-------------------------------------------------------------------------------
@@ -3767,9 +4169,12 @@ public partial class Form1 : Form
             _buttonQuickSpawn is null ||
             _buttonQuickRoute is null ||
             _buttonQuickWaterbox is null ||
+            _buttonQuickUnitConnect is null ||
             _buttonQuickAdd is null ||
+            _buttonQuickUnitConnectionAddDoor is null ||
             _buttonQuickRouteDelete is null ||
             _buttonQuickDelete is null ||
+            _buttonQuickUnitConnectionDeleteDoor is null ||
             _buttonQuickMove is null ||
             _buttonQuickAngle is null ||
             _buttonQuickRadius is null ||
@@ -3780,8 +4185,22 @@ public partial class Form1 : Form
             _comboBoxQuickSpawnType is null ||
             _checkBoxRadiusOverlay is null ||
             _checkBoxWaterboxOverlay is null ||
+            _checkBoxUnitConnectionOverlay is null ||
             _buttonQuickToolMinimize is null)
         {
+            return;
+        }
+
+        if (!_detachedToolWindowsAllowed || IsHomeScreenVisible())
+        {
+            _quickToolForm?.Hide();
+            _fieldConsoleForm?.Hide();
+            _quickToolWindow.Visible = false;
+            if (_fieldConsoleWindow is not null)
+            {
+                _fieldConsoleWindow.Visible = false;
+            }
+
             return;
         }
 
@@ -3791,33 +4210,46 @@ public partial class Form1 : Form
         bool isSpawn = _quickToolTarget == QuickToolTarget.Spawn;
         bool isRoute = _quickToolTarget == QuickToolTarget.Route;
         bool isWaterbox = _quickToolTarget == QuickToolTarget.Waterbox;
+        bool isUnitConnect = _quickToolTarget == QuickToolTarget.UnitConnect;
 
         Color baseColor = isSpawn
-            ? Color.FromArgb(224, 242, 232)
-            : isRoute ? Color.FromArgb(224, 235, 248) : Color.FromArgb(222, 240, 246);
+            ? UiTheme.SpawnModeBack
+            : isRoute ? UiTheme.RouteModeBack : isWaterbox ? UiTheme.WaterboxModeBack : UiTheme.UnitConnectModeBack;
         Color activeColor = isSpawn
-            ? Color.FromArgb(77, 151, 105)
-            : isRoute ? Color.FromArgb(67, 126, 183) : Color.FromArgb(0, 128, 168);
+            ? UiTheme.SpawnModeAccent
+            : isRoute ? UiTheme.RouteModeAccent : isWaterbox ? UiTheme.WaterboxModeAccent : UiTheme.UnitConnectModeAccent;
         _quickToolWindow.BackColor = baseColor;
         _quickToolContentPanel.BackColor = baseColor;
+        ApplyQuickToolContainerBackColor(_quickToolContentPanel, baseColor);
         _quickToolGrip.BackColor = isSpawn
-            ? Color.FromArgb(196, 224, 207)
-            : isRoute ? Color.FromArgb(196, 213, 232) : Color.FromArgb(188, 223, 233);
-        _buttonQuickToolMinimize.Location = new Point(Math.Max(4, _quickToolGrip.Width - _buttonQuickToolMinimize.Width - 4), 3);
+            ? UiTheme.SpawnModeHeader
+            : isRoute ? UiTheme.RouteModeHeader : isWaterbox ? UiTheme.WaterboxModeHeader : UiTheme.UnitConnectModeHeader;
+        _buttonQuickToolMinimize.Location = new Point(4, 3);
+        ApplyQuickToolFormStyle(baseColor, _quickToolGrip.BackColor, isSpawn, isRoute, isWaterbox, isUnitConnect);
         UpdateFloatingWindowMinimizeButtons();
         _quickToolGrip.Invalidate();
-        ApplyQuickModeButtonStyle(_buttonQuickSpawn, isSpawn, Color.FromArgb(77, 151, 105));
-        ApplyQuickModeButtonStyle(_buttonQuickRoute, isRoute, Color.FromArgb(67, 126, 183));
-        ApplyQuickModeButtonStyle(_buttonQuickWaterbox, isWaterbox, Color.FromArgb(0, 128, 168));
+        ApplyQuickModeButtonStyle(_buttonQuickSpawn, isSpawn, UiTheme.SpawnModeAccent);
+        ApplyQuickModeButtonStyle(_buttonQuickRoute, isRoute, UiTheme.RouteModeAccent);
+        ApplyQuickModeButtonStyle(_buttonQuickWaterbox, isWaterbox, UiTheme.WaterboxModeAccent);
+        ApplyQuickModeButtonStyle(_buttonQuickUnitConnect, isUnitConnect, UiTheme.UnitConnectModeAccent);
 
-        _buttonQuickAdd.Enabled = isCave ||
-            (isField && hasFieldMap && (isSpawn || isRoute));
+        _buttonQuickAdd.Visible = !isUnitConnect;
+        _buttonQuickAdd.Enabled = !isUnitConnect && (isCave ||
+            (isField && hasFieldMap && (isSpawn || isRoute)));
         _buttonQuickRouteDelete.Visible = isRoute;
         _buttonQuickRouteDelete.Enabled = CanEditRoutePoints() && isRoute;
-        _buttonQuickDelete.Enabled = isCave ||
-            (isField && hasFieldMap && (isSpawn || isRoute));
-        _buttonQuickMove.Enabled = isCave ||
-            (isField && hasFieldMap && (isSpawn || isRoute));
+        _buttonQuickDelete.Visible = !isUnitConnect;
+        _buttonQuickDelete.Enabled = !isUnitConnect && (isCave ||
+            (isField && hasFieldMap && (isSpawn || isRoute)));
+        _buttonQuickUnitConnectionAddDoor.Visible = isUnitConnect;
+        _buttonQuickUnitConnectionAddDoor.Enabled = isCave && _currentUnitDefinition is not null;
+        _buttonQuickUnitConnectionDeleteDoor.Visible = isUnitConnect;
+        _buttonQuickUnitConnectionDeleteDoor.Enabled = isCave &&
+            _currentUnitDefinition is not null &&
+            _selectedUnitConnectionDoorIndex is not null;
+        _buttonQuickMove.Visible = !isUnitConnect;
+        _buttonQuickMove.Enabled = !isUnitConnect && (isCave ||
+            (isField && hasFieldMap && (isSpawn || isRoute)));
         _buttonQuickAngle.Visible = isSpawn;
         _buttonQuickAngle.Enabled = CanEditSpawnLikePoints() && isSpawn;
         _buttonQuickRadius.Visible = isSpawn || isRoute;
@@ -3831,57 +4263,67 @@ public partial class Form1 : Form
             _selectedRouteWaypointIndex is not null &&
             _currentUnitDefinition is not null &&
             _currentUnitDefinition.Doors.Count > 0;
-        string? targetPath = isSpawn ? _currentLayoutPath : isRoute ? _currentRoutePath : _currentWaterboxPath;
-        _buttonQuickSave.Enabled = (isCave && !string.IsNullOrWhiteSpace(targetPath)) ||
-            (isField && hasFieldMap && (isSpawn || isRoute));
+        string? targetPath = isSpawn ? _currentLayoutPath : isRoute ? _currentRoutePath : isWaterbox ? _currentWaterboxPath : null;
+        _buttonQuickSave.Enabled = isUnitConnect
+            ? isCave && _currentUnitDefinition is not null
+            : (isCave && !string.IsNullOrWhiteSpace(targetPath)) ||
+                (isField && hasFieldMap && (isSpawn || isRoute));
+        _buttonQuickSave.Visible = true;
         _buttonQuickSaveAll.Enabled = (isCave && HasAnyUnitSavePath()) ||
             (isField && hasFieldMap);
         _comboBoxQuickSpawnType.Visible = isSpawn;
         _comboBoxQuickSpawnType.Enabled = isCave && isSpawn;
-        checkBoxObjDirectView.Enabled = isCave || _currentObjScene is not null;
+        checkBoxObjDirectView.Enabled = (isCave || _currentObjScene is not null) && !IsTextsGridModelSourceMode();
         checkBoxSpawnOverlay.Enabled = isCave || hasFieldMap;
         checkBoxRouteOverlay.Enabled = isCave || hasFieldMap;
         _checkBoxRadiusOverlay.Enabled = isCave || hasFieldMap;
         _checkBoxWaterboxOverlay.Enabled = isCave || hasFieldMap;
+        _checkBoxUnitConnectionOverlay.Enabled = isCave && _currentUnitDefinition is not null;
         _buttonQuickAdd.BackColor = IsCurrentQuickAddModeActive()
             ? activeColor
-            : Color.FromArgb(250, 250, 250);
-        _buttonQuickAdd.ForeColor = IsCurrentQuickAddModeActive() ? Color.White : Color.Black;
+            : UiTheme.LightButtonBack;
+        _buttonQuickAdd.ForeColor = IsCurrentQuickAddModeActive() ? Color.White : UiTheme.TextOnLight;
         _buttonQuickMove.BackColor = IsCurrentQuickMoveModeActive()
             ? activeColor
-            : Color.FromArgb(250, 250, 250);
-        _buttonQuickMove.ForeColor = IsCurrentQuickMoveModeActive() ? Color.White : Color.Black;
+            : UiTheme.LightButtonBack;
+        _buttonQuickMove.ForeColor = IsCurrentQuickMoveModeActive() ? Color.White : UiTheme.TextOnLight;
         _buttonQuickAngle.BackColor = _currentEditMode == UnitMapEditMode.RotateSpawn
             ? activeColor
-            : Color.FromArgb(250, 250, 250);
-        _buttonQuickAngle.ForeColor = _currentEditMode == UnitMapEditMode.RotateSpawn ? Color.White : Color.Black;
+            : UiTheme.LightButtonBack;
+        _buttonQuickAngle.ForeColor = _currentEditMode == UnitMapEditMode.RotateSpawn ? Color.White : UiTheme.TextOnLight;
         _buttonQuickRadius.BackColor =
             (_currentEditMode == UnitMapEditMode.ResizeSpawnRadius && isSpawn) ||
             (_currentEditMode == UnitMapEditMode.ResizeRouteWaypointRadius && isRoute)
                 ? activeColor
-                : Color.FromArgb(250, 250, 250);
+                : UiTheme.LightButtonBack;
         _buttonQuickRadius.ForeColor =
             (_currentEditMode == UnitMapEditMode.ResizeSpawnRadius && isSpawn) ||
             (_currentEditMode == UnitMapEditMode.ResizeRouteWaypointRadius && isRoute)
                 ? Color.White
-                : Color.Black;
+                : UiTheme.TextOnLight;
         _buttonQuickDelete.BackColor = IsCurrentQuickDeleteModeActive()
             ? activeColor
-            : Color.FromArgb(250, 250, 250);
-        _buttonQuickDelete.ForeColor = IsCurrentQuickDeleteModeActive() ? Color.White : Color.Black;
+            : UiTheme.LightButtonBack;
+        _buttonQuickDelete.ForeColor = IsCurrentQuickDeleteModeActive() ? Color.White : UiTheme.TextOnLight;
+        _buttonQuickUnitConnectionAddDoor.BackColor = _currentEditMode == UnitMapEditMode.AddUnitConnectionDoor
+            ? activeColor
+            : UiTheme.LightButtonBack;
+        _buttonQuickUnitConnectionAddDoor.ForeColor = _currentEditMode == UnitMapEditMode.AddUnitConnectionDoor ? Color.White : UiTheme.TextOnLight;
+        _buttonQuickUnitConnectionDeleteDoor.BackColor = UiTheme.LightButtonBack;
+        _buttonQuickUnitConnectionDeleteDoor.ForeColor = UiTheme.TextOnLight;
         _buttonQuickConnect.BackColor = _currentEditMode == UnitMapEditMode.ConnectRouteWaypoint
             ? activeColor
-            : Color.FromArgb(250, 250, 250);
-        _buttonQuickConnect.ForeColor = _currentEditMode == UnitMapEditMode.ConnectRouteWaypoint ? Color.White : Color.Black;
+            : UiTheme.LightButtonBack;
+        _buttonQuickConnect.ForeColor = _currentEditMode == UnitMapEditMode.ConnectRouteWaypoint ? Color.White : UiTheme.TextOnLight;
         _buttonQuickRouteDelete.BackColor = _currentEditMode == UnitMapEditMode.DeleteRouteLink
             ? activeColor
-            : Color.FromArgb(250, 250, 250);
-        _buttonQuickRouteDelete.ForeColor = _currentEditMode == UnitMapEditMode.DeleteRouteLink ? Color.White : Color.Black;
-        _buttonQuickRoomConnect.BackColor = Color.FromArgb(250, 250, 250);
-        _buttonQuickRoomConnect.ForeColor = Color.Black;
+            : UiTheme.LightButtonBack;
+        _buttonQuickRouteDelete.ForeColor = _currentEditMode == UnitMapEditMode.DeleteRouteLink ? Color.White : UiTheme.TextOnLight;
+        _buttonQuickRoomConnect.BackColor = UiTheme.LightButtonBack;
+        _buttonQuickRoomConnect.ForeColor = UiTheme.TextOnLight;
         _buttonQuickSaveAll.Visible = true;
-        _buttonQuickSaveAll.BackColor = Color.FromArgb(250, 250, 250);
-        _buttonQuickSaveAll.ForeColor = Color.Black;
+        _buttonQuickSaveAll.BackColor = UiTheme.LightButtonBack;
+        _buttonQuickSaveAll.ForeColor = UiTheme.TextOnLight;
 
         string fieldPendingSuffix = isField && !((isSpawn || isRoute) && hasFieldMap) ? Localize("TipFieldPending") : string.Empty;
         string fieldMoveSuffix = isField && (isSpawn || isRoute) ? Localize("TipFieldSupported") : fieldPendingSuffix;
@@ -3889,24 +4331,135 @@ public partial class Form1 : Form
         _quickToolTip?.SetToolTip(_buttonQuickRouteDelete, Localize("TipRouteDelete"));
         _quickToolTip?.SetToolTip(_buttonQuickRoomConnect, Localize("TipRoomConnect"));
         _quickToolTip?.SetToolTip(_buttonQuickDelete, Localize(isSpawn ? "TipDeleteSpawn" : isRoute ? "TipDeleteWaypoint" : "TipDeleteWaterbox") + fieldPendingSuffix);
+        _quickToolTip?.SetToolTip(_buttonQuickUnitConnectionAddDoor, "Door を追加し，対応 Waypoint を自動作成");
+        _quickToolTip?.SetToolTip(_buttonQuickUnitConnectionDeleteDoor, "選択 Door を削除し，door links を再計算");
         _quickToolTip?.SetToolTip(_buttonQuickMove, Localize(isSpawn ? "TipMoveSpawn" : isRoute ? "TipMoveWaypoint" : "TipMoveWaterbox") + fieldMoveSuffix);
         _quickToolTip?.SetToolTip(_buttonQuickAngle, Localize("TipAngleSpawn"));
         _quickToolTip?.SetToolTip(_buttonQuickRadius, Localize(isSpawn ? "TipRadiusSpawn" : "TipRadiusWaypoint"));
         _quickToolTip?.SetToolTip(_checkBoxRadiusOverlay, Localize("TipRadiusOverlay"));
         _quickToolTip?.SetToolTip(_buttonQuickConnect, Localize("TipRouteConnect"));
-        _quickToolTip?.SetToolTip(_buttonQuickSave, isField ? Localize("TipSaveField") : isSpawn ? Localize("TipSaveLayout") : isRoute ? Localize("TipSaveRoute") : Localize("TipSaveWaterbox"));
+        _quickToolTip?.SetToolTip(_buttonQuickUnitConnect, Localize("TipUnitConnectionMode"));
+        _quickToolTip?.SetToolTip(_checkBoxUnitConnectionOverlay, Localize("TipUnitConnectionOverlay"));
+        _quickToolTip?.SetToolTip(_buttonQuickSave, isUnitConnect ? Localize("TipSaveUnitConnection") : isField ? Localize("TipSaveField") : isSpawn ? Localize("TipSaveLayout") : isRoute ? Localize("TipSaveRoute") : Localize("TipSaveWaterbox"));
         _quickToolTip?.SetToolTip(_buttonQuickSaveAll, isField ? Localize("TipSaveAllField") : Localize("TipSaveAllCave"));
-        _quickToolWindow.Visible = isCave || hasFieldMap;
-        _quickToolWindow.BringToFront();
+        SetDetachedToolWindowVisible(_quickToolForm, _quickToolWindow, isCave || hasFieldMap);
+        ApplyQuickToolFormStyle(baseColor, _quickToolGrip.BackColor, isSpawn, isRoute, isWaterbox, isUnitConnect);
         if (_fieldConsoleWindow is not null)
         {
-            _fieldConsoleWindow.Visible = hasFieldMap;
-            if (hasFieldMap)
-            {
-                _fieldConsoleWindow.BringToFront();
-            }
+            SetDetachedToolWindowVisible(_fieldConsoleForm, _fieldConsoleWindow, hasFieldMap);
         }
         UpdateModeBanner();
+    }
+
+    //-------------------------------------------------------------------------------
+    // 分離ミニコントローラー Form のタイトルと色を現在の対象へ同期する処理
+    //-------------------------------------------------------------------------------
+    private void ApplyQuickToolFormStyle(Color baseColor, Color headerColor, bool isSpawn, bool isRoute, bool isWaterbox, bool isUnitConnect)
+    {
+        if (_quickToolForm is null)
+        {
+            return;
+        }
+
+        string targetText = isSpawn ? "Spawn" : isRoute ? "Route" : isWaterbox ? "Waterbox" : isUnitConnect ? "Unit Connect" : string.Empty;
+        _quickToolForm.Text = string.IsNullOrWhiteSpace(targetText)
+            ? Localize("MiniController")
+            : $"{Localize("MiniController")} - {targetText}";
+        _quickToolForm.BackColor = headerColor;
+        if (_quickToolWindow is not null)
+        {
+            _quickToolWindow.BackColor = baseColor;
+        }
+
+        TryApplyNativeTitleBarColor(_quickToolForm, headerColor, UiTheme.TextMain);
+    }
+
+    //-------------------------------------------------------------------------------
+    // ミニコントローラー内のレイアウト用コンテナ背景色と文字色を現在の対象色へ同期する処理
+    //-------------------------------------------------------------------------------
+    private static void ApplyQuickToolContainerBackColor(Control control, Color backColor)
+    {
+        if (control is Panel or TableLayoutPanel or FlowLayoutPanel)
+        {
+            control.BackColor = backColor;
+        }
+
+        if (control is CheckBox or Label)
+        {
+            control.ForeColor = UiTheme.TextMain;                  // ダーク面上の文字を明色へ
+        }
+
+        foreach (Control child in control.Controls)
+        {
+            ApplyQuickToolContainerBackColor(child, backColor);
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // Windows のタイトルバー色を可能な環境だけ更新する処理
+    //-------------------------------------------------------------------------------
+    private static void TryApplyNativeTitleBarColor(Form form, Color captionColor, Color textColor)
+    {
+        if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
+        {
+            return;
+        }
+
+        try
+        {
+            int captionColorValue = ColorTranslator.ToWin32(captionColor);
+            int textColorValue = ColorTranslator.ToWin32(textColor);
+            DwmSetWindowAttribute(form.Handle, DwmwaCaptionColor, ref captionColorValue, Marshal.SizeOf<int>());
+            DwmSetWindowAttribute(form.Handle, DwmwaTextColor, ref textColorValue, Marshal.SizeOf<int>());
+        }
+        catch
+        {
+            // DWM 属性に未対応の環境では通常のタイトルバー表示に戻す。
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // 分離ツールウィンドウまたは従来 Panel の表示状態を切り替える処理
+    //-------------------------------------------------------------------------------
+    private void SetDetachedToolWindowVisible(Form? form, Panel? panel, bool visible)
+    {
+        if (form is not null)
+        {
+            if (panel is not null)
+            {
+                panel.Visible = visible;
+            }
+
+            if (visible)
+            {
+                panel?.BringToFront();
+                if (!form.Visible)
+                {
+                    form.Show(this);
+                }
+
+                if (panel == _fieldConsoleWindow)
+                {
+                    form.Text = Localize("FieldGeneratorConsole");
+                    TryApplyNativeTitleBarColor(form, UiTheme.HeaderBack, UiTheme.TextMain);
+                }
+            }
+            else
+            {
+                form.Hide();
+            }
+
+            return;
+        }
+
+        if (panel is not null)
+        {
+            panel.Visible = visible;
+            if (visible)
+            {
+                panel.BringToFront();
+            }
+        }
     }
 
     //-------------------------------------------------------------------------------
@@ -3942,8 +4495,9 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     private static void ApplyQuickModeButtonStyle(Button button, bool active, Color activeColor)
     {
-        button.BackColor = active ? activeColor : Color.FromArgb(250, 250, 250);
-        button.ForeColor = active ? Color.White : Color.Black;
+        button.BackColor = active ? activeColor : UiTheme.LightButtonBack;
+        button.ForeColor = active ? Color.White : UiTheme.TextOnLight;
+        button.FlatAppearance.BorderColor = active ? Color.White : UiTheme.LightButtonBorder;
     }
 
     //-------------------------------------------------------------------------------
@@ -3970,6 +4524,7 @@ public partial class Form1 : Form
             QuickToolTarget.Spawn => _currentEditMode == UnitMapEditMode.AddSpawn,
             QuickToolTarget.Route => _currentEditMode == UnitMapEditMode.AddRouteWaypoint,
             QuickToolTarget.Waterbox => _currentEditMode == UnitMapEditMode.AddWaterbox,
+            QuickToolTarget.UnitConnect => _currentEditMode == UnitMapEditMode.AddUnitConnectionDoor,
             _ => false
         };
     }
@@ -4066,6 +4621,51 @@ public partial class Form1 : Form
         layout.Controls.Add(editor, 1, rowIndex);
     }
 
+    //-------------------------------------------------------------------------------
+    // 右側編集欄に2項目を横並びで追加する処理
+    //-------------------------------------------------------------------------------
+    private static void AddInspectorPairRow(
+        TableLayoutPanel layout,
+        int rowIndex,
+        string firstLabelText,
+        Control firstEditor,
+        string secondLabelText,
+        Control secondEditor)
+    {
+        layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 34F));
+        TableLayoutPanel pairLayout = new()
+        {
+            Dock = DockStyle.Fill,
+            ColumnCount = 4,
+            Margin = Padding.Empty,
+            Padding = Padding.Empty
+        };
+        pairLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 62F));
+        pairLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+        pairLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 62F));
+        pairLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+
+        Label firstLabel = new()
+        {
+            Anchor = AnchorStyles.Left,
+            AutoSize = true,
+            Text = firstLabelText
+        };
+        Label secondLabel = new()
+        {
+            Anchor = AnchorStyles.Left,
+            AutoSize = true,
+            Text = secondLabelText
+        };
+
+        pairLayout.Controls.Add(firstLabel, 0, 0);
+        pairLayout.Controls.Add(firstEditor, 1, 0);
+        pairLayout.Controls.Add(secondLabel, 2, 0);
+        pairLayout.Controls.Add(secondEditor, 3, 0);
+        layout.Controls.Add(pairLayout, 0, rowIndex);
+        layout.SetColumnSpan(pairLayout, 2);
+    }
+
     private void buttonToggleLeftPane_Click(object? sender, EventArgs e)
     {
         if (_leftPaneTimer is null)
@@ -4090,7 +4690,7 @@ public partial class Form1 : Form
 
         if (!_rightPaneCollapsed)
         {
-            _expandedRightPaneWidth = Math.Max(panelInspectorShell.Width, 308);
+            _expandedRightPaneWidth = Math.Max(panelInspectorShell.Width, 372);
         }
 
         _rightPaneTimer.Start();
@@ -4457,6 +5057,34 @@ public partial class Form1 : Form
         RefreshUnitSummary();
     }
 
+    private void buttonUnitConnectionAddDoor_Click(object? sender, EventArgs e)
+    {
+        if (GetCurrentMode() != EditorMode.Cave || _currentUnitDefinition is null)
+        {
+            return;
+        }
+
+        _quickToolTarget = QuickToolTarget.UnitConnect;
+        _currentEditMode = _currentEditMode == UnitMapEditMode.AddUnitConnectionDoor
+            ? UnitMapEditMode.Navigate
+            : UnitMapEditMode.AddUnitConnectionDoor;
+        if (_currentEditMode == UnitMapEditMode.AddUnitConnectionDoor && _checkBoxUnitConnectionOverlay is not null)
+        {
+            _checkBoxUnitConnectionOverlay.Checked = true;
+        }
+
+        _unitMapView.SetEditMode(_currentEditMode);
+        _objModelView.SetEditMode(_currentEditMode);
+        UpdateRouteEditUi();
+        UpdateQuickToolWindowState();
+        RefreshUnitSummary();
+    }
+
+    private void buttonUnitConnectionDeleteDoor_Click(object? sender, EventArgs e)
+    {
+        DeleteSelectedUnitConnectionDoor();
+    }
+
     private void buttonWaterboxMoveMode_Click(object? sender, EventArgs e)
     {
         if (GetCurrentMode() != EditorMode.Cave)
@@ -4527,6 +5155,223 @@ public partial class Form1 : Form
         RefreshInspector();
         RefreshUnitSummary();
         AppendLog($"waypoint 追加: index={newWaypoint.Index}, x={newWaypoint.X:0.###}, y={newWaypoint.Y:0.###}, z={newWaypoint.Z:0.###}");
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection の Door と対応 WayPoint を追加する処理
+    //-------------------------------------------------------------------------------
+    private void AddUnitConnectionDoorWithWaypoint()
+    {
+        if (_currentUnitDefinition is null ||
+            _numericUnitConnectionDoorOffset is null)
+        {
+            AppendLog("Door 追加失敗: UnitConnection 定義が読み込まれていません．");
+            return;
+        }
+
+        ApplyUnitConnectionInspectorValues();
+        UnitDefinition unitDefinition = _currentUnitDefinition;
+        int direction = GetSelectedUnitConnectionDirection(0);
+        int offset = (int)_numericUnitConnectionDoorOffset.Value;
+        AddUnitConnectionDoorWithWaypoint(direction, offset);
+    }
+
+    //-------------------------------------------------------------------------------
+    // プレビューのクリック位置から UnitConnection の Door と対応 WayPoint を追加する処理
+    //-------------------------------------------------------------------------------
+    private void AddUnitConnectionDoorAt(float x, float z)
+    {
+        if (_currentUnitDefinition is null)
+        {
+            AppendLog("Door 追加失敗: UnitConnection 定義が読み込まれていません．");
+            return;
+        }
+
+        ApplyUnitConnectionInspectorValues();
+        if (!UnitConnectionGeometry.TryGetNearestDoorPlacement(_currentUnitDefinition, x, z, out UnitConnectionPoint placement))
+        {
+            AppendLog("Door 追加失敗: 配置可能な接続位置が見つかりません．");
+            return;
+        }
+
+        AddUnitConnectionDoorWithWaypoint(placement.Direction, placement.Offset);
+    }
+
+    //-------------------------------------------------------------------------------
+    // 指定 direction / offset で UnitConnection の Door と対応 WayPoint を追加する処理
+    //-------------------------------------------------------------------------------
+    private void AddUnitConnectionDoorWithWaypoint(int direction, int offset)
+    {
+        if (_currentUnitDefinition is null)
+        {
+            AppendLog("Door 追加失敗: UnitConnection 定義が読み込まれていません．");
+            return;
+        }
+
+        UnitDefinition unitDefinition = _currentUnitDefinition;
+        int doorIndex = GetNextDoorIndex(unitDefinition);
+        DoorDefinition temporaryDoor = new(doorIndex, direction, offset, 0, Array.Empty<DoorLinkDefinition>());
+        UnitConnectionPoint connectionPoint = UnitConnectionGeometry.CreateConnectionPoint(unitDefinition, temporaryDoor);
+
+        RecordUndoSnapshot();
+        (RouteFile route, int waypointIndex, bool createdWaypoint) = EnsureDoorWaypoint(connectionPoint.X, connectionPoint.Z);
+        temporaryDoor = temporaryDoor with { WayPointIndex = waypointIndex };
+        List<DoorDefinition> doors = unitDefinition.Doors
+            .Append(temporaryDoor)
+            .OrderBy(door => door.Index)
+            .ToList();
+        _currentRoute = route;
+        _currentUnitDefinition = RecalculateCurrentUnitDoorLinks(unitDefinition with { Doors = doors });
+        _selectedUnitConnectionDoorIndex = temporaryDoor.Index;
+        _selectedRouteWaypointIndex = waypointIndex;
+        _selectedSpawnIndex = null;
+        _selectedWaterboxIndex = null;
+        checkBoxRouteOverlay.Checked = true;
+        if (_checkBoxUnitConnectionOverlay is not null)
+        {
+            _checkBoxUnitConnectionOverlay.Checked = true;
+        }
+
+        UpdateAllPreviewOverlays();
+        SyncSelectedTargets();
+        RefreshInspector();
+        RefreshUnitSummary();
+        AppendLog($"Door 追加: door={temporaryDoor.Index}, dir={direction}, offset={offset}, waypoint={waypointIndex}, waypoint作成={(createdWaypoint ? "あり" : "再利用")}");
+    }
+
+    //-------------------------------------------------------------------------------
+    // 選択中 UnitConnection Door と対応 WayPoint を削除する処理
+    //-------------------------------------------------------------------------------
+    private void DeleteSelectedUnitConnectionDoor()
+    {
+        if (_currentUnitDefinition is null)
+        {
+            AppendLog("Door 削除失敗: UnitConnection 定義が読み込まれていません．");
+            return;
+        }
+
+        int? selectedDoorIndex = _selectedUnitConnectionDoorIndex ?? GetSelectedUnitConnectionDoorIndex();
+        if (selectedDoorIndex is null)
+        {
+            AppendLog("Door 削除失敗: Door が選択されていません．");
+            return;
+        }
+
+        DoorDefinition? deletedDoor = _currentUnitDefinition.Doors.FirstOrDefault(door => door.Index == selectedDoorIndex.Value);
+        if (deletedDoor is null)
+        {
+            AppendLog("Door 削除失敗: 選択 Door が見つかりません．");
+            return;
+        }
+
+        RecordUndoSnapshot();
+        List<DoorDefinition> remainingDoors = _currentUnitDefinition.Doors
+            .Where(door => door.Index != deletedDoor.Index)
+            .Select((door, index) => door with { Index = index, DoorLinks = Array.Empty<DoorLinkDefinition>() })
+            .ToList();
+        _currentRoute = RemoveUnusedDoorWaypoint(_currentRoute, _currentUnitDefinition, deletedDoor, remainingDoors);
+        _currentUnitDefinition = RecalculateCurrentUnitDoorLinks(_currentUnitDefinition with { Doors = remainingDoors });
+        _selectedUnitConnectionDoorIndex = remainingDoors.Count == 0 ? null : remainingDoors[0].Index;
+        _selectedRouteWaypointIndex = null;
+        UpdateAllPreviewOverlays();
+        SyncSelectedTargets();
+        RefreshInspector();
+        RefreshUnitSummary();
+        AppendLog($"Door 削除: door={deletedDoor.Index}, waypoint={deletedDoor.WayPointIndex}");
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection Door 用の WayPoint を作成または再利用する処理
+    //-------------------------------------------------------------------------------
+    private (RouteFile Route, int WaypointIndex, bool CreatedWaypoint) EnsureDoorWaypoint(float x, float z)
+    {
+        RouteWaypoint? existingWaypoint = _currentRoute.Waypoints.Values
+            .OrderBy(waypoint => GetSquaredDistance(waypoint.X, waypoint.Z, x, z))
+            .FirstOrDefault(waypoint => GetSquaredDistance(waypoint.X, waypoint.Z, x, z) <= 1f);
+        if (existingWaypoint is not null)
+        {
+            return (_currentRoute, existingWaypoint.Index, false);
+        }
+
+        Dictionary<int, RouteWaypoint> updatedWaypoints = _currentRoute.Waypoints
+            .ToDictionary(entry => entry.Key, entry => entry.Value);
+        int waypointIndex = GetNextWaypointIndex();
+        float y = GetGroundHeightOrFallback(x, z, 0f);
+        int? linkTargetIndex = GetDoorWaypointLinkTarget(x, z);
+        RouteWaypoint newWaypoint = new(
+            waypointIndex,
+            linkTargetIndex is null ? Array.Empty<int>() : new[] { linkTargetIndex.Value },
+            x,
+            y,
+            z,
+            32f);
+        updatedWaypoints[waypointIndex] = newWaypoint;
+        return (new RouteFile(updatedWaypoints), waypointIndex, true);
+    }
+
+    //-------------------------------------------------------------------------------
+    // Door 用 WayPoint の接続先を選択中または最寄り WayPoint から求める処理
+    //-------------------------------------------------------------------------------
+    private int? GetDoorWaypointLinkTarget(float x, float z)
+    {
+        if (_selectedRouteWaypointIndex is not null &&
+            _currentRoute.Waypoints.ContainsKey(_selectedRouteWaypointIndex.Value))
+        {
+            return _selectedRouteWaypointIndex.Value;
+        }
+
+        return _currentRoute.Waypoints.Values
+            .OrderBy(waypoint => GetSquaredDistance(waypoint.X, waypoint.Z, x, z))
+            .Select(waypoint => (int?)waypoint.Index)
+            .FirstOrDefault();
+    }
+
+    //-------------------------------------------------------------------------------
+    // 削除 Door 専用の WayPoint を route から削除する処理
+    //-------------------------------------------------------------------------------
+    private RouteFile RemoveUnusedDoorWaypoint(RouteFile route, UnitDefinition originalDefinition, DoorDefinition deletedDoor, IReadOnlyList<DoorDefinition> remainingDoors)
+    {
+        if (remainingDoors.Any(door => door.WayPointIndex == deletedDoor.WayPointIndex) ||
+            !route.Waypoints.TryGetValue(deletedDoor.WayPointIndex, out RouteWaypoint? waypoint))
+        {
+            return route;
+        }
+
+        UnitConnectionPoint deletedPoint = UnitConnectionGeometry.CreateConnectionPoint(originalDefinition, deletedDoor);
+        if (GetSquaredDistance(waypoint.X, waypoint.Z, deletedPoint.X, deletedPoint.Z) > 1f)
+        {
+            return route;
+        }
+
+        Dictionary<int, RouteWaypoint> updatedWaypoints = route.Waypoints
+            .Where(entry => entry.Key != waypoint.Index)
+            .ToDictionary(
+                entry => entry.Key,
+                entry => entry.Value with
+                {
+                    Links = entry.Value.Links.Where(link => link != waypoint.Index).ToList()
+                });
+        return new RouteFile(updatedWaypoints);
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection Door の次の index を取得する処理
+    //-------------------------------------------------------------------------------
+    private static int GetNextDoorIndex(UnitDefinition unitDefinition)
+    {
+        return unitDefinition.Doors.Count == 0
+            ? 0
+            : unitDefinition.Doors.Max(door => door.Index) + 1;
+    }
+
+    //-------------------------------------------------------------------------------
+    // route の次の WayPoint index を取得する処理
+    //-------------------------------------------------------------------------------
+    private int GetNextWaypointIndex()
+    {
+        return _currentRoute.Waypoints.Count == 0
+            ? 0
+            : _currentRoute.Waypoints.Keys.Max() + 1;
     }
 
     //-------------------------------------------------------------------------------
@@ -4682,17 +5527,139 @@ public partial class Form1 : Form
     }
 
     //-------------------------------------------------------------------------------
+    // UnitConnection の door index 選択変更を編集欄へ反映する処理
+    //-------------------------------------------------------------------------------
+    private void UnitConnectionDoorIndexChanged(object? sender, EventArgs e)
+    {
+        if (_inspectorUpdating)
+        {
+            return;
+        }
+
+        _selectedUnitConnectionDoorIndex = GetSelectedUnitConnectionDoorIndex();
+        RefreshInspector();
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection 編集欄の変更を現在のユニット定義へ反映する処理
+    //-------------------------------------------------------------------------------
+    private bool ApplyUnitConnectionInspectorValues()
+    {
+        if (_inspectorUpdating ||
+            _currentUnitDefinition is null ||
+            _numericUnitConnectionDx is null ||
+            _numericUnitConnectionDz is null ||
+            _comboBoxUnitConnectionKind is null ||
+            _textBoxUnitConnectionFlags is null ||
+            _comboBoxUnitConnectionDoorDirection is null ||
+            _numericUnitConnectionDoorOffset is null ||
+            _numericUnitConnectionDoorWaypoint is null)
+        {
+            return false;
+        }
+
+        string name = string.IsNullOrWhiteSpace(_currentPreviewUnitName)
+            ? _currentUnitDefinition.Name
+            : _currentPreviewUnitName;
+        (int flagA, int flagB) = ParseUnitConnectionFlags(_textBoxUnitConnectionFlags.Text, _currentUnitDefinition.RoomFlagA, _currentUnitDefinition.RoomFlagB);
+        UnitKind kind = _comboBoxUnitConnectionKind.SelectedIndex >= 0
+            ? (UnitKind)Math.Clamp(_comboBoxUnitConnectionKind.SelectedIndex, 0, 2)
+            : _currentUnitDefinition.Kind;
+        List<DoorDefinition> doors = _currentUnitDefinition.Doors.ToList();
+        int? selectedDoorIndex = _selectedUnitConnectionDoorIndex ?? GetSelectedUnitConnectionDoorIndex();
+        if (selectedDoorIndex is not null)
+        {
+            int doorListIndex = doors.FindIndex(door => door.Index == selectedDoorIndex.Value);
+            if (doorListIndex >= 0)
+            {
+                DoorDefinition currentDoor = doors[doorListIndex];
+                doors[doorListIndex] = currentDoor with
+                {
+                    Direction = GetSelectedUnitConnectionDirection(currentDoor.Direction),
+                    Offset = (int)_numericUnitConnectionDoorOffset.Value,
+                    WayPointIndex = (int)_numericUnitConnectionDoorWaypoint.Value
+                };
+            }
+        }
+
+        _currentUnitDefinition = new UnitDefinition(
+            name,
+            (int)_numericUnitConnectionDx.Value,
+            (int)_numericUnitConnectionDz.Value,
+            kind,
+            flagA,
+            flagB,
+            doors);
+        UpdateAllPreviewOverlays();
+        UpdateQuickToolWindowState();
+        RefreshUnitSummary();
+        return true;
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection 編集欄の変更イベントから即時反映を実行する処理
+    //-------------------------------------------------------------------------------
+    private void UnitConnectionInspectorValueChanged(object? sender, EventArgs e)
+    {
+        ApplyUnitConnectionInspectorValues();
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection の room flags 入力を解析する処理
+    //-------------------------------------------------------------------------------
+    private static (int First, int Second) ParseUnitConnectionFlags(string text, int fallbackFirst, int fallbackSecond)
+    {
+        int[] values = text.Split(new[] { ' ', '\t', ',' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(part => int.TryParse(part, NumberStyles.Integer, CultureInfo.InvariantCulture, out int value) ? value : int.MinValue)
+            .Where(value => value != int.MinValue)
+            .Take(2)
+            .ToArray();
+        return values.Length switch
+        {
+            >= 2 => (values[0], values[1]),
+            1 => (values[0], fallbackSecond),
+            _ => (fallbackFirst, fallbackSecond)
+        };
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection の door index 選択値を取得する処理
+    //-------------------------------------------------------------------------------
+    private int? GetSelectedUnitConnectionDoorIndex()
+    {
+        if (_comboBoxUnitConnectionDoorIndex?.SelectedItem is UnitConnectionDoorItem doorItem)
+        {
+            return doorItem.DoorIndex;
+        }
+
+        return null;
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection の direction 選択値を取得する処理
+    //-------------------------------------------------------------------------------
+    private int GetSelectedUnitConnectionDirection(int fallbackDirection)
+    {
+        if (_comboBoxUnitConnectionDoorDirection?.SelectedItem is UnitConnectionDirectionItem directionItem)
+        {
+            return directionItem.Direction;
+        }
+
+        return fallbackDirection;
+    }
+
+    //-------------------------------------------------------------------------------
     // 地上 generator の経過日数変更を表示中 object に反映する処理
     //-------------------------------------------------------------------------------
     private void numericFieldDay_ValueChanged(object? sender, EventArgs e)
     {
-        if (_inspectorUpdating || _numericFieldDay is null)
+        if (_inspectorUpdating || sender is not NumericUpDown numericFieldDay)
         {
             return;
         }
 
         CommitCurrentFieldLayoutToMapData();
-        _currentFieldDay = (int)_numericFieldDay.Value;
+        _currentFieldDay = (int)numericFieldDay.Value;
         RefreshFieldGeneratorDisplayObjects(resetSelection: true);
         UpdateAllPreviewOverlays(resetView: true);
         RefreshInspector();
@@ -4705,8 +5672,11 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     private void buttonApplyFieldObjectRaw_Click(object? sender, EventArgs e)
     {
+        TextBox? sourceTextBox = sender == _buttonApplyFieldConsoleObjectRaw
+            ? _textBoxFieldConsoleObjectRaw
+            : _textBoxFieldObjectRaw;
         if (_currentFieldMapData is null ||
-            _textBoxFieldObjectRaw is null ||
+            sourceTextBox is null ||
             !TryGetSelectedFieldObjectRef(out FieldDisplayObjectRef objectRef))
         {
             return;
@@ -4719,7 +5689,7 @@ public partial class Form1 : Form
             generatorFiles[objectRef.FileIndex] = FieldGeneratorParser.ReplaceObjectRawText(
                 generatorFiles[objectRef.FileIndex],
                 objectRef.ObjectIndex,
-                _textBoxFieldObjectRaw.Text);
+                sourceTextBox.Text);
             _currentFieldMapData = _currentFieldMapData with
             {
                 GeneratorFiles = generatorFiles
@@ -4892,6 +5862,7 @@ public partial class Form1 : Form
     {
         bool showRadius = _checkBoxRadiusOverlay?.Checked != false;
         _unitMapView.SetRadiusVisible(showRadius);
+        _unitMapView.SetUnitConnectionOverlay(_currentUnitDefinition, _checkBoxUnitConnectionOverlay?.Checked == true);
         _unitMapView.SetViewTitle(GetCurrentMode() == EditorMode.Field ? Localize("ViewTitleField") : Localize("ViewTitleCave"));
         _unitMapView.SetUseFieldObjectIcons(GetCurrentMode() == EditorMode.Field);
         _unitMapView.SetRouteColorHeights(BuildRouteColorHeights(_currentRoute));
@@ -4956,6 +5927,7 @@ public partial class Form1 : Form
     {
         bool showRadius = _checkBoxRadiusOverlay?.Checked != false;
         _objModelView.SetRadiusVisible(showRadius);
+        _objModelView.SetUnitConnectionOverlay(_currentUnitDefinition, _checkBoxUnitConnectionOverlay?.Checked == true);
         _objModelView.SetUseFieldObjectIcons(GetCurrentMode() == EditorMode.Field);
         _objModelView.SetRouteColorHeights(BuildRouteColorHeights(_currentRoute));
         LayoutFile layout = checkBoxSpawnOverlay.Checked
@@ -4997,12 +5969,21 @@ public partial class Form1 : Form
             return;
         }
 
+        if (_selectedUnitConnectionDoorIndex is not null)
+        {
+            _unitMapView.SelectUnitConnectionDoor(_selectedUnitConnectionDoorIndex);
+            _objModelView.SelectUnitConnectionDoor(_selectedUnitConnectionDoorIndex);
+            return;
+        }
+
         _unitMapView.SelectSpawn(null);
         _unitMapView.SelectRouteWaypoint(null);
         _unitMapView.SelectWaterbox(null);
+        _unitMapView.SelectUnitConnectionDoor(null);
         _objModelView.SelectSpawn(null);
         _objModelView.SelectRouteWaypoint(null);
         _objModelView.SelectWaterbox(null);
+        _objModelView.SelectUnitConnectionDoor(null);
     }
 
     //-------------------------------------------------------------------------------
@@ -5024,7 +6005,8 @@ public partial class Form1 : Form
         if (_labelInspectorSelection is null ||
             _groupBoxSpawnInspector is null ||
             _groupBoxWaypointInspector is null ||
-            _groupBoxWaterboxInspector is null)
+            _groupBoxWaterboxInspector is null ||
+            _groupBoxUnitConnectionInspector is null)
         {
             return;
         }
@@ -5041,11 +6023,19 @@ public partial class Form1 : Form
             bool hasWaterbox = _selectedWaterboxIndex is not null &&
                 _selectedWaterboxIndex.Value >= 0 &&
                 _selectedWaterboxIndex.Value < _currentWaterbox.Boxes.Count;
+            bool hasUnitConnectionDoor = _selectedUnitConnectionDoorIndex is not null &&
+                _currentUnitDefinition?.Doors.Any(door => door.Index == _selectedUnitConnectionDoorIndex.Value) == true;
 
             if (_numericFieldDay is not null)
             {
                 _numericFieldDay.Enabled = GetCurrentMode() == EditorMode.Field && _currentFieldMapData is not null;
                 SetNumericValue(_numericFieldDay, _currentFieldDay);
+            }
+
+            if (_numericFieldConsoleDay is not null)
+            {
+                _numericFieldConsoleDay.Enabled = GetCurrentMode() == EditorMode.Field && _currentFieldMapData is not null;
+                SetNumericValue(_numericFieldConsoleDay, _currentFieldDay);
             }
 
             if (_labelFieldActiveFiles is not null)
@@ -5055,13 +6045,27 @@ public partial class Form1 : Form
                     : "-";
             }
 
+            if (_labelFieldConsoleActiveFiles is not null)
+            {
+                _labelFieldConsoleActiveFiles.Text = GetCurrentMode() == EditorMode.Field && _currentFieldMapData is not null
+                    ? BuildActiveFieldGeneratorFileText(_currentFieldMapData.GeneratorFiles, _currentFieldDay)
+                    : "-";
+            }
+
             RefreshFieldAddControls();
 
             bool hasFieldObject = TryGetSelectedFieldObjectRef(out FieldDisplayObjectRef selectedFieldObjectRef);
+            string fieldObjectRawText = hasFieldObject ? GetSelectedFieldObjectRawText() : string.Empty;
             if (_textBoxFieldObjectRaw is not null)
             {
                 _textBoxFieldObjectRaw.Enabled = hasFieldObject;
-                _textBoxFieldObjectRaw.Text = hasFieldObject ? GetSelectedFieldObjectRawText() : string.Empty;
+                _textBoxFieldObjectRaw.Text = fieldObjectRawText;
+            }
+
+            if (_textBoxFieldConsoleObjectRaw is not null)
+            {
+                _textBoxFieldConsoleObjectRaw.Enabled = hasFieldObject;
+                _textBoxFieldConsoleObjectRaw.Text = fieldObjectRawText;
             }
 
             if (_buttonApplyFieldObjectRaw is not null)
@@ -5069,9 +6073,15 @@ public partial class Form1 : Form
                 _buttonApplyFieldObjectRaw.Enabled = hasFieldObject;
             }
 
+            if (_buttonApplyFieldConsoleObjectRaw is not null)
+            {
+                _buttonApplyFieldConsoleObjectRaw.Enabled = hasFieldObject;
+            }
+
             _groupBoxSpawnInspector.Enabled = GetCurrentMode() == EditorMode.Cave;
             _groupBoxWaypointInspector.Enabled = GetCurrentMode() == EditorMode.Cave;
             _groupBoxWaterboxInspector.Enabled = GetCurrentMode() == EditorMode.Cave;
+            _groupBoxUnitConnectionInspector.Enabled = GetCurrentMode() == EditorMode.Cave && _currentUnitDefinition is not null;
 
             if (hasSpawn)
             {
@@ -5092,7 +6102,7 @@ public partial class Form1 : Form
             {
                 _labelInspectorSelection.Text = hasWaypoint
                     ? $"Waypoint #{waypoint!.Index}"
-                    : hasWaterbox ? $"Waterbox #{_selectedWaterboxIndex!.Value}" : Localize("NoSelection");
+                    : hasWaterbox ? $"Waterbox #{_selectedWaterboxIndex!.Value}" : hasUnitConnectionDoor ? $"Door #{_selectedUnitConnectionDoorIndex!.Value}" : Localize("NoSelection");
             }
 
             if (hasWaypoint)
@@ -5130,6 +6140,8 @@ public partial class Form1 : Form
                 SetNumericValue(_numericWaterboxZ2, 0f);
             }
 
+            RefreshUnitConnectionInspectorValues();
+
             _buttonDeleteSpawn!.Enabled = hasSpawn;
             _buttonApplySpawn!.Enabled = hasSpawn;
             _comboBoxSpawnType!.Enabled = hasSpawn;
@@ -5156,6 +6168,7 @@ public partial class Form1 : Form
             _numericWaterboxX2!.Enabled = hasWaterbox;
             _numericWaterboxY2!.Enabled = hasWaterbox;
             _numericWaterboxZ2!.Enabled = hasWaterbox;
+            SetUnitConnectionInspectorEnabled(_currentUnitDefinition is not null);
         }
         finally
         {
@@ -5163,6 +6176,135 @@ public partial class Form1 : Form
         }
 
         UpdateQuickToolWindowState();
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection 編集欄へ現在のユニット定義を表示する処理
+    //-------------------------------------------------------------------------------
+    private void RefreshUnitConnectionInspectorValues()
+    {
+        if (_numericUnitConnectionDx is null ||
+            _numericUnitConnectionDz is null ||
+            _comboBoxUnitConnectionKind is null ||
+            _textBoxUnitConnectionFlags is null ||
+            _comboBoxUnitConnectionDoorIndex is null ||
+            _comboBoxUnitConnectionDoorDirection is null ||
+            _numericUnitConnectionDoorOffset is null ||
+            _numericUnitConnectionDoorWaypoint is null)
+        {
+            return;
+        }
+
+        if (_currentUnitDefinition is null)
+        {
+            SetNumericValue(_numericUnitConnectionDx, 1);
+            SetNumericValue(_numericUnitConnectionDz, 1);
+            _comboBoxUnitConnectionKind.SelectedIndex = -1;
+            _textBoxUnitConnectionFlags.Text = string.Empty;
+            _comboBoxUnitConnectionDoorIndex.Items.Clear();
+            _comboBoxUnitConnectionDoorDirection.SelectedIndex = -1;
+            return;
+        }
+
+        SetNumericValue(_numericUnitConnectionDx, _currentUnitDefinition.Width);
+        SetNumericValue(_numericUnitConnectionDz, _currentUnitDefinition.Height);
+        _comboBoxUnitConnectionKind.SelectedIndex = Math.Clamp((int)_currentUnitDefinition.Kind, 0, _comboBoxUnitConnectionKind.Items.Count - 1);
+        _textBoxUnitConnectionFlags.Text = $"{_currentUnitDefinition.RoomFlagA} {_currentUnitDefinition.RoomFlagB}";
+        int? previousDoorIndex = _selectedUnitConnectionDoorIndex;
+        _comboBoxUnitConnectionDoorIndex.Items.Clear();
+        foreach (DoorDefinition door in _currentUnitDefinition.Doors.OrderBy(door => door.Index))
+        {
+            _comboBoxUnitConnectionDoorIndex.Items.Add(new UnitConnectionDoorItem(door.Index));
+        }
+
+        if (_comboBoxUnitConnectionDoorIndex.Items.Count > 0)
+        {
+            int selectIndex = 0;
+            if (previousDoorIndex is not null)
+            {
+                for (int i = 0; i < _comboBoxUnitConnectionDoorIndex.Items.Count; i++)
+                {
+                    if (_comboBoxUnitConnectionDoorIndex.Items[i] is UnitConnectionDoorItem doorItem && doorItem.DoorIndex == previousDoorIndex.Value)
+                    {
+                        selectIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            _comboBoxUnitConnectionDoorIndex.SelectedIndex = selectIndex;
+            _selectedUnitConnectionDoorIndex = GetSelectedUnitConnectionDoorIndex();
+        }
+        else
+        {
+            _comboBoxUnitConnectionDoorIndex.SelectedIndex = -1;
+            _selectedUnitConnectionDoorIndex = null;
+        }
+
+        DoorDefinition? selectedDoor = _selectedUnitConnectionDoorIndex is null
+            ? null
+            : _currentUnitDefinition.Doors.FirstOrDefault(door => door.Index == _selectedUnitConnectionDoorIndex.Value);
+        if (selectedDoor is not null)
+        {
+            SelectUnitConnectionDirection(selectedDoor.Direction);
+            SetNumericValue(_numericUnitConnectionDoorOffset, selectedDoor.Offset);
+            SetNumericValue(_numericUnitConnectionDoorWaypoint, selectedDoor.WayPointIndex);
+        }
+        else
+        {
+            SelectUnitConnectionDirection(0);
+            SetNumericValue(_numericUnitConnectionDoorOffset, 0);
+            SetNumericValue(_numericUnitConnectionDoorWaypoint, 0);
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection の direction コンボボックスへ方向値を反映する処理
+    //-------------------------------------------------------------------------------
+    private void SelectUnitConnectionDirection(int direction)
+    {
+        if (_comboBoxUnitConnectionDoorDirection is null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < _comboBoxUnitConnectionDoorDirection.Items.Count; i++)
+        {
+            if (_comboBoxUnitConnectionDoorDirection.Items[i] is UnitConnectionDirectionItem directionItem &&
+                directionItem.Direction == direction)
+            {
+                _comboBoxUnitConnectionDoorDirection.SelectedIndex = i;
+                return;
+            }
+        }
+
+        _comboBoxUnitConnectionDoorDirection.SelectedIndex = -1;
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection 編集欄の有効状態を切り替える処理
+    //-------------------------------------------------------------------------------
+    private void SetUnitConnectionInspectorEnabled(bool enabled)
+    {
+        Control?[] controls =
+        {
+            _numericUnitConnectionDx,
+            _numericUnitConnectionDz,
+            _comboBoxUnitConnectionKind,
+            _textBoxUnitConnectionFlags,
+            _comboBoxUnitConnectionDoorIndex,
+            _comboBoxUnitConnectionDoorDirection,
+            _numericUnitConnectionDoorOffset,
+            _numericUnitConnectionDoorWaypoint
+        };
+
+        foreach (Control? control in controls)
+        {
+            if (control is not null)
+            {
+                control.Enabled = enabled;
+            }
+        }
     }
 
     private void SelectSpawnType(int typeId)
@@ -5367,8 +6509,15 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     private void panelPreview_Resize(object? sender, EventArgs e)
     {
-        ClampQuickToolWindowToPreview();
-        ClampFieldConsoleWindowToPreview();
+        if (_quickToolForm is null)
+        {
+            ClampQuickToolWindowToPreview();
+        }
+
+        if (_fieldConsoleForm is null)
+        {
+            ClampFieldConsoleWindowToPreview();
+        }
     }
 
     //-------------------------------------------------------------------------------
@@ -5514,6 +6663,12 @@ public partial class Form1 : Form
             return;
         }
 
+        if (IsCaveTextsGridMode())
+        {
+            AppendLog("texts/grid モードでは画像キャッシュを使わないため，全ユニットキャッシュ生成は arc visual モードで実行してください．");
+            return;
+        }
+
         if (!Directory.Exists(textBoxArcPath.Text))
         {
             AppendLog("arc フォルダが見つからないため，全ユニットキャッシュを中断しました．");
@@ -5622,12 +6777,12 @@ public partial class Form1 : Form
     {
         bool ready = File.Exists(textBoxToolkitPath.Text);
         labelToolkitStatus.Text = ready ? Localize("ToolkitStatusReady") : Localize("ToolkitStatusMissing");
-        labelToolkitStatus.ForeColor = ready ? Color.DarkGreen : Color.DarkRed;
+        labelToolkitStatus.ForeColor = ready ? Color.FromArgb(90, 245, 185) : Color.FromArgb(255, 120, 110);  // ダーク背景で読める明色
         buttonBrowseDisc.Enabled = ready;
         buttonPrepareCache.Enabled = ready && GetCurrentMode() == EditorMode.Cave;
         if (_buttonPrepareAllUnitCache is not null)
         {
-            _buttonPrepareAllUnitCache.Enabled = ready && GetCurrentMode() == EditorMode.Cave && _currentLoadFormat == LoadFormatKind.DiscExtractData;
+            _buttonPrepareAllUnitCache.Enabled = ready && GetCurrentMode() == EditorMode.Cave && _currentLoadFormat == LoadFormatKind.DiscExtractData && !IsCaveTextsGridMode();
         }
 
         if (!ready && showWarning)
@@ -5989,6 +7144,12 @@ public partial class Form1 : Form
     {
         if (GetCurrentMode() == EditorMode.Cave)
         {
+            bool nameOnlyList = IsCaveTextsGridMode();
+            if (nameOnlyList && !checkBoxObjDirectView.Checked)
+            {
+                checkBoxObjDirectView.Checked = true;
+            }
+
             string? caveArcRoot = GetCurrentCaveArcRoot();
             string? caveUnitsRoot = GetCurrentCaveUnitsRoot();
             _lastCaveArcPath = caveArcRoot;
@@ -6013,7 +7174,8 @@ public partial class Form1 : Form
     {
         bool exists = !string.IsNullOrWhiteSpace(path) && (Directory.Exists(path) || File.Exists(path));
         box.Text = exists ? path! : "-Not Found-";
-        box.BackColor = exists ? Color.Honeydew : Color.MistyRose;
+        box.BackColor = exists ? Color.FromArgb(12, 48, 34) : Color.FromArgb(58, 22, 28);   // 存在=暗緑 / 不在=暗赤
+        box.ForeColor = exists ? Color.FromArgb(170, 235, 200) : Color.FromArgb(245, 170, 165);
     }
 
     //-------------------------------------------------------------------------------
@@ -6024,11 +7186,12 @@ public partial class Form1 : Form
         _currentLoadFormat = formatKind;
         _currentCacheRootOverride = cacheRootOverride;
         textBoxLoadFormat.Text = GetLoadFormatLabel(formatKind);
-        textBoxLoadFormat.BackColor = formatKind == LoadFormatKind.None ? Color.MistyRose : Color.Honeydew;
+        textBoxLoadFormat.BackColor = formatKind == LoadFormatKind.None ? Color.FromArgb(58, 22, 28) : Color.FromArgb(12, 48, 34);  // 未設定=暗赤 / 設定済=暗緑
+        textBoxLoadFormat.ForeColor = formatKind == LoadFormatKind.None ? Color.FromArgb(245, 170, 165) : Color.FromArgb(170, 235, 200);
         UpdateMapUnitPaneAvailability();
         if (_buttonPrepareAllUnitCache is not null)
         {
-            _buttonPrepareAllUnitCache.Enabled = File.Exists(textBoxToolkitPath.Text) && GetCurrentMode() == EditorMode.Cave && formatKind == LoadFormatKind.DiscExtractData;
+            _buttonPrepareAllUnitCache.Enabled = File.Exists(textBoxToolkitPath.Text) && GetCurrentMode() == EditorMode.Cave && formatKind == LoadFormatKind.DiscExtractData && !IsCaveTextsGridMode();
         }
     }
 
@@ -6120,6 +7283,11 @@ public partial class Form1 : Form
     {
         if (GetCurrentMode() == EditorMode.Cave)
         {
+            if (IsCaveTextsGridMode() && !checkBoxObjDirectView.Checked)
+            {
+                checkBoxObjDirectView.Checked = true;
+            }
+
             pictureBoxPreview.Visible = false;
             bool directViewEnabled = IsObjDirectViewEnabled();
             bool wasDirectViewVisible = _objModelView.Visible;
@@ -6144,6 +7312,11 @@ public partial class Form1 : Form
             UpdateQuickToolWindowState();
             RefreshInspector();
             return;
+        }
+
+        if (IsTextsGridModelSourceMode() && !checkBoxObjDirectView.Checked)
+        {
+            checkBoxObjDirectView.Checked = true;
         }
 
         pictureBoxPreview.Visible = false;
@@ -6176,9 +7349,9 @@ public partial class Form1 : Form
         using Graphics graphics = Graphics.FromImage(bitmap);
         graphics.SmoothingMode = SmoothingMode.AntiAlias;
         graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-        graphics.Clear(Color.FromArgb(248, 246, 239));
+        graphics.Clear(UiTheme.CanvasPaper);
 
-        using Pen gridPen = new(Color.FromArgb(224, 219, 205), 1f);
+        using Pen gridPen = new(UiTheme.CanvasGrid, 1f);
         for (int x = 80; x <= 880; x += 80)
         {
             graphics.DrawLine(gridPen, x, 80, x, 880);
@@ -6189,7 +7362,7 @@ public partial class Form1 : Form
             graphics.DrawLine(gridPen, 80, y, 880, y);
         }
 
-        using SolidBrush titleBrush = new(Color.FromArgb(44, 62, 80));
+        using SolidBrush titleBrush = new(UiTheme.CanvasText);
         using Font titleFont = new("Yu Gothic UI", 20f, FontStyle.Bold);
         using Font bodyFont = new("Yu Gothic UI", 11f, FontStyle.Regular);
         using Font badgeFont = new("Yu Gothic UI", 10f, FontStyle.Bold);
@@ -6423,11 +7596,11 @@ public partial class Form1 : Form
         buttonPrepareCache.Enabled = !isBusy && File.Exists(textBoxToolkitPath.Text) && GetCurrentMode() == EditorMode.Cave;
         if (_buttonPrepareAllUnitCache is not null)
         {
-            _buttonPrepareAllUnitCache.Enabled = !isBusy && File.Exists(textBoxToolkitPath.Text) && GetCurrentMode() == EditorMode.Cave && _currentLoadFormat == LoadFormatKind.DiscExtractData;
+            _buttonPrepareAllUnitCache.Enabled = !isBusy && File.Exists(textBoxToolkitPath.Text) && GetCurrentMode() == EditorMode.Cave && _currentLoadFormat == LoadFormatKind.DiscExtractData && !IsCaveTextsGridMode();
         }
         buttonReloadTemplates.Enabled = !isBusy;
         comboBoxMode.Enabled = !isBusy;
-        checkBoxObjDirectView.Enabled = GetCurrentMode() == EditorMode.Cave || _currentObjScene is not null;
+        checkBoxObjDirectView.Enabled = (GetCurrentMode() == EditorMode.Cave || _currentObjScene is not null) && !IsTextsGridModelSourceMode();
         checkBoxSpawnOverlay.Enabled = !isBusy;
         checkBoxRouteOverlay.Enabled = !isBusy;
         buttonSpawnMoveMode.Enabled = !isBusy && CanEditSpawnLikePoints();
@@ -6456,39 +7629,44 @@ public partial class Form1 : Form
         return _selectedTemplateName;
     }
 
-    private void AddTemplateListItem(string displayName, string? imagePath)
+    private void AddTemplateListItem(string displayName, string? imagePath, bool nameOnly = false)
     {
         Panel cardPanel = new()
         {
             Width = 244,
-            Height = 54,
+            Height = nameOnly ? 32 : 54,
             Margin = new Padding(2, 2, 2, 5),
             Padding = new Padding(4),
             BorderStyle = BorderStyle.FixedSingle,
-            BackColor = Color.FromArgb(252, 251, 247),
+            BackColor = UiTheme.CardBack,
             Tag = displayName,
             Cursor = Cursors.Hand
         };
 
-        PictureBox pictureBox = new()
+        PictureBox? pictureBox = null;
+        if (!nameOnly)
         {
-            Width = 72,
-            Height = 44,
-            Location = new Point(4, 4),
-            SizeMode = PictureBoxSizeMode.Zoom,
-            BackColor = Color.FromArgb(236, 233, 224),
-            BorderStyle = BorderStyle.FixedSingle,
-            Tag = displayName,
-            Cursor = Cursors.Hand,
-            Image = LoadTemplateCardImage(imagePath)
-        };
+            pictureBox = new PictureBox
+            {
+                Width = 72,
+                Height = 44,
+                Location = new Point(4, 4),
+                SizeMode = PictureBoxSizeMode.Zoom,
+                BackColor = UiTheme.CardThumbnailBack,
+                BorderStyle = BorderStyle.FixedSingle,
+                Tag = displayName,
+                Cursor = Cursors.Hand,
+                Image = LoadTemplateCardImage(imagePath)
+            };
+        }
 
         Label nameLabel = new()
         {
             AutoEllipsis = true,
-            Location = new Point(84, 6),
-            Size = new Size(150, 40),
+            Location = nameOnly ? new Point(8, 5) : new Point(84, 6),
+            Size = nameOnly ? new Size(224, 22) : new Size(150, 40),
             Font = new Font("Yu Gothic UI", 8.5F, FontStyle.Bold),
+            ForeColor = UiTheme.TextMain,
             Text = displayName,
             Tag = displayName,
             Cursor = Cursors.Hand
@@ -6500,14 +7678,18 @@ public partial class Form1 : Form
         }
 
         bindClick(cardPanel);
-        bindClick(pictureBox);
+        if (pictureBox is not null)
+        {
+            bindClick(pictureBox);
+            cardPanel.Controls.Add(pictureBox);
+            _templateCardImages[displayName] = pictureBox;
+        }
+
         bindClick(nameLabel);
 
-        cardPanel.Controls.Add(pictureBox);
         cardPanel.Controls.Add(nameLabel);
         flowLayoutPanelTemplateCards.Controls.Add(cardPanel);
         _templateCardPanels[displayName] = cardPanel;
-        _templateCardImages[displayName] = pictureBox;
     }
 
     private string? TryGetCachedPreviewImagePath(string unitName)
@@ -6628,7 +7810,7 @@ public partial class Form1 : Form
         foreach ((string key, Panel panel) in _templateCardPanels)
         {
             bool isSelected = string.Equals(key, unitName, StringComparison.OrdinalIgnoreCase);
-            panel.BackColor = isSelected ? Color.FromArgb(233, 241, 255) : Color.FromArgb(252, 251, 247);
+            panel.BackColor = isSelected ? UiTheme.CardSelectedBack : UiTheme.CardBack;
             panel.Padding = isSelected ? new Padding(5) : new Padding(6);
         }
 
@@ -6670,7 +7852,7 @@ public partial class Form1 : Form
     {
         Bitmap bitmap = new(72, 44);
         using Graphics graphics = Graphics.FromImage(bitmap);
-        graphics.Clear(Color.FromArgb(245, 243, 236));
+        graphics.Clear(UiTheme.CardThumbnailBack);
         graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
         graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
@@ -6682,7 +7864,8 @@ public partial class Form1 : Form
             fitted.Width,
             fitted.Height);
         graphics.DrawImage(source, drawRect);
-        graphics.DrawRectangle(Pens.SlateGray, targetBounds);
+        using Pen thumbnailBorderPen = new(UiTheme.BorderCyan, 1f);
+        graphics.DrawRectangle(thumbnailBorderPen, targetBounds);
         return bitmap;
     }
 
@@ -6690,11 +7873,11 @@ public partial class Form1 : Form
     {
         Bitmap bitmap = new(96, 58);
         using Graphics graphics = Graphics.FromImage(bitmap);
-        graphics.Clear(Color.FromArgb(238, 235, 228));
-        using Pen borderPen = new(Color.FromArgb(120, 122, 126), 1f);
+        graphics.Clear(UiTheme.CardThumbnailBack);
+        using Pen borderPen = new(UiTheme.BorderCyan, 1f);
         graphics.DrawRectangle(borderPen, 4, 3, 88, 50);
         using Font font = new("Yu Gothic UI", 8f, FontStyle.Bold);
-        using SolidBrush brush = new(Color.FromArgb(96, 96, 96));
+        using SolidBrush brush = new(UiTheme.TextSub);
         StringFormat format = new()
         {
             Alignment = StringAlignment.Center,
@@ -6738,6 +7921,22 @@ public partial class Form1 : Form
         return _settings.CaveModelSource.Equals("ArcVisual", StringComparison.OrdinalIgnoreCase)
             ? CaveModelSourceMode.ArcVisual
             : CaveModelSourceMode.TextsGrid;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 現在の 3D 表示ソースが texts/grid か判定する処理
+    //-------------------------------------------------------------------------------
+    private bool IsTextsGridModelSourceMode()
+    {
+        return GetCurrentCaveModelSourceMode() == CaveModelSourceMode.TextsGrid;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 洞窟 texts/grid 表示で軽量一覧と 3D 固定を使うか判定する処理
+    //-------------------------------------------------------------------------------
+    private bool IsCaveTextsGridMode()
+    {
+        return GetCurrentMode() == EditorMode.Cave && IsTextsGridModelSourceMode();
     }
 
     //-------------------------------------------------------------------------------
@@ -6787,6 +7986,7 @@ public partial class Form1 : Form
         _currentObjMtlPath = null;
         _currentObjScene = null;
         _currentUnitDefinition = null;
+        _currentUnitDefinitionSourcePath = null;
         _currentLayoutPath = null;
         _currentRoutePath = null;
         _currentWaterboxPath = null;
@@ -6798,10 +7998,17 @@ public partial class Form1 : Form
         _selectedSpawnIndex = null;
         _selectedRouteWaypointIndex = null;
         _selectedWaterboxIndex = null;
+        _selectedUnitConnectionDoorIndex = null;
         _previewSceneResetRequired = true;
 
         if (GetCurrentMode() == EditorMode.Cave)
         {
+            bool nameOnlyList = IsCaveTextsGridMode();
+            if (nameOnlyList && !checkBoxObjDirectView.Checked)
+            {
+                checkBoxObjDirectView.Checked = true;
+            }
+
             string? caveArcRoot = GetCurrentCaveArcRoot();
             string? caveUnitsRoot = GetCurrentCaveUnitsRoot();
             SetPathStatus(textBoxArcPath, caveArcRoot);
@@ -6813,7 +8020,7 @@ public partial class Form1 : Form
                 foreach (string dir in Directory.GetDirectories(textBoxArcPath.Text).OrderBy(Path.GetFileName))
                 {
                     string unitName = Path.GetFileName(dir);
-                    AddTemplateListItem(unitName, TryGetCachedPreviewImagePath(unitName));
+                    AddTemplateListItem(unitName, nameOnlyList ? null : TryGetCachedPreviewImagePath(unitName), nameOnlyList);
                     unitIndex++;
                     if (unitIndex % 8 == 0)
                     {
@@ -6824,6 +8031,12 @@ public partial class Form1 : Form
         }
         else
         {
+            bool nameOnlyList = IsTextsGridModelSourceMode();
+            if (nameOnlyList && !checkBoxObjDirectView.Checked)
+            {
+                checkBoxObjDirectView.Checked = true;
+            }
+
             string? fieldMapRoot = GetCurrentFieldMapRoot();
             string? fieldTextsRoot = GetCurrentFieldTextsRoot();
             _lastFieldMapRoot = fieldMapRoot;
@@ -6838,7 +8051,7 @@ public partial class Form1 : Form
                 foreach (string dir in Directory.GetDirectories(fieldMapRoot).OrderBy(Path.GetFileName))
                 {
                     string mapName = Path.GetFileName(dir);
-                    AddTemplateListItem(mapName, TryGetCachedFieldPreviewImagePath(mapName));
+                    AddTemplateListItem(mapName, nameOnlyList ? null : TryGetCachedFieldPreviewImagePath(mapName), nameOnlyList);
                     mapIndex++;
                     if (mapIndex % 8 == 0)
                     {
@@ -6877,12 +8090,14 @@ public partial class Form1 : Form
         _currentWaterboxPath = null;
         _currentModelBounds = RectangleF.Empty;
         _currentUnitDefinition = null;
+        _currentUnitDefinitionSourcePath = null;
         _currentLayout = new LayoutFile(Array.Empty<LayoutSpawn>());
         _currentRoute = new RouteFile(new Dictionary<int, RouteWaypoint>());
         _currentWaterbox = new WaterboxFile(0, Array.Empty<WaterboxEntry>());
         _selectedSpawnIndex = null;
         _selectedRouteWaypointIndex = null;
         _selectedWaterboxIndex = null;
+        _selectedUnitConnectionDoorIndex = null;
         _previewSceneResetRequired = true;
 
         if (string.IsNullOrWhiteSpace(unitName) || !Directory.Exists(textBoxArcPath.Text))
@@ -6900,6 +8115,12 @@ public partial class Form1 : Form
         _currentObjScene = LoadObjScene(cacheEntry);
         _currentModelBounds = LoadModelBounds(_currentObjScene);
         _currentUnitDefinition = TryLoadUnitDefinition(unitName);
+        if (_currentUnitDefinition is null)
+        {
+            _currentUnitDefinition = CreateDefaultUnitDefinition(unitName, _currentModelBounds);
+            _currentUnitDefinitionSourcePath = null;
+            AppendLog($"unit 定義未検出: {unitName} の初期 UnitConnection 定義を作成しました．");
+        }
         _currentLayout = LayoutParser.ParseFile(cacheEntry.LayoutPath ?? string.Empty);
         _currentRoute = RouteParser.ParseFile(cacheEntry.RoutePath ?? string.Empty);
         _currentWaterbox = WaterboxParser.ParseFile(cacheEntry.WaterboxPath ?? string.Empty);
@@ -6928,6 +8149,7 @@ public partial class Form1 : Form
         _currentObjScene = null;
         _currentModelBounds = RectangleF.Empty;
         _currentUnitDefinition = null;
+        _currentUnitDefinitionSourcePath = null;
         _currentLayoutPath = null;
         _currentRoutePath = null;
         _currentWaterboxPath = null;
@@ -6939,6 +8161,7 @@ public partial class Form1 : Form
         _selectedSpawnIndex = null;
         _selectedRouteWaypointIndex = null;
         _selectedWaterboxIndex = null;
+        _selectedUnitConnectionDoorIndex = null;
         _previewSceneResetRequired = true;
 
         if (string.IsNullOrWhiteSpace(mapName) ||
@@ -7005,6 +8228,7 @@ public partial class Form1 : Form
             }
 
             FieldMapCacheService cacheService = new(fieldMapRoot, fieldTextsRoot, textBoxToolkitPath.Text, GetCurrentCacheRoot());
+            CaveModelSourceMode modelSourceMode = GetCurrentCaveModelSourceMode();
             progressBarCache.Minimum = 0;
             progressBarCache.Maximum = 4;
             progressBarCache.Value = 0;
@@ -7016,7 +8240,7 @@ public partial class Form1 : Form
                     {
                         UpdateCacheProgress(new CacheProgressInfo(name, completed, total, "地上キャッシュ準備中"));
                     }));
-                });
+                }, modelSourceMode: modelSourceMode);
             });
         }
         catch (Exception ex)
@@ -7389,24 +8613,24 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     private void RefreshFieldAddControls()
     {
-        if (_comboBoxFieldAddFile is null ||
-            _comboBoxFieldAddType is null ||
-            _buttonFieldAddSpawnMode is null)
+        if (_comboBoxFieldConsoleAddFile is null ||
+            _comboBoxFieldConsoleAddType is null ||
+            _buttonFieldConsoleAddSpawnMode is null)
         {
             return;
         }
 
         bool canAdd = GetCurrentMode() == EditorMode.Field && _currentFieldMapData is not null;
-        _comboBoxFieldAddFile.Enabled = canAdd;
-        _comboBoxFieldAddType.Enabled = canAdd;
-        _buttonFieldAddSpawnMode.Enabled = canAdd;
+        _comboBoxFieldConsoleAddFile.Enabled = canAdd;
+        _comboBoxFieldConsoleAddType.Enabled = canAdd;
+        _buttonFieldConsoleAddSpawnMode.Enabled = canAdd;
         if (!canAdd)
         {
-            _comboBoxFieldAddFile.Items.Clear();
+            _comboBoxFieldConsoleAddFile.Items.Clear();
             return;
         }
 
-        int? selectedFileIndex = _comboBoxFieldAddFile.SelectedItem is FieldGeneratorFileItem selectedItem
+        int? selectedFileIndex = _comboBoxFieldConsoleAddFile.SelectedItem is FieldGeneratorFileItem selectedItem
             ? selectedItem.FileIndex
             : null;
         List<FieldGeneratorFileItem> items = new();
@@ -7431,24 +8655,24 @@ public partial class Form1 : Form
             }
         }
 
-        _comboBoxFieldAddFile.BeginUpdate();
+        _comboBoxFieldConsoleAddFile.BeginUpdate();
         try
         {
-            _comboBoxFieldAddFile.Items.Clear();
+            _comboBoxFieldConsoleAddFile.Items.Clear();
             foreach (FieldGeneratorFileItem item in items)
             {
-                _comboBoxFieldAddFile.Items.Add(item);
+                _comboBoxFieldConsoleAddFile.Items.Add(item);
             }
         }
         finally
         {
-            _comboBoxFieldAddFile.EndUpdate();
+            _comboBoxFieldConsoleAddFile.EndUpdate();
         }
 
         int selectedIndex = selectedFileIndex is null
             ? -1
             : items.FindIndex(item => item.FileIndex == selectedFileIndex.Value);
-        _comboBoxFieldAddFile.SelectedIndex = items.Count == 0 ? -1 : Math.Max(0, selectedIndex);
+        _comboBoxFieldConsoleAddFile.SelectedIndex = items.Count == 0 ? -1 : Math.Max(0, selectedIndex);
     }
 
     //-------------------------------------------------------------------------------
@@ -7511,8 +8735,8 @@ public partial class Form1 : Form
     private void AddFieldObjectAt(float x, float z)
     {
         if (_currentFieldMapData is null ||
-            _comboBoxFieldAddFile?.SelectedItem is not FieldGeneratorFileItem fileItem ||
-            _comboBoxFieldAddType?.SelectedItem is not FieldAddTemplateItem templateItem)
+            _comboBoxFieldConsoleAddFile?.SelectedItem is not FieldGeneratorFileItem fileItem ||
+            _comboBoxFieldConsoleAddType?.SelectedItem is not FieldAddTemplateItem templateItem)
         {
             AppendLog("地上 object 追加失敗: 追加先 generator または追加タイプが未選択です．");
             return;
@@ -7897,6 +9121,7 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     private UnitDefinition? TryLoadUnitDefinition(string unitName)
     {
+        _currentUnitDefinitionSourcePath = null;
         if (string.IsNullOrWhiteSpace(unitName))
         {
             return null;
@@ -7924,6 +9149,7 @@ public partial class Form1 : Form
                     .FirstOrDefault(unit => unit.Name.Equals(unitName, StringComparison.OrdinalIgnoreCase));
                 if (definition is not null)
                 {
+                    _currentUnitDefinitionSourcePath = candidate;
                     return definition;
                 }
             }
@@ -7934,6 +9160,20 @@ public partial class Form1 : Form
         }
 
         return null;
+    }
+
+    //-------------------------------------------------------------------------------
+    // all_units 定義がないユニット用の初期 UnitConnection 定義を作成する処理
+    //-------------------------------------------------------------------------------
+    private static UnitDefinition CreateDefaultUnitDefinition(string unitName, RectangleF modelBounds)
+    {
+        int width = modelBounds.Width > 0f
+            ? Math.Max(1, (int)MathF.Round(modelBounds.Width / 170f))
+            : 1;
+        int height = modelBounds.Height > 0f
+            ? Math.Max(1, (int)MathF.Round(modelBounds.Height / 170f))
+            : 1;
+        return new UnitDefinition(unitName, width, height, UnitKind.Room, 0, 1, Array.Empty<DoorDefinition>());
     }
 
     //-------------------------------------------------------------------------------
@@ -8233,6 +9473,7 @@ public partial class Form1 : Form
             {
                 RouteSerializer.WriteFile(_currentRoutePath, _currentRoute);
                 AppendLog($"route キャッシュ保存完了: {_currentRoutePath}");
+                SaveCurrentUnitDefinitionForRouteSync();
             }
 
             if (!string.IsNullOrWhiteSpace(_currentWaterboxPath))
@@ -8262,6 +9503,267 @@ public partial class Form1 : Form
         {
             SetBusyState(false, "待機中です");
         }
+    }
+
+    //-------------------------------------------------------------------------------
+    // route 保存に合わせて UnitConnection 定義テキストの door links を同期保存する処理
+    //-------------------------------------------------------------------------------
+    private void SaveCurrentUnitDefinitionForRouteSync()
+    {
+        if (_currentUnitDefinition is null)
+        {
+            return;
+        }
+
+        UnitDefinition definition = RecalculateCurrentUnitDoorLinks(_currentUnitDefinition);
+        List<string> targetFiles = ResolveUnitDefinitionSaveTargets(definition).ToList();
+        if (targetFiles.Count == 0)
+        {
+            AppendLog("UnitConnection door links 同期スキップ: 保存先が見つかりません．");
+            return;
+        }
+
+        foreach (string targetFile in targetFiles)
+        {
+            SaveUnitDefinitionToFile(targetFile, definition);
+        }
+
+        _currentUnitDefinitionSourcePath = targetFiles[0];
+        AppendLog($"UnitConnection door links 同期保存完了: {string.Join(", ", targetFiles.Select(Path.GetFileName))}");
+    }
+
+    //-------------------------------------------------------------------------------
+    // 現在の UnitConnection 定義を unit 定義テキストへ保存する処理
+    //-------------------------------------------------------------------------------
+    private async Task SaveCurrentUnitDefinitionAsync()
+    {
+        if (GetCurrentMode() != EditorMode.Cave)
+        {
+            AppendLog("UnitConnection 定義は洞窟モードでのみ保存できます．");
+            return;
+        }
+
+        if (_currentUnitDefinition is null)
+        {
+            AppendLog("UnitConnection 定義がないため保存できません．");
+            return;
+        }
+
+        ApplyUnitConnectionInspectorValues();
+        UnitDefinition definition = RecalculateCurrentUnitDoorLinks(_currentUnitDefinition);
+        List<string> targetFiles = ResolveUnitDefinitionSaveTargets(definition).ToList();
+        if (targetFiles.Count == 0)
+        {
+            AppendLog("UnitConnection 定義の保存先が見つかりません．");
+            return;
+        }
+
+        string targetText = string.Join(Environment.NewLine, targetFiles.Select(path => $"・{path}"));
+        DialogResult result = MessageBox.Show(
+            this,
+            $"UnitConnection 定義を保存します．{Environment.NewLine}{targetText}{Environment.NewLine}続行しますか？",
+            Localize("SaveConfirmTitle"),
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Warning);
+        if (result != DialogResult.Yes)
+        {
+            AppendLog("UnitConnection 定義保存をキャンセルしました．");
+            return;
+        }
+
+        try
+        {
+            SetBusyState(true, "UnitConnection 定義を保存しています");
+            await Task.Run(() =>
+            {
+                foreach (string targetFile in targetFiles)
+                {
+                    SaveUnitDefinitionToFile(targetFile, definition);
+                }
+            });
+
+            _currentUnitDefinitionSourcePath = targetFiles[0];
+            UnitDefinition? reloadedDefinition = TryLoadUnitDefinition(definition.Name);
+            _currentUnitDefinition = reloadedDefinition ?? definition;
+            if (reloadedDefinition is null)
+            {
+                _currentUnitDefinitionSourcePath = targetFiles[0];
+            }
+            UpdateAllPreviewOverlays();
+            RefreshInspector();
+            RefreshReferenceUnitInfo();
+            RefreshUnitSummary();
+            AppendLog($"UnitConnection 定義保存完了: {string.Join(", ", targetFiles.Select(Path.GetFileName))}");
+            MessageBox.Show(this, "UnitConnection 定義を保存しました．", Localize("SaveCompleteTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"UnitConnection 定義保存失敗: {ex.Message}");
+            MessageBox.Show(this, $"{Localize("SaveFailed")}\n{ex.Message}", Localize("SaveFailedTitle"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        finally
+        {
+            SetBusyState(false, "待機中です");
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // 現在の route 情報から UnitConnection の door links を再計算する処理
+    //-------------------------------------------------------------------------------
+    private UnitDefinition RecalculateCurrentUnitDoorLinks(UnitDefinition definition)
+    {
+        if (_currentRoute.Waypoints.Count == 0)
+        {
+            AppendLog("UnitConnection door links 再計算スキップ: route が読み込まれていません．");
+            return definition;
+        }
+
+        UnitDefinition recalculatedDefinition = UnitDoorLinkCalculator.RecalculateDoorLinks(definition, _currentRoute);
+        _currentUnitDefinition = recalculatedDefinition;
+        int linkCount = recalculatedDefinition.Doors.Sum(door => door.DoorLinks.Count);
+        AppendLog($"UnitConnection door links 再計算: doors={recalculatedDefinition.Doors.Count}, links={linkCount}");
+        return recalculatedDefinition;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 現在の参照状態から UnitConnection 定義の保存先一覧を作成する処理
+    //-------------------------------------------------------------------------------
+    private IReadOnlyList<string> ResolveUnitDefinitionSaveTargets(UnitDefinition definition)
+    {
+        HashSet<string> targets = new(StringComparer.OrdinalIgnoreCase);
+        if (!string.IsNullOrWhiteSpace(_currentUnitDefinitionSourcePath) &&
+            File.Exists(_currentUnitDefinitionSourcePath))
+        {
+            string? sourceDirectory = Path.GetDirectoryName(_currentUnitDefinitionSourcePath);
+            if (!string.IsNullOrWhiteSpace(sourceDirectory) && Directory.Exists(sourceDirectory))
+            {
+                foreach (string candidate in Directory.GetFiles(sourceDirectory, "*.txt"))
+                {
+                    if (UnitDefinitionFileContains(candidate, definition.Name))
+                    {
+                        targets.Add(candidate);
+                    }
+                }
+            }
+
+            targets.Add(_currentUnitDefinitionSourcePath);
+            return targets.OrderBy(path => path, StringComparer.OrdinalIgnoreCase).ToList();
+        }
+
+        string? directDefinitionPath = FindExistingDirectUnitDefinitionPath(definition.Name);
+        if (!string.IsNullOrWhiteSpace(directDefinitionPath))
+        {
+            targets.Add(directDefinitionPath);
+            return targets.ToList();
+        }
+
+        string? unitsRoot = GetCurrentCaveUnitsRoot();
+        if (!string.IsNullOrWhiteSpace(unitsRoot) && Directory.Exists(unitsRoot))
+        {
+            targets.Add(Path.Combine(unitsRoot, "all_units.txt"));
+            return targets.ToList();
+        }
+
+        if (Directory.Exists(textBoxUnitsPath.Text))
+        {
+            targets.Add(Path.Combine(textBoxUnitsPath.Text, $"{definition.Name}.txt"));
+            return targets.ToList();
+        }
+
+        targets.Add(Path.Combine(AppContext.BaseDirectory, "UnitDefinitions", $"{definition.Name}.txt"));
+        return targets.ToList();
+    }
+
+    //-------------------------------------------------------------------------------
+    // 直接ユニットフォルダ内の既存 unit 定義テキストを探す処理
+    //-------------------------------------------------------------------------------
+    private string? FindExistingDirectUnitDefinitionPath(string unitName)
+    {
+        if (!Directory.Exists(textBoxUnitsPath.Text))
+        {
+            return null;
+        }
+
+        foreach (string candidate in Directory.GetFiles(textBoxUnitsPath.Text, "*.txt").OrderBy(Path.GetFileName))
+        {
+            if (UnitDefinitionFileContains(candidate, unitName))
+            {
+                return candidate;
+            }
+        }
+
+        return null;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 指定 unit 定義ファイルに対象ユニットが含まれるか判定する処理
+    //-------------------------------------------------------------------------------
+    private static bool UnitDefinitionFileContains(string path, string unitName)
+    {
+        try
+        {
+            return UnitDefinitionParser.ParseMany(path)
+                .Any(unit => unit.Name.Equals(unitName, StringComparison.OrdinalIgnoreCase));
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // 指定 unit 定義ファイルへ現在ユニットを追加または置換して保存する処理
+    //-------------------------------------------------------------------------------
+    private static void SaveUnitDefinitionToFile(string path, UnitDefinition definition)
+    {
+        List<UnitDefinition> units = LoadUnitDefinitionsForSave(path);
+        int existingIndex = units.FindIndex(unit => unit.Name.Equals(definition.Name, StringComparison.OrdinalIgnoreCase));
+        if (existingIndex >= 0)
+        {
+            units[existingIndex] = definition;
+        }
+        else
+        {
+            units.Add(definition);
+        }
+
+        UnitDefinitionSerializer.WriteFile(path, units.OrderBy(unit => unit.Name, StringComparer.OrdinalIgnoreCase).ToList());
+    }
+
+    //-------------------------------------------------------------------------------
+    // 保存先ファイル用の既存 UnitDefinition 一覧を読み込む処理
+    //-------------------------------------------------------------------------------
+    private static List<UnitDefinition> LoadUnitDefinitionsForSave(string path)
+    {
+        if (File.Exists(path))
+        {
+            return UnitDefinitionParser.ParseMany(path).ToList();
+        }
+
+        string? directory = Path.GetDirectoryName(path);
+        if (string.Equals(Path.GetFileName(path), "all_units.txt", StringComparison.OrdinalIgnoreCase) &&
+            !string.IsNullOrWhiteSpace(directory) &&
+            Directory.Exists(directory))
+        {
+            List<UnitDefinition> units = new();
+            foreach (string candidate in Directory.GetFiles(directory, "*.txt").Where(file => !string.Equals(file, path, StringComparison.OrdinalIgnoreCase)))
+            {
+                try
+                {
+                    units.AddRange(UnitDefinitionParser.ParseMany(candidate));
+                }
+                catch
+                {
+                }
+            }
+
+            return units
+                .GroupBy(unit => unit.Name, StringComparer.OrdinalIgnoreCase)
+                .Select(group => group.First())
+                .ToList();
+        }
+
+        return new List<UnitDefinition>();
     }
 
     //-------------------------------------------------------------------------------
@@ -8369,12 +9871,14 @@ public partial class Form1 : Form
         {
             _selectedSpawnIndex = null;
             _selectedWaterboxIndex = null;
+            _selectedUnitConnectionDoorIndex = null;
         }
         _objModelView.SelectRouteWaypoint(e.WaypointIndex);
         if (e.WaypointIndex is not null)
         {
             _objModelView.SelectSpawn(null);
             _objModelView.SelectWaterbox(null);
+            _objModelView.SelectUnitConnectionDoor(null);
             SwitchQuickToolTargetFromSelection(QuickToolTarget.Route);
         }
         RefreshInspector();
@@ -8391,12 +9895,14 @@ public partial class Form1 : Form
         {
             _selectedRouteWaypointIndex = null;
             _selectedWaterboxIndex = null;
+            _selectedUnitConnectionDoorIndex = null;
         }
         _objModelView.SelectSpawn(e.SpawnIndex);
         if (e.SpawnIndex is not null)
         {
             _objModelView.SelectRouteWaypoint(null);
             _objModelView.SelectWaterbox(null);
+            _objModelView.SelectUnitConnectionDoor(null);
             SwitchQuickToolTargetFromSelection(QuickToolTarget.Spawn);
         }
         RefreshInspector();
@@ -8415,9 +9921,14 @@ public partial class Form1 : Form
 
         float movedX = waypoint.X + e.DeltaX;
         float movedZ = waypoint.Z + e.DeltaZ;
+        if (e.MovesHeight)
+        {
+            _routeHeightDragInProgress = true;
+        }
+
         float movedY = e.MovesHeight
             ? waypoint.Y + e.DeltaY
-            : GetGroundHeightOrFallback(movedX, movedZ, waypoint.Y);
+            : _continuousEditUndoRecorded ? waypoint.Y : GetGroundHeightOrFallback(movedX, movedZ, waypoint.Y);
 
         RecordUndoSnapshotForEditChange();
         Dictionary<int, RouteWaypoint> updatedWaypoints = _currentRoute.Waypoints
@@ -8557,7 +10068,7 @@ public partial class Form1 : Form
         LayoutSpawn spawn = updatedSpawns[e.SpawnIndex];
         float movedX = spawn.X + e.DeltaX;
         float movedZ = spawn.Z + e.DeltaZ;
-        float movedY = GetGroundHeightOrFallback(movedX, movedZ, spawn.Y);
+        float movedY = _continuousEditUndoRecorded ? spawn.Y : GetGroundHeightOrFallback(movedX, movedZ, spawn.Y);
         RecordUndoSnapshotForEditChange();
         updatedSpawns[e.SpawnIndex] = spawn with
         {
@@ -8679,6 +10190,12 @@ public partial class Form1 : Form
         if (e.EditMode == UnitMapEditMode.AddRouteWaypoint)
         {
             AddRouteWaypointAt(e.X, e.Z);
+            return;
+        }
+
+        if (e.EditMode == UnitMapEditMode.AddUnitConnectionDoor)
+        {
+            AddUnitConnectionDoorAt(e.X, e.Z);
             return;
         }
 
@@ -8860,6 +10377,7 @@ public partial class Form1 : Form
         {
             _selectedSpawnIndex = null;
             _selectedWaterboxIndex = null;
+            _selectedUnitConnectionDoorIndex = null;
         }
 
         _unitMapView.SelectRouteWaypoint(e.WaypointIndex);
@@ -8867,6 +10385,7 @@ public partial class Form1 : Form
         {
             _unitMapView.SelectSpawn(null);
             _unitMapView.SelectWaterbox(null);
+            _unitMapView.SelectUnitConnectionDoor(null);
             SwitchQuickToolTargetFromSelection(QuickToolTarget.Route);
         }
 
@@ -8884,6 +10403,7 @@ public partial class Form1 : Form
         {
             _selectedRouteWaypointIndex = null;
             _selectedWaterboxIndex = null;
+            _selectedUnitConnectionDoorIndex = null;
         }
 
         _unitMapView.SelectSpawn(e.SpawnIndex);
@@ -8891,6 +10411,7 @@ public partial class Form1 : Form
         {
             _unitMapView.SelectRouteWaypoint(null);
             _unitMapView.SelectWaterbox(null);
+            _unitMapView.SelectUnitConnectionDoor(null);
             SwitchQuickToolTargetFromSelection(QuickToolTarget.Spawn);
         }
 
@@ -8908,15 +10429,44 @@ public partial class Form1 : Form
         {
             _selectedSpawnIndex = null;
             _selectedRouteWaypointIndex = null;
+            _selectedUnitConnectionDoorIndex = null;
             _unitMapView.SelectSpawn(null);
             _unitMapView.SelectRouteWaypoint(null);
+            _unitMapView.SelectUnitConnectionDoor(null);
             _objModelView.SelectSpawn(null);
             _objModelView.SelectRouteWaypoint(null);
+            _objModelView.SelectUnitConnectionDoor(null);
             SwitchQuickToolTargetFromSelection(QuickToolTarget.Waterbox);
         }
 
         _unitMapView.SelectWaterbox(e.WaterboxIndex);
         _objModelView.SelectWaterbox(e.WaterboxIndex);
+        RefreshInspector();
+        RefreshUnitSummary();
+    }
+
+    //-------------------------------------------------------------------------------
+    // プレビュー上の UnitConnection door 選択変更をフォームへ反映する処理
+    //-------------------------------------------------------------------------------
+    private void Preview_UnitConnectionSelectionChanged(object? sender, UnitConnectionSelectionChangedEventArgs e)
+    {
+        _selectedUnitConnectionDoorIndex = e.DoorIndex;
+        if (e.DoorIndex is not null)
+        {
+            _selectedSpawnIndex = null;
+            _selectedRouteWaypointIndex = null;
+            _selectedWaterboxIndex = null;
+            _unitMapView.SelectSpawn(null);
+            _unitMapView.SelectRouteWaypoint(null);
+            _unitMapView.SelectWaterbox(null);
+            _objModelView.SelectSpawn(null);
+            _objModelView.SelectRouteWaypoint(null);
+            _objModelView.SelectWaterbox(null);
+            SwitchQuickToolTargetFromSelection(QuickToolTarget.UnitConnect);
+        }
+
+        _unitMapView.SelectUnitConnectionDoor(e.DoorIndex);
+        _objModelView.SelectUnitConnectionDoor(e.DoorIndex);
         RefreshInspector();
         RefreshUnitSummary();
     }
@@ -9091,22 +10641,22 @@ public partial class Form1 : Form
             ? Localize("SpawnMoveOn")
             : Localize("SpawnMoveOff");
         buttonSpawnMoveMode.BackColor = _currentEditMode == UnitMapEditMode.MoveSpawn
-            ? Color.Honeydew
-            : SystemColors.Control;
+            ? UiTheme.ButtonHover
+            : UiTheme.ButtonBack;
         buttonRouteMoveMode.Text = _currentEditMode == UnitMapEditMode.MoveRouteWaypoint
             ? Localize("WaypointMoveOn")
             : Localize("WaypointMoveOff");
         buttonRouteMoveMode.BackColor = _currentEditMode == UnitMapEditMode.MoveRouteWaypoint
-            ? Color.Honeydew
-            : SystemColors.Control;
+            ? UiTheme.ButtonHover
+            : UiTheme.ButtonBack;
         if (_buttonAddSpawn is not null)
         {
             _buttonAddSpawn.Text = _currentEditMode == UnitMapEditMode.AddSpawn
                 ? Localize("SpawnAddOn")
                 : Localize("SpawnAdd");
             _buttonAddSpawn.BackColor = _currentEditMode == UnitMapEditMode.AddSpawn
-                ? Color.Honeydew
-                : SystemColors.Control;
+                ? UiTheme.ButtonHover
+                : UiTheme.ButtonBack;
         }
 
         if (_buttonAddWaypoint is not null)
@@ -9115,8 +10665,8 @@ public partial class Form1 : Form
                 ? Localize("WaypointAddOn")
                 : Localize("WaypointAdd");
             _buttonAddWaypoint.BackColor = _currentEditMode == UnitMapEditMode.AddRouteWaypoint
-                ? Color.Honeydew
-                : SystemColors.Control;
+                ? UiTheme.ButtonHover
+                : UiTheme.ButtonBack;
         }
 
         buttonSpawnMoveMode.Enabled = isCave;
@@ -9313,7 +10863,8 @@ public partial class Form1 : Form
     {
         Spawn,
         Route,
-        Waterbox
+        Waterbox,
+        UnitConnect
     }
 
     private enum LoadFormatKind

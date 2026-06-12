@@ -34,14 +34,18 @@ internal sealed class UnitMapView : Control
     private RouteFile _route = new(new Dictionary<int, RouteWaypoint>());
     private IReadOnlyDictionary<int, float> _routeColorHeights = new Dictionary<int, float>();
     private WaterboxFile _waterbox = new(0, Array.Empty<WaterboxEntry>());
+    private UnitDefinition? _unitConnectionDefinition;
     private UnitMapEditMode _editMode;
     private bool _showRadius = true;
+    private bool _showUnitConnections = true;
     private bool _useFieldObjectIcons;
     private bool _englishUi;
     private string _viewTitle = "洞窟ユニットモード";
     private int? _selectedRouteWaypointIndex;
     private int? _selectedSpawnIndex;
     private int? _selectedWaterboxIndex;
+    private int? _selectedUnitConnectionDoorIndex;
+    private UnitConnectionPoint? _hoverUnitConnectionPlacement;
 
     public event EventHandler<RouteWaypointSelectionChangedEventArgs>? RouteWaypointSelectionChanged;
     public event EventHandler<RouteWaypointMovedEventArgs>? RouteWaypointMoved;
@@ -55,6 +59,7 @@ internal sealed class UnitMapView : Control
     public event EventHandler<WaterboxSelectionChangedEventArgs>? WaterboxSelectionChanged;
     public event EventHandler<WaterboxMovedEventArgs>? WaterboxMoved;
     public event EventHandler<WaterboxResizedEventArgs>? WaterboxResized;
+    public event EventHandler<UnitConnectionSelectionChangedEventArgs>? UnitConnectionSelectionChanged;
     public event EventHandler? OverlayDragStarted;
     public event EventHandler? OverlayDragEnded;
     public event EventHandler<MapPointPlacementRequestedEventArgs>? MapPointPlacementRequested;
@@ -63,7 +68,7 @@ internal sealed class UnitMapView : Control
     public UnitMapView()
     {
         DoubleBuffered = true;
-        BackColor = Color.FromArgb(232, 227, 213);
+        BackColor = UiTheme.CanvasBack;
         SetStyle(ControlStyles.ResizeRedraw, true);
     }
 
@@ -147,6 +152,7 @@ internal sealed class UnitMapView : Control
         _resizingPointRadius = false;
         _waterboxResizeHandle = WaterboxResizeHandle.None;
         _linkingRouteWaypointIndex = null;
+        _hoverUnitConnectionPlacement = null;
         Cursor = GetCursorForEditMode(mode);
         Invalidate();
     }
@@ -162,6 +168,22 @@ internal sealed class UnitMapView : Control
         }
 
         _showRadius = visible;
+        Invalidate();
+    }
+
+    //-------------------------------------------------------------------------------
+    // ユニット接続ポイント overlay の表示情報を設定する処理
+    //-------------------------------------------------------------------------------
+    public void SetUnitConnectionOverlay(UnitDefinition? unitDefinition, bool visible)
+    {
+        _unitConnectionDefinition = unitDefinition;
+        _showUnitConnections = visible;
+        if (_selectedUnitConnectionDoorIndex is not null &&
+            unitDefinition?.Doors.Any(door => door.Index == _selectedUnitConnectionDoorIndex.Value) != true)
+        {
+            SetSelectedUnitConnectionDoor(null);
+        }
+
         Invalidate();
     }
 
@@ -237,6 +259,7 @@ internal sealed class UnitMapView : Control
         {
             SetSelectedSpawn(null);
             SetSelectedWaterbox(null);
+            SetSelectedUnitConnectionDoor(null);
         }
     }
 
@@ -253,6 +276,7 @@ internal sealed class UnitMapView : Control
         {
             SetSelectedRouteWaypoint(null);
             SetSelectedWaterbox(null);
+            SetSelectedUnitConnectionDoor(null);
         }
     }
 
@@ -272,6 +296,27 @@ internal sealed class UnitMapView : Control
         {
             SetSelectedRouteWaypoint(null);
             SetSelectedSpawn(null);
+            SetSelectedUnitConnectionDoor(null);
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // 選択中 UnitConnection door を外部から指定する処理
+    //-------------------------------------------------------------------------------
+    public void SelectUnitConnectionDoor(int? doorIndex)
+    {
+        if (doorIndex is not null &&
+            _unitConnectionDefinition?.Doors.Any(door => door.Index == doorIndex.Value) != true)
+        {
+            doorIndex = null;
+        }
+
+        SetSelectedUnitConnectionDoor(doorIndex);
+        if (doorIndex is not null)
+        {
+            SetSelectedRouteWaypoint(null);
+            SetSelectedSpawn(null);
+            SetSelectedWaterbox(null);
         }
     }
 
@@ -315,7 +360,8 @@ internal sealed class UnitMapView : Control
 
             if (_editMode == UnitMapEditMode.AddSpawn ||
                 _editMode == UnitMapEditMode.AddRouteWaypoint ||
-                _editMode == UnitMapEditMode.AddWaterbox)
+                _editMode == UnitMapEditMode.AddWaterbox ||
+                _editMode == UnitMapEditMode.AddUnitConnectionDoor)
             {
                 PointF worldPoint = ScreenToWorld(e.Location);
                 MapPointPlacementRequested?.Invoke(
@@ -330,6 +376,9 @@ internal sealed class UnitMapView : Control
             int? hitSpawn = hitWaypoint is null ? HitTestLayoutSpawn(e.Location) : null;
             WaterboxResizeHandle hitWaterboxHandle = HitTestWaterboxHandle(e.Location, out int? hitHandleWaterbox);
             int? hitWaterbox = hitWaypoint is null && hitSpawn is null ? HitTestWaterbox(e.Location) : null;
+            int? hitUnitConnectionDoor = hitWaypoint is null && hitSpawn is null && hitWaterbox is null
+                ? HitTestUnitConnectionDoor(e.Location)
+                : null;
             if (_editMode == UnitMapEditMode.DeleteRouteWaypoint)
             {
                 if (hitWaypoint is not null)
@@ -377,6 +426,7 @@ internal sealed class UnitMapView : Control
                 SetSelectedRouteWaypoint(hitWaypoint);
                 SetSelectedSpawn(null);
                 SetSelectedWaterbox(null);
+                SetSelectedUnitConnectionDoor(null);
                 if (_editMode == UnitMapEditMode.ConnectRouteWaypoint)
                 {
                     _linkingRouteWaypointIndex = hitWaypoint;
@@ -401,6 +451,7 @@ internal sealed class UnitMapView : Control
                 SetSelectedSpawn(hitSpawn);
                 SetSelectedRouteWaypoint(null);
                 SetSelectedWaterbox(null);
+                SetSelectedUnitConnectionDoor(null);
                 _resizingPointRadius = _editMode == UnitMapEditMode.ResizeSpawnRadius;
                 _draggingSpawn = !_resizingPointRadius && _editMode == UnitMapEditMode.MoveSpawn;
                 if (_draggingSpawn || _resizingPointRadius)
@@ -419,6 +470,7 @@ internal sealed class UnitMapView : Control
                 SetSelectedWaterbox(hitHandleWaterbox);
                 SetSelectedRouteWaypoint(null);
                 SetSelectedSpawn(null);
+                SetSelectedUnitConnectionDoor(null);
                 _resizingWaterbox = true;
                 _waterboxResizeHandle = hitWaterboxHandle;
                 OverlayDragStarted?.Invoke(this, EventArgs.Empty);
@@ -428,17 +480,26 @@ internal sealed class UnitMapView : Control
                 SetSelectedWaterbox(hitWaterbox);
                 SetSelectedRouteWaypoint(null);
                 SetSelectedSpawn(null);
+                SetSelectedUnitConnectionDoor(null);
                 _draggingWaterbox = _editMode == UnitMapEditMode.MoveWaterbox;
                 if (_draggingWaterbox)
                 {
                     OverlayDragStarted?.Invoke(this, EventArgs.Empty);
                 }
             }
+            else if (hitUnitConnectionDoor is not null)
+            {
+                SetSelectedUnitConnectionDoor(hitUnitConnectionDoor);
+                SetSelectedRouteWaypoint(null);
+                SetSelectedSpawn(null);
+                SetSelectedWaterbox(null);
+            }
             else
             {
                 SetSelectedRouteWaypoint(null);
                 SetSelectedSpawn(null);
                 SetSelectedWaterbox(null);
+                SetSelectedUnitConnectionDoor(null);
             }
         }
         else if (e.Button == MouseButtons.Right)
@@ -469,6 +530,7 @@ internal sealed class UnitMapView : Control
                 SetSelectedRouteWaypoint(null);
                 SetSelectedSpawn(null);
                 SetSelectedWaterbox(null);
+                SetSelectedUnitConnectionDoor(null);
                 _rotatingSpawn = false;
                 _resizingPointRadius = false;
             }
@@ -593,6 +655,7 @@ internal sealed class UnitMapView : Control
             Invalidate();
         }
 
+        UpdateUnitConnectionPlacementHover(e.Location);
         _lastMouse = e.Location;
     }
 
@@ -677,7 +740,9 @@ internal sealed class UnitMapView : Control
 
         DrawWorldGrid(g);
         DrawTerrain(g);
+        DrawUnitConnectionPlacementGrid(g);
         DrawWaterbox(g);
+        DrawUnitConnections(g);
         DrawRoute(g, viewport);
         DrawRouteConnectionPreview(g);
         DrawLayout(g, viewport);
@@ -693,7 +758,7 @@ internal sealed class UnitMapView : Control
 
     private void DrawBackdrop(Graphics g, Rectangle viewport)
     {
-        using SolidBrush paperBrush = new(Color.FromArgb(248, 246, 239));
+        using SolidBrush paperBrush = new(UiTheme.CanvasPaper);
         Rectangle bounds = viewport;
         bounds.Inflate(-12, -12);
         g.FillRectangle(paperBrush, bounds);
@@ -727,8 +792,8 @@ internal sealed class UnitMapView : Control
         float maxZ = MathF.Ceiling(bounds.Bottom / GridStepWorld) * GridStepWorld;
         float stroke = 1f / Math.Max(_baseScale * _zoom, 0.0001f);
 
-        using Pen gridPen = new(Color.FromArgb(205, 198, 178), stroke);
-        using Pen axisPen = new(Color.FromArgb(162, 151, 121), stroke * 1.6f);
+        using Pen gridPen = new(UiTheme.CanvasGrid, stroke);
+        using Pen axisPen = new(UiTheme.CanvasAxis, stroke * 1.6f);
 
         for (float x = minX; x <= maxX + 0.001f; x += GridStepWorld)
         {
@@ -905,6 +970,67 @@ internal sealed class UnitMapView : Control
     }
 
     //-------------------------------------------------------------------------------
+    // ユニット定義の接続ポイントを overlay として描画する処理
+    //-------------------------------------------------------------------------------
+    private void DrawUnitConnections(Graphics g)
+    {
+        if (!_showUnitConnections || _unitConnectionDefinition is null)
+        {
+            return;
+        }
+
+        float unitScale = Math.Max(_baseScale * _zoom, 0.0001f);
+        float radius = 13f / unitScale;
+        using SolidBrush fillBrush = new(Color.FromArgb(245, 127, 23));
+        using Pen outlinePen = new(Color.FromArgb(245, 20, 20, 20), 2.2f / unitScale);
+        using Pen selectedPen = new(Color.FromArgb(255, 255, 255), 4.2f / unitScale);
+        foreach (UnitConnectionPoint point in UnitConnectionGeometry.GetConnectionPoints(_unitConnectionDefinition))
+        {
+            RectangleF bounds = new(point.X - radius, point.Z - radius, radius * 2f, radius * 2f);
+            g.FillEllipse(fillBrush, bounds);
+            g.DrawEllipse(outlinePen, bounds);
+            if (_selectedUnitConnectionDoorIndex == point.DoorIndex)
+            {
+                g.DrawEllipse(selectedPen, bounds);
+            }
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection Door 追加モード用の配置候補を描画する処理
+    //-------------------------------------------------------------------------------
+    private void DrawUnitConnectionPlacementGrid(Graphics g)
+    {
+        if (_editMode != UnitMapEditMode.AddUnitConnectionDoor || _unitConnectionDefinition is null)
+        {
+            return;
+        }
+
+        float unitScale = Math.Max(_baseScale * _zoom, 0.0001f);
+        float radius = 12f / unitScale;
+        using Pen guidePen = new(Color.FromArgb(190, 205, 70, 70), 2.4f / unitScale);
+        using SolidBrush fillBrush = new(Color.FromArgb(70, 205, 70, 70));
+        using SolidBrush hoverBrush = new(Color.FromArgb(215, 220, 35, 35));
+        using Pen hoverPen = new(Color.White, 4.2f / unitScale);
+
+        foreach (UnitConnectionPoint point in UnitConnectionGeometry.GetDoorPlacementCandidates(_unitConnectionDefinition))
+        {
+            RectangleF bounds = new(point.X - radius, point.Z - radius, radius * 2f, radius * 2f);
+            g.FillEllipse(fillBrush, bounds);
+            g.DrawEllipse(guidePen, bounds);
+        }
+
+        if (_hoverUnitConnectionPlacement is not null)
+        {
+            UnitConnectionPoint point = _hoverUnitConnectionPlacement;
+            float hoverRadius = radius * 1.35f;
+            RectangleF bounds = new(point.X - hoverRadius, point.Z - hoverRadius, hoverRadius * 2f, hoverRadius * 2f);
+            g.FillEllipse(hoverBrush, bounds);
+            g.DrawEllipse(hoverPen, bounds);
+        }
+    }
+
+    //-------------------------------------------------------------------------------
     // Spawn の Angle とサイズから地上 object の向き付き矩形を作成する処理
     //-------------------------------------------------------------------------------
     private static PointF[] GetOrientedFootprintPoints(LayoutSpawn spawn, SizeF size)
@@ -1037,7 +1163,7 @@ internal sealed class UnitMapView : Control
 
     private void DrawOverlay(Graphics g)
     {
-        using SolidBrush textBrush = new(Color.FromArgb(44, 62, 80));
+        using SolidBrush textBrush = new(UiTheme.CanvasText);
         using Font titleFont = new("Yu Gothic UI", 20f, FontStyle.Bold);
         using Font bodyFont = new("Yu Gothic UI", 10f, FontStyle.Regular);
         g.DrawString(_viewTitle, titleFont, textBrush, new PointF(76, 22));
@@ -1351,6 +1477,35 @@ internal sealed class UnitMapView : Control
         }
 
         return nearestSpawn;
+    }
+
+    //-------------------------------------------------------------------------------
+    // マウス位置に最も近い UnitConnection door を画面座標から求める処理
+    //-------------------------------------------------------------------------------
+    private int? HitTestUnitConnectionDoor(Point location)
+    {
+        if (!_showUnitConnections || _unitConnectionDefinition is null)
+        {
+            return null;
+        }
+
+        using Matrix transform = BuildWorldToScreenMatrix(ClientRectangle);
+        int? nearestDoor = null;
+        float nearestDistanceSquared = SpawnHitRadiusPixels * SpawnHitRadiusPixels;
+        foreach (UnitConnectionPoint point in UnitConnectionGeometry.GetConnectionPoints(_unitConnectionDefinition))
+        {
+            PointF screenPoint = WorldToScreen(transform, new PointF(point.X, point.Z));
+            float dx = screenPoint.X - location.X;
+            float dy = screenPoint.Y - location.Y;
+            float distanceSquared = (dx * dx) + (dy * dy);
+            if (distanceSquared <= nearestDistanceSquared)
+            {
+                nearestDistanceSquared = distanceSquared;
+                nearestDoor = point.DoorIndex;
+            }
+        }
+
+        return nearestDoor;
     }
 
     //-------------------------------------------------------------------------------
@@ -1676,12 +1831,37 @@ internal sealed class UnitMapView : Control
                 UnitMapEditMode.AddRouteWaypoint or
                 UnitMapEditMode.AddSpawn or
                 UnitMapEditMode.AddWaterbox or
+                UnitMapEditMode.AddUnitConnectionDoor or
                 UnitMapEditMode.ConnectRouteWaypoint or
                 UnitMapEditMode.RotateSpawn or
                 UnitMapEditMode.ResizeSpawnRadius or
                 UnitMapEditMode.ResizeRouteWaypointRadius => GetDeleteCursor(),
             _ => Cursors.Default
         };
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection Door 追加モードのホバー候補を更新する処理
+    //-------------------------------------------------------------------------------
+    private void UpdateUnitConnectionPlacementHover(Point location)
+    {
+        UnitConnectionPoint? nextHover = null;
+        if (_editMode == UnitMapEditMode.AddUnitConnectionDoor)
+        {
+            PointF worldPoint = ScreenToWorld(location);
+            if (UnitConnectionGeometry.TryGetNearestDoorPlacement(_unitConnectionDefinition, worldPoint.X, worldPoint.Y, out UnitConnectionPoint placement))
+            {
+                nextHover = placement;
+            }
+        }
+
+        if (_hoverUnitConnectionPlacement == nextHover)
+        {
+            return;
+        }
+
+        _hoverUnitConnectionPlacement = nextHover;
+        Invalidate();
     }
 
     //-------------------------------------------------------------------------------
@@ -1774,6 +1954,21 @@ internal sealed class UnitMapView : Control
         Invalidate();
     }
 
+    //-------------------------------------------------------------------------------
+    // 選択中 UnitConnection door を更新してイベント通知する処理
+    //-------------------------------------------------------------------------------
+    private void SetSelectedUnitConnectionDoor(int? doorIndex)
+    {
+        if (_selectedUnitConnectionDoorIndex == doorIndex)
+        {
+            return;
+        }
+
+        _selectedUnitConnectionDoorIndex = doorIndex;
+        UnitConnectionSelectionChanged?.Invoke(this, new UnitConnectionSelectionChangedEventArgs(doorIndex));
+        Invalidate();
+    }
+
 }
 
 internal enum UnitMapEditMode
@@ -1792,7 +1987,8 @@ internal enum UnitMapEditMode
     ResizeRouteWaypointRadius,
     AddWaterbox,
     DeleteWaterbox,
-    MoveWaterbox
+    MoveWaterbox,
+    AddUnitConnectionDoor
 }
 
 internal enum WaterboxResizeHandle
@@ -1889,6 +2085,11 @@ internal sealed class RouteWaypointRadiusChangedEventArgs(int waypointIndex, flo
 internal sealed class WaterboxSelectionChangedEventArgs(int? waterboxIndex) : EventArgs
 {
     public int? WaterboxIndex { get; } = waterboxIndex;
+}
+
+internal sealed class UnitConnectionSelectionChangedEventArgs(int? doorIndex) : EventArgs
+{
+    public int? DoorIndex { get; } = doorIndex;
 }
 
 internal sealed class WaterboxMovedEventArgs(int waterboxIndex, float deltaX, float deltaZ) : EventArgs

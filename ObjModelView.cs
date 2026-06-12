@@ -21,17 +21,22 @@ internal sealed class ObjModelView : Control
     private RouteFile _route = new(new Dictionary<int, RouteWaypoint>());
     private IReadOnlyDictionary<int, float> _routeColorHeights = new Dictionary<int, float>();
     private WaterboxFile _waterbox = new(0, Array.Empty<WaterboxEntry>());
+    private UnitDefinition? _unitConnectionDefinition;
     private UnitMapEditMode _editMode;
     private bool _showRadius = true;
+    private bool _showUnitConnections = true;
     private bool _useFieldObjectIcons;
     private bool _englishUi;
     private int? _selectedSpawnIndex;
     private int? _selectedRouteWaypointIndex;
     private int? _selectedWaterboxIndex;
+    private int? _selectedUnitConnectionDoorIndex;
+    private UnitConnectionPoint? _hoverUnitConnectionPlacement;
     private float _overlayHeightOffset;
     private bool _leftButtonDown;
     private bool _middleButtonDown;
     private bool _rightButtonDown;
+    private bool _overlayInteractionActive;
     private bool _draggingSpawn;
     private bool _draggingWaypoint;
     private bool _draggingWaterbox;
@@ -48,6 +53,14 @@ internal sealed class ObjModelView : Control
     private float _zoom = 1.1f;
     private float _panX;
     private float _panY;
+    private Bitmap? _terrainRenderCache;
+    private Size _terrainRenderCacheSize;
+    private ObjScene? _terrainRenderCacheScene;
+    private float _terrainRenderCacheYaw;
+    private float _terrainRenderCachePitch;
+    private float _terrainRenderCacheZoom;
+    private float _terrainRenderCachePanX;
+    private float _terrainRenderCachePanY;
 
     public event EventHandler<RouteWaypointSelectionChangedEventArgs>? RouteWaypointSelectionChanged;
     public event EventHandler<RouteWaypointMovedEventArgs>? RouteWaypointMoved;
@@ -62,6 +75,7 @@ internal sealed class ObjModelView : Control
     public event EventHandler<WaterboxMovedEventArgs>? WaterboxMoved;
     public event EventHandler<WaterboxResizedEventArgs>? WaterboxResized;
     public event EventHandler<WaterboxHeightMovedEventArgs>? WaterboxHeightMoved;
+    public event EventHandler<UnitConnectionSelectionChangedEventArgs>? UnitConnectionSelectionChanged;
     public event EventHandler? OverlayDragStarted;
     public event EventHandler? OverlayDragEnded;
     public event EventHandler<MapPointPlacementRequestedEventArgs>? MapPointPlacementRequested;
@@ -72,7 +86,7 @@ internal sealed class ObjModelView : Control
     public ObjModelView()
     {
         DoubleBuffered = true;
-        BackColor = Color.FromArgb(232, 227, 213);
+        BackColor = UiTheme.CanvasBack;
         SetStyle(
             ControlStyles.AllPaintingInWmPaint |
             ControlStyles.UserPaint |
@@ -86,13 +100,19 @@ internal sealed class ObjModelView : Control
     //-------------------------------------------------------------------------------
     public void SetScene(ObjScene? scene, string? sceneName, LayoutFile layout, RouteFile route, WaterboxFile waterbox, bool resetView = true)
     {
+        bool sceneChanged = !ReferenceEquals(_scene, scene) ||
+            !string.Equals(_sceneName, sceneName, StringComparison.Ordinal);
         _scene = scene;
         _sceneName = sceneName;
         _layout = layout;
         _route = route;
         _waterbox = waterbox;
-        _bounds = scene is null ? default : ModelBounds.FromScene(scene);
-        _overlayHeightOffset = scene is null ? 0f : EstimateOverlayHeightOffset(scene, layout, route);
+        if (sceneChanged || resetView)
+        {
+            _bounds = scene is null ? default : ModelBounds.FromScene(scene);
+            _overlayHeightOffset = scene is null ? 0f : EstimateOverlayHeightOffset(scene, layout, route);
+            ClearTerrainRenderCache();
+        }
 
         if (_selectedRouteWaypointIndex is not null &&
             !_route.Waypoints.ContainsKey(_selectedRouteWaypointIndex.Value))
@@ -164,6 +184,7 @@ internal sealed class ObjModelView : Control
         _resizingPointRadius = false;
         _waterboxResizeHandle = WaterboxResizeHandle.None;
         _linkingRouteWaypointIndex = null;
+        _hoverUnitConnectionPlacement = null;
         Cursor = GetCursorForEditMode(mode);
         Invalidate();
     }
@@ -179,6 +200,22 @@ internal sealed class ObjModelView : Control
         }
 
         _showRadius = visible;
+        Invalidate();
+    }
+
+    //-------------------------------------------------------------------------------
+    // ユニット接続ポイント overlay の表示情報を設定する処理
+    //-------------------------------------------------------------------------------
+    public void SetUnitConnectionOverlay(UnitDefinition? unitDefinition, bool visible)
+    {
+        _unitConnectionDefinition = unitDefinition;
+        _showUnitConnections = visible;
+        if (_selectedUnitConnectionDoorIndex is not null &&
+            unitDefinition?.Doors.Any(door => door.Index == _selectedUnitConnectionDoorIndex.Value) != true)
+        {
+            SetSelectedUnitConnectionDoor(null);
+        }
+
         Invalidate();
     }
 
@@ -234,6 +271,7 @@ internal sealed class ObjModelView : Control
         {
             SetSelectedSpawn(null);
             SetSelectedWaterbox(null);
+            SetSelectedUnitConnectionDoor(null);
         }
     }
 
@@ -253,6 +291,7 @@ internal sealed class ObjModelView : Control
         {
             SetSelectedRouteWaypoint(null);
             SetSelectedWaterbox(null);
+            SetSelectedUnitConnectionDoor(null);
         }
     }
 
@@ -272,6 +311,27 @@ internal sealed class ObjModelView : Control
         {
             SetSelectedRouteWaypoint(null);
             SetSelectedSpawn(null);
+            SetSelectedUnitConnectionDoor(null);
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // 選択中 UnitConnection door を外部から指定する処理
+    //-------------------------------------------------------------------------------
+    public void SelectUnitConnectionDoor(int? doorIndex)
+    {
+        if (doorIndex is not null &&
+            _unitConnectionDefinition?.Doors.Any(door => door.Index == doorIndex.Value) != true)
+        {
+            doorIndex = null;
+        }
+
+        SetSelectedUnitConnectionDoor(doorIndex);
+        if (doorIndex is not null)
+        {
+            SetSelectedRouteWaypoint(null);
+            SetSelectedSpawn(null);
+            SetSelectedWaterbox(null);
         }
     }
 
@@ -311,6 +371,8 @@ internal sealed class ObjModelView : Control
             DrawWaterboxOverlay(e.Graphics);
         }
 
+        DrawUnitConnectionPlacementGrid(e.Graphics);
+        DrawUnitConnectionOverlay(e.Graphics);
         DrawRouteOverlay(e.Graphics);
         DrawSpawnOverlay(e.Graphics);
         DrawSelectedWaterboxResizeHandles(e.Graphics);
@@ -346,7 +408,8 @@ internal sealed class ObjModelView : Control
 
             if (_editMode == UnitMapEditMode.AddSpawn ||
                 _editMode == UnitMapEditMode.AddRouteWaypoint ||
-                _editMode == UnitMapEditMode.AddWaterbox)
+                _editMode == UnitMapEditMode.AddWaterbox ||
+                _editMode == UnitMapEditMode.AddUnitConnectionDoor)
             {
                 if (TryGetPlacementWorldPoint(e.Location, out Vector3 placementPoint))
                 {
@@ -367,6 +430,9 @@ internal sealed class ObjModelView : Control
                 ? HitTestWaterboxHandle(e.Location, out hitHandleWaterbox)
                 : WaterboxResizeHandle.None;
             int? hitWaterbox = hitWaypoint is null && hitSpawn is null && hitWaterboxHandle == WaterboxResizeHandle.None ? HitTestWaterbox(e.Location) : null;
+            int? hitUnitConnectionDoor = hitWaypoint is null && hitSpawn is null && hitWaterbox is null && hitWaterboxHandle == WaterboxResizeHandle.None
+                ? HitTestUnitConnectionDoor(e.Location)
+                : null;
             if (_editMode == UnitMapEditMode.DeleteRouteWaypoint)
             {
                 if (hitWaypoint is not null)
@@ -414,24 +480,26 @@ internal sealed class ObjModelView : Control
                 SetSelectedRouteWaypoint(hitWaypoint);
                 SetSelectedSpawn(null);
                 SetSelectedWaterbox(null);
+                SetSelectedUnitConnectionDoor(null);
                 if (_editMode == UnitMapEditMode.ConnectRouteWaypoint)
                 {
                     _linkingRouteWaypointIndex = hitWaypoint;
                     _linkPreviewPoint = e.Location;
+                    BeginOverlayInteraction();
                 }
                 else if (_editMode == UnitMapEditMode.MoveRouteWaypoint &&
                     _route.Waypoints.TryGetValue(hitWaypoint.Value, out RouteWaypoint? waypoint))
                 {
                     _draggingWaypoint = true;
                     _dragPlaneY = GetOverlayWorldY(waypoint.Y);
-                    OverlayDragStarted?.Invoke(this, EventArgs.Empty);
+                    BeginOverlayInteraction();
                 }
                 else if (_editMode == UnitMapEditMode.ResizeRouteWaypointRadius &&
                     _route.Waypoints.TryGetValue(hitWaypoint.Value, out RouteWaypoint? radiusWaypoint))
                 {
                     _resizingPointRadius = true;
                     _dragPlaneY = GetOverlayWorldY(radiusWaypoint.Y);
-                    OverlayDragStarted?.Invoke(this, EventArgs.Empty);
+                    BeginOverlayInteraction();
                     UpdateSelectedRadiusFromScreenPoint(e.Location);
                 }
             }
@@ -440,13 +508,14 @@ internal sealed class ObjModelView : Control
                 SetSelectedSpawn(hitSpawn);
                 SetSelectedRouteWaypoint(null);
                 SetSelectedWaterbox(null);
+                SetSelectedUnitConnectionDoor(null);
                 if (_editMode == UnitMapEditMode.MoveSpawn &&
                     hitSpawn.Value >= 0 &&
                     hitSpawn.Value < _layout.Spawns.Count)
                 {
                     _draggingSpawn = true;
                     _dragPlaneY = GetOverlayWorldY(_layout.Spawns[hitSpawn.Value].Y);
-                    OverlayDragStarted?.Invoke(this, EventArgs.Empty);
+                    BeginOverlayInteraction();
                 }
                 else if (_editMode == UnitMapEditMode.ResizeSpawnRadius &&
                     hitSpawn.Value >= 0 &&
@@ -454,7 +523,7 @@ internal sealed class ObjModelView : Control
                 {
                     _resizingPointRadius = true;
                     _dragPlaneY = GetOverlayWorldY(_layout.Spawns[hitSpawn.Value].Y);
-                    OverlayDragStarted?.Invoke(this, EventArgs.Empty);
+                    BeginOverlayInteraction();
                     UpdateSelectedRadiusFromScreenPoint(e.Location);
                 }
             }
@@ -463,13 +532,14 @@ internal sealed class ObjModelView : Control
                 SetSelectedWaterbox(hitWaterbox);
                 SetSelectedRouteWaypoint(null);
                 SetSelectedSpawn(null);
+                SetSelectedUnitConnectionDoor(null);
                 _draggingWaterbox = _editMode == UnitMapEditMode.MoveWaterbox;
                 if (hitWaterbox.Value >= 0 && hitWaterbox.Value < _waterbox.Boxes.Count)
                 {
                     _dragPlaneY = _waterbox.Boxes[hitWaterbox.Value].MaxY + _overlayHeightOffset;
                     if (_draggingWaterbox)
                     {
-                        OverlayDragStarted?.Invoke(this, EventArgs.Empty);
+                        BeginOverlayInteraction();
                     }
                 }
             }
@@ -480,16 +550,25 @@ internal sealed class ObjModelView : Control
                 SetSelectedWaterbox(hitHandleWaterbox);
                 SetSelectedRouteWaypoint(null);
                 SetSelectedSpawn(null);
+                SetSelectedUnitConnectionDoor(null);
                 _resizingWaterbox = true;
                 _waterboxResizeHandle = hitWaterboxHandle;
                 _dragPlaneY = _waterbox.Boxes[hitHandleWaterbox.Value].MaxY + _overlayHeightOffset;
-                OverlayDragStarted?.Invoke(this, EventArgs.Empty);
+                BeginOverlayInteraction();
+            }
+            else if (hitUnitConnectionDoor is not null)
+            {
+                SetSelectedUnitConnectionDoor(hitUnitConnectionDoor);
+                SetSelectedRouteWaypoint(null);
+                SetSelectedSpawn(null);
+                SetSelectedWaterbox(null);
             }
             else
             {
                 SetSelectedRouteWaypoint(null);
                 SetSelectedSpawn(null);
                 SetSelectedWaterbox(null);
+                SetSelectedUnitConnectionDoor(null);
             }
         }
         else if (e.Button == MouseButtons.Middle)
@@ -512,14 +591,14 @@ internal sealed class ObjModelView : Control
                 if (_editMode == UnitMapEditMode.ResizeSpawnRadius)
                 {
                     _resizingPointRadius = true;
-                    OverlayDragStarted?.Invoke(this, EventArgs.Empty);
+                    BeginOverlayInteraction();
                     UpdateSelectedRadiusFromScreenPoint(e.Location);
                     Cursor = Cursors.Cross;
                 }
                 else
                 {
                     _rotatingSpawn = true;
-                    OverlayDragStarted?.Invoke(this, EventArgs.Empty);
+                    BeginOverlayInteraction();
                     UpdateSpawnAngleFromScreenPoint(e.Location);
                     Cursor = Cursors.Cross;
                 }
@@ -529,11 +608,21 @@ internal sealed class ObjModelView : Control
                 SetSelectedRouteWaypoint(null);
                 SetSelectedSpawn(null);
                 SetSelectedWaterbox(null);
+                SetSelectedUnitConnectionDoor(null);
                 _rotatingSpawn = false;
                 _resizingPointRadius = false;
                 Cursor = Cursors.SizeAll;
             }
         }
+    }
+
+    //-------------------------------------------------------------------------------
+    // overlay の連続編集開始を記録して通知する処理
+    //-------------------------------------------------------------------------------
+    private void BeginOverlayInteraction()
+    {
+        _overlayInteractionActive = true;
+        OverlayDragStarted?.Invoke(this, EventArgs.Empty);
     }
 
     //-------------------------------------------------------------------------------
@@ -558,12 +647,14 @@ internal sealed class ObjModelView : Control
         {
             _yaw += diffX * 0.01f;
             _pitch = Math.Clamp(_pitch + (diffY * 0.01f), -TopDownPitch, TopDownPitch);
+            ClearTerrainRenderCache();
             Invalidate();
         }
         else if (_middleButtonDown)
         {
             _panX += diffX;
             _panY += diffY;
+            ClearTerrainRenderCache();
             Invalidate();
         }
         else if (_leftButtonDown && _linkingRouteWaypointIndex is not null)
@@ -723,6 +814,7 @@ internal sealed class ObjModelView : Control
             UpdateSelectedRadiusFromScreenPoint(e.Location);
         }
 
+        UpdateUnitConnectionPlacementHover(e.Location);
         _lastMousePoint = e.Location;
     }
 
@@ -756,8 +848,9 @@ internal sealed class ObjModelView : Control
             _resizingPointRadius = false;
             _waterboxResizeHandle = WaterboxResizeHandle.None;
             _linkingRouteWaypointIndex = null;
-            if (endedOverlayDrag)
+            if (endedOverlayDrag || _overlayInteractionActive)
             {
+                _overlayInteractionActive = false;
                 OverlayDragEnded?.Invoke(this, EventArgs.Empty);
             }
             Invalidate();
@@ -772,8 +865,9 @@ internal sealed class ObjModelView : Control
             _rightButtonDown = false;
             _rotatingSpawn = false;
             _resizingPointRadius = false;
-            if (endedOverlayDrag)
+            if (endedOverlayDrag || _overlayInteractionActive)
             {
+                _overlayInteractionActive = false;
                 OverlayDragEnded?.Invoke(this, EventArgs.Empty);
             }
             Invalidate();
@@ -794,6 +888,7 @@ internal sealed class ObjModelView : Control
         base.OnMouseWheel(e);
         float zoomFactor = e.Delta > 0 ? 1.15f : 1f / 1.15f;
         _zoom = Math.Clamp(_zoom * zoomFactor, MinZoom, MaxZoom);
+        ClearTerrainRenderCache();
         Invalidate();
     }
 
@@ -810,12 +905,12 @@ internal sealed class ObjModelView : Control
 
         using LinearGradientBrush brush = new(
             bounds,
-            Color.FromArgb(247, 244, 236),
-            Color.FromArgb(220, 214, 198),
+            UiTheme.CanvasPaper,
+            UiTheme.CanvasBack,
             LinearGradientMode.Vertical);
         graphics.FillRectangle(brush, bounds);
 
-        using Pen gridPen = new(Color.FromArgb(215, 208, 191), 1f);
+        using Pen gridPen = new(UiTheme.CanvasGrid, 1f);
         for (int x = 0; x < bounds.Width; x += 64)
         {
             graphics.DrawLine(gridPen, x, 0, x, bounds.Height);
@@ -834,8 +929,8 @@ internal sealed class ObjModelView : Control
     {
         using Font titleFont = new("Yu Gothic UI", 18f, FontStyle.Bold);
         using Font bodyFont = new("Yu Gothic UI", 10f, FontStyle.Regular);
-        using SolidBrush titleBrush = new(Color.FromArgb(56, 70, 80));
-        using SolidBrush bodyBrush = new(Color.FromArgb(96, 96, 96));
+        using SolidBrush titleBrush = new(UiTheme.CanvasText);
+        using SolidBrush bodyBrush = new(UiTheme.TextSub);
 
         string title = _englishUi ? "Could not load OBJ." : "OBJ を読み込めませんでした．";
         string controls = _englishUi
@@ -850,7 +945,21 @@ internal sealed class ObjModelView : Control
     //-------------------------------------------------------------------------------
     private void DrawScene(Graphics graphics)
     {
+        if (_overlayInteractionActive && TryDrawTerrainRenderCache(graphics))
+        {
+            DrawWaterboxOverlay(graphics);
+            return;
+        }
+
         CameraState camera = GetCameraState();
+        DrawSceneCore(graphics, camera, includeWaterboxDepthSort: true);
+    }
+
+    //-------------------------------------------------------------------------------
+    // 現在の OBJ シーンを指定カメラ状態で描画する処理
+    //-------------------------------------------------------------------------------
+    private void DrawSceneCore(Graphics graphics, CameraState camera, bool includeWaterboxDepthSort)
+    {
         Vector3 lightDirection = Vector3.Normalize(new Vector3(-0.45f, 0.85f, 0.35f));
         List<ProjectedTriangle> triangles = new();
 
@@ -880,7 +989,10 @@ internal sealed class ObjModelView : Control
             }
         }
 
-        AddWaterboxProjectedPolygons(triangles, camera);
+        if (includeWaterboxDepthSort)
+        {
+            AddWaterboxProjectedPolygons(triangles, camera);
+        }
 
         foreach (ProjectedTriangle triangle in triangles.OrderBy(t => t.Depth))
         {
@@ -889,6 +1001,83 @@ internal sealed class ObjModelView : Control
             graphics.FillPolygon(fillBrush, triangle.Points);
             graphics.DrawPolygon(edgePen, triangle.Points);
         }
+    }
+
+    //-------------------------------------------------------------------------------
+    // ドラッグ中に使う地形描画キャッシュを表示する処理
+    //-------------------------------------------------------------------------------
+    private bool TryDrawTerrainRenderCache(Graphics graphics)
+    {
+        if (_scene is null || ClientSize.Width <= 0 || ClientSize.Height <= 0)
+        {
+            return false;
+        }
+
+        if (!IsTerrainRenderCacheCurrent())
+        {
+            RebuildTerrainRenderCache();
+        }
+
+        if (_terrainRenderCache is null)
+        {
+            return false;
+        }
+
+        graphics.DrawImageUnscaled(_terrainRenderCache, Point.Empty);
+        return true;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 地形描画キャッシュが現在のカメラ状態と一致するか判定する処理
+    //-------------------------------------------------------------------------------
+    private bool IsTerrainRenderCacheCurrent()
+    {
+        return _terrainRenderCache is not null &&
+            ReferenceEquals(_terrainRenderCacheScene, _scene) &&
+            _terrainRenderCacheSize == ClientSize &&
+            Math.Abs(_terrainRenderCacheYaw - _yaw) < 0.0001f &&
+            Math.Abs(_terrainRenderCachePitch - _pitch) < 0.0001f &&
+            Math.Abs(_terrainRenderCacheZoom - _zoom) < 0.0001f &&
+            Math.Abs(_terrainRenderCachePanX - _panX) < 0.0001f &&
+            Math.Abs(_terrainRenderCachePanY - _panY) < 0.0001f;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 現在のカメラ状態で地形描画キャッシュを作成する処理
+    //-------------------------------------------------------------------------------
+    private void RebuildTerrainRenderCache()
+    {
+        ClearTerrainRenderCache();
+        if (_scene is null || ClientSize.Width <= 0 || ClientSize.Height <= 0)
+        {
+            return;
+        }
+
+        Bitmap bitmap = new(ClientSize.Width, ClientSize.Height);
+        using Graphics cacheGraphics = Graphics.FromImage(bitmap);
+        cacheGraphics.SmoothingMode = SmoothingMode.AntiAlias;
+        cacheGraphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+        cacheGraphics.Clear(Color.Transparent);
+        DrawSceneCore(cacheGraphics, GetCameraState(), includeWaterboxDepthSort: false);
+        _terrainRenderCache = bitmap;
+        _terrainRenderCacheScene = _scene;
+        _terrainRenderCacheSize = ClientSize;
+        _terrainRenderCacheYaw = _yaw;
+        _terrainRenderCachePitch = _pitch;
+        _terrainRenderCacheZoom = _zoom;
+        _terrainRenderCachePanX = _panX;
+        _terrainRenderCachePanY = _panY;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 地形描画キャッシュを破棄する処理
+    //-------------------------------------------------------------------------------
+    private void ClearTerrainRenderCache()
+    {
+        _terrainRenderCache?.Dispose();
+        _terrainRenderCache = null;
+        _terrainRenderCacheScene = null;
+        _terrainRenderCacheSize = Size.Empty;
     }
 
     //-------------------------------------------------------------------------------
@@ -1069,6 +1258,73 @@ internal sealed class ObjModelView : Control
             [WaterboxResizeHandle.BottomLeft] = new(box.MinX, box.MaxZ),
             [WaterboxResizeHandle.Left] = new(box.MinX, centerZ)
         };
+    }
+
+    //-------------------------------------------------------------------------------
+    // ユニット定義の接続ポイントを 3D overlay として描画する処理
+    //-------------------------------------------------------------------------------
+    private void DrawUnitConnectionOverlay(Graphics graphics)
+    {
+        if (!_showUnitConnections || _unitConnectionDefinition is null)
+        {
+            return;
+        }
+
+        foreach (UnitConnectionPoint connectionPoint in UnitConnectionGeometry.GetConnectionPoints(_unitConnectionDefinition))
+        {
+            float dataY = 0f;
+            if (!TryProjectWorldPoint(connectionPoint.X, GetOverlayWorldY(dataY), connectionPoint.Z, out PointF point, out _))
+            {
+                continue;
+            }
+
+            float radius = _selectedUnitConnectionDoorIndex == connectionPoint.DoorIndex ? 11f : 9f;
+            using SolidBrush fillBrush = new(Color.FromArgb(245, 127, 23));
+            using Pen outlinePen = new(Color.FromArgb(235, 20, 20, 20), 2f);
+            using Pen selectedPen = new(Color.White, 3f);
+            graphics.FillEllipse(fillBrush, point.X - radius, point.Y - radius, radius * 2f, radius * 2f);
+            graphics.DrawEllipse(outlinePen, point.X - radius, point.Y - radius, radius * 2f, radius * 2f);
+            if (_selectedUnitConnectionDoorIndex == connectionPoint.DoorIndex)
+            {
+                graphics.DrawEllipse(selectedPen, point.X - radius, point.Y - radius, radius * 2f, radius * 2f);
+            }
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection Door 追加モード用の配置候補を 3D overlay として描画する処理
+    //-------------------------------------------------------------------------------
+    private void DrawUnitConnectionPlacementGrid(Graphics graphics)
+    {
+        if (_editMode != UnitMapEditMode.AddUnitConnectionDoor || _unitConnectionDefinition is null)
+        {
+            return;
+        }
+
+        using SolidBrush fillBrush = new(Color.FromArgb(90, 205, 70, 70));
+        using Pen guidePen = new(Color.FromArgb(210, 205, 70, 70), 2.5f);
+        using SolidBrush hoverBrush = new(Color.FromArgb(220, 220, 35, 35));
+        using Pen hoverPen = new(Color.White, 4f);
+
+        foreach (UnitConnectionPoint connectionPoint in UnitConnectionGeometry.GetDoorPlacementCandidates(_unitConnectionDefinition))
+        {
+            if (!TryProjectWorldPoint(connectionPoint.X, GetOverlayWorldY(0f), connectionPoint.Z, out PointF point, out _))
+            {
+                continue;
+            }
+
+            const float radius = 10f;
+            graphics.FillEllipse(fillBrush, point.X - radius, point.Y - radius, radius * 2f, radius * 2f);
+            graphics.DrawEllipse(guidePen, point.X - radius, point.Y - radius, radius * 2f, radius * 2f);
+        }
+
+        if (_hoverUnitConnectionPlacement is not null &&
+            TryProjectWorldPoint(_hoverUnitConnectionPlacement.X, GetOverlayWorldY(0f), _hoverUnitConnectionPlacement.Z, out PointF hoverPoint, out _))
+        {
+            const float hoverRadius = 15f;
+            graphics.FillEllipse(hoverBrush, hoverPoint.X - hoverRadius, hoverPoint.Y - hoverRadius, hoverRadius * 2f, hoverRadius * 2f);
+            graphics.DrawEllipse(hoverPen, hoverPoint.X - hoverRadius, hoverPoint.Y - hoverRadius, hoverRadius * 2f, hoverRadius * 2f);
+        }
     }
 
     //-------------------------------------------------------------------------------
@@ -1889,6 +2145,38 @@ internal sealed class ObjModelView : Control
     }
 
     //-------------------------------------------------------------------------------
+    // マウス位置に最も近い UnitConnection door を画面座標から求める処理
+    //-------------------------------------------------------------------------------
+    private int? HitTestUnitConnectionDoor(Point location)
+    {
+        if (!_showUnitConnections || _unitConnectionDefinition is null)
+        {
+            return null;
+        }
+
+        int? nearestDoor = null;
+        float nearestDistanceSquared = SpawnHitRadiusPixels * SpawnHitRadiusPixels;
+        foreach (UnitConnectionPoint connectionPoint in UnitConnectionGeometry.GetConnectionPoints(_unitConnectionDefinition))
+        {
+            if (!TryProjectWorldPoint(connectionPoint.X, GetOverlayWorldY(0f), connectionPoint.Z, out PointF screenPoint, out _))
+            {
+                continue;
+            }
+
+            float dx = screenPoint.X - location.X;
+            float dy = screenPoint.Y - location.Y;
+            float distanceSquared = (dx * dx) + (dy * dy);
+            if (distanceSquared <= nearestDistanceSquared)
+            {
+                nearestDistanceSquared = distanceSquared;
+                nearestDoor = connectionPoint.DoorIndex;
+            }
+        }
+
+        return nearestDoor;
+    }
+
+    //-------------------------------------------------------------------------------
     // マウス位置にあるスポーン角度ハンドルを画面座標から求める処理
     //-------------------------------------------------------------------------------
     private int? HitTestSpawnAngleHandle(Point location)
@@ -2266,12 +2554,35 @@ internal sealed class ObjModelView : Control
                 UnitMapEditMode.AddRouteWaypoint or
                 UnitMapEditMode.AddSpawn or
                 UnitMapEditMode.AddWaterbox or
+                UnitMapEditMode.AddUnitConnectionDoor or
                 UnitMapEditMode.ConnectRouteWaypoint or
                 UnitMapEditMode.RotateSpawn or
                 UnitMapEditMode.ResizeSpawnRadius or
                 UnitMapEditMode.ResizeRouteWaypointRadius => GetDeleteCursor(),
             _ => Cursors.Default
         };
+    }
+
+    //-------------------------------------------------------------------------------
+    // UnitConnection Door 追加モードのホバー候補を更新する処理
+    //-------------------------------------------------------------------------------
+    private void UpdateUnitConnectionPlacementHover(Point location)
+    {
+        UnitConnectionPoint? nextHover = null;
+        if (_editMode == UnitMapEditMode.AddUnitConnectionDoor &&
+            TryGetPlacementWorldPoint(location, out Vector3 placementPoint) &&
+            UnitConnectionGeometry.TryGetNearestDoorPlacement(_unitConnectionDefinition, placementPoint.X, placementPoint.Z, out UnitConnectionPoint placement))
+        {
+            nextHover = placement;
+        }
+
+        if (_hoverUnitConnectionPlacement == nextHover)
+        {
+            return;
+        }
+
+        _hoverUnitConnectionPlacement = nextHover;
+        Invalidate();
     }
 
     //-------------------------------------------------------------------------------
@@ -2488,6 +2799,21 @@ internal sealed class ObjModelView : Control
 
         _selectedWaterboxIndex = waterboxIndex;
         WaterboxSelectionChanged?.Invoke(this, new WaterboxSelectionChangedEventArgs(waterboxIndex));
+        Invalidate();
+    }
+
+    //-------------------------------------------------------------------------------
+    // 選択中 UnitConnection door を更新してイベント通知する処理
+    //-------------------------------------------------------------------------------
+    private void SetSelectedUnitConnectionDoor(int? doorIndex)
+    {
+        if (_selectedUnitConnectionDoorIndex == doorIndex)
+        {
+            return;
+        }
+
+        _selectedUnitConnectionDoorIndex = doorIndex;
+        UnitConnectionSelectionChanged?.Invoke(this, new UnitConnectionSelectionChangedEventArgs(doorIndex));
         Invalidate();
     }
 

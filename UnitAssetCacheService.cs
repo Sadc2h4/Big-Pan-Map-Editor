@@ -130,14 +130,16 @@ internal sealed class UnitAssetCacheService
         }
 
         progressCallback?.Invoke(unitName, 3, 4);
-        bool hasPrettyImage = HasPrettyImage(unitName);
+        bool allowPreviewImage = modelSourceMode != CaveModelSourceMode.TextsGrid;
+        bool hasPrettyImage = allowPreviewImage && HasPrettyImage(unitName);
         bool copiedPrettyImage = false;
-        if (hasPrettyImage && (!File.Exists(imagePath) || replacePreviewWithPrettyImage))
+        if (allowPreviewImage && hasPrettyImage && (!File.Exists(imagePath) || replacePreviewWithPrettyImage))
         {
             copiedPrettyImage = TryCopyPrettyImage(unitName, imagePath);
         }
 
-        if ((!hasPrettyImage || (!File.Exists(imagePath) && !copiedPrettyImage)) &&
+        if (allowPreviewImage &&
+            (!hasPrettyImage || (!File.Exists(imagePath) && !copiedPrettyImage)) &&
             ShouldRenderPreviewImage(imagePath, objPath, daePath))
         {
             if (objPath is not null && mtlPath is not null && File.Exists(objPath) && File.Exists(mtlPath))
@@ -174,7 +176,7 @@ internal sealed class UnitAssetCacheService
             cacheDir,
             objPath,
             mtlPath,
-            File.Exists(imagePath) ? imagePath : null,
+            allowPreviewImage && File.Exists(imagePath) ? imagePath : null,
             layoutPath,
             routePath,
             waterboxPath);

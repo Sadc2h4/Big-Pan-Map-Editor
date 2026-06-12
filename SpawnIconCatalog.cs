@@ -7,8 +7,8 @@ internal static class SpawnIconCatalog
         [0] = "00_Teki_A.png",
         [1] = "01_Teki_B.png",
         [2] = "02_Item.png",
-        [4] = "05_Hole_Geyser.png",
-        [5] = "05_Hole_Geyser.png",
+        [4] = "05_Hole_Geyser.png",  // ゲーム側の HoleOrGeyser は type 4，アイコンのファイル名は歴史的に 05_ 接頭辞
+
         [6] = "06_Plant.png",
         [7] = "07_Start.png",
         [8] = "08_Teki_F.png"
