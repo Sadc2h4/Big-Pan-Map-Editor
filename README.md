@@ -8,7 +8,7 @@
 
 ## Download
 
-<a href="https://github.com/Sadc2h4/Big-Pan-Map-Editor/releases/tag/v2.0b">
+<a href="https://github.com/Sadc2h4/Big-Pan-Map-Editor/releases/tag/v2.1a">
   <img
     src="https://raw.githubusercontent.com/Sadc2h4/brand-assets/main/button/Download_Button_1.png"
     alt="Download .zip"
