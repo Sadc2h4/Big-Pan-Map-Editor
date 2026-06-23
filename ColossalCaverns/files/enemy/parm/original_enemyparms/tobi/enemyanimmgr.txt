@@ -1,0 +1,75 @@
+#
+#	AnimMgr
+#
+	10 	# number of animations
+# dead.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tobi\anim\dead.bca 
+	dead.bca 
+	-1 
+}
+# dead_p.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tobi\anim\dead_p.bca 
+	dead_p.bca 
+	-1 
+}
+# appear.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tobi\anim\appear.bca 
+	appear.bca 
+	-1 
+}
+# dive.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tobi\anim\dive.bca 
+	dive.bca 
+	-1 
+}
+# move.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tobi\anim\move.bca 
+	move.bca 
+	0 0 
+	19 1 
+	-1 
+}
+# fly.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tobi\anim\fly.bca 
+	fly.bca 
+	46 0 
+	65 1 
+	-1 
+}
+# attack1.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tobi\anim\attack1.bca 
+	attack1.bca 
+	15 2 
+	-1 
+}
+# attack2.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tobi\anim\attack2.bca 
+	attack2.bca 
+	5 2 
+	12 3 
+	14 4 
+	-1 
+}
+# eat.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tobi\anim\eat.bca 
+	eat.bca 
+	53 2 
+	-1 
+}
+# type5.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tobi\anim\type5.bca 
+	type5.bca 
+	10 0 
+	29 1 
+	-1 
+}

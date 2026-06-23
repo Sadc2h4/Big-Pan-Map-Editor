@@ -12,10 +12,10 @@
     <Product>Big Pan Map Editor</Product>
     <Authors>C2H4</Authors>
     <Company></Company>
-    <Version>2.1.0</Version>
-    <AssemblyVersion>2.1.0.0</AssemblyVersion>
-    <FileVersion>2.1.0.0</FileVersion>
-    <InformationalVersion>2.1a</InformationalVersion>
+    <Version>2.2.0</Version>
+    <AssemblyVersion>2.2.0.0</AssemblyVersion>
+    <FileVersion>2.2.0.0</FileVersion>
+    <InformationalVersion>2.2a</InformationalVersion>
     <ApplicationIcon>ホーム画面用素材\BigPan_icon_trim_20260522_161519.ico</ApplicationIcon>
     <PublishSingleFile>true</PublishSingleFile>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
@@ -41,6 +41,9 @@
     <EmbeddedResource Include="確認用画像\Loading.*" Link="loading\%(Filename)%(Extension)" />
     <EmbeddedResource Include="manual\**\*.*" />
     <EmbeddedResource Include="pretty\*.png" />
+    <EmbeddedResource Include="object_templates\*.txt" />
+    <EmbeddedResource Include="resources\entities.json" />
+    <EmbeddedResource Include="Setting\*.txt" />
   </ItemGroup>
 
 </Project>

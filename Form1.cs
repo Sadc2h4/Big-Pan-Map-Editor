@@ -14,9 +14,11 @@ public partial class Form1 : Form
     private const int HomeConsoleHeight = 714;
     private const int HomeDesignWidth = 1123;
     private const int HomeDesignHeight = 714;
+    private const int FloatingWindowMinimizedWidth = 340;
+    private const int FloatingWindowMinimizedHeight = 42;
     private const int DwmwaCaptionColor = 35;
     private const int DwmwaTextColor = 36;
-    private const string ApplicationVersionText = "Version : 2.1a";
+    private const string ApplicationVersionText = "Version : 2.2a";
     private readonly EditorSettingsStore _settingsStore;
     private readonly DataRepository _repository;
     private EditorSettings _settings = new();
@@ -57,6 +59,7 @@ public partial class Form1 : Form
     private Button? _buttonFieldConsoleAddSpawnMode;
     private TextBox? _textBoxFieldConsoleObjectRaw;
     private Button? _buttonApplyFieldConsoleObjectRaw;
+    private bool _fieldConsoleRawShowsAddTemplate;
     private Button? _buttonAddSpawn;
     private Button? _buttonDeleteSpawn;
     private Button? _buttonAddWaypoint;
@@ -99,7 +102,9 @@ public partial class Form1 : Form
     private NumericUpDown? _numericUnitConnectionDoorWaypoint;
     private int? _selectedUnitConnectionDoorIndex;
     private bool _inspectorUpdating;
+    private bool _loadingSettings;
     private QuickToolTarget _quickToolTarget = QuickToolTarget.Spawn;
+    private Button? _buttonCreateTestCave;
     private Panel? _quickToolWindow;
     private Form? _quickToolForm;
     private Panel? _quickToolGrip;
@@ -221,7 +226,7 @@ public partial class Form1 : Form
         (8, "Teki F")
     };
 
-    private static readonly (FieldAddTemplateKind Kind, string Label)[] FieldAddTemplateOptions =
+    private static readonly (FieldAddTemplateKind Kind, string Label)[] FieldAddFallbackTemplateOptions =
     {
         (FieldAddTemplateKind.Teki, "Teki"),
         (FieldAddTemplateKind.Item, "Item"),
@@ -281,6 +286,7 @@ public partial class Form1 : Form
         BuildReferenceUnitPanel();
         BuildInspectorPanel();
         BuildQuickToolWindow();
+        BuildCreateTestCaveButton();
         BuildConsoleLogButton();
         BuildAllUnitCacheButton();
         BuildModeReferenceBrowseButtons();
@@ -1230,6 +1236,7 @@ public partial class Form1 : Form
         SetQuickIconButtonText(_buttonQuickRoomConnect, Localize("QuickRoomConnect"));
         SetQuickIconButtonText(_buttonQuickSave, Localize("QuickSave"));
         SetQuickIconButtonText(_buttonQuickSaveAll, Localize("QuickSaveAll"));
+        ApplyCreateTestCaveButtonLanguage();
         ApplyLanguageToPreviewViews();
         ApplyLocalizedAuxiliaryText();
 
@@ -1336,6 +1343,39 @@ public partial class Form1 : Form
             "QuickRoomConnect" => english ? "Snap to Connector" : "接続座標へ移動",
             "QuickSave" => english ? "Save" : "保存",
             "QuickSaveAll" => english ? "Save All" : "すべて保存",
+            "CommonCreate" => english ? "Create" : "作成",
+            "CommonCancel" => english ? "Cancel" : "キャンセル",
+            "CreateTestCaveTitle" => english ? "Create Test Cave" : "テスト洞窟作成",
+            "CreateTestCaveButtonFallback" => english ? "Create\nTest Cave" : "テスト\n洞窟作成",
+            "TipCreateTestCave" => english ? "Create a one-floor test cave in challenge stage 0" : "チャレンジ0面へ反映するテスト洞窟を作成",
+            "CreateTestCaveNeedUnit" => english ? "Load a cave unit in Cave mode before running this." : "洞窟モードでユニットを読み込んでから実行してください．",
+            "CreateTestCaveDefinitionAddFailed" => english ? "Failed to add the edited unit to all_units.txt." : "all_units.txt への編集中ユニット追加に失敗しました．",
+            "CreateTestCaveDefinitionAddFailedLog" => english ? "[Create Test Cave] Failed to create UnitConnection definition: {0}" : "[テスト洞窟作成] UnitConnection 定義作成失敗: {0}",
+            "CreateTestCaveDefinitionCreatedNote" => english
+                ? "The unit was not found in all_units.txt, so data was created from the current edit state."
+                : "all_units.txtに該当ユニットがないため、現在の編集状態からデータを作成しました。",
+            "CreateTestCaveDefinitionUpdatedNote" => english
+                ? "The unit definition in all_units.txt differed from the current edit state, so it was updated from the current edit state."
+                : "all_units.txtの該当ユニット定義が現在の編集状態と異なるため、現在の編集状態で更新しました。",
+            "CreateTestCaveLogSuccess" => english ? "[Create Test Cave] Success: {0}" : "[テスト洞窟作成] 成功: {0}",
+            "CreateTestCaveLogFailed" => english ? "[Create Test Cave] Failed: {0}" : "[テスト洞窟作成] 失敗: {0}",
+            "CreateTestCaveDefinitionCreatedLog" => english
+                ? "Create Test Cave: added edited unit definition to all_units.txt: {0}"
+                : "テスト洞窟作成: all_units.txt に編集中ユニット定義を追加しました: {0}",
+            "CreateTestCaveDefinitionUpdatedLog" => english
+                ? "Create Test Cave: updated all_units.txt from the current unit definition: {0}"
+                : "テスト洞窟作成: all_units.txt の編集中ユニット定義を現在状態で更新しました: {0}",
+            "CreateTestCaveDialogDescription" => english
+                ? "Specify starting Pikmin counts for challenge stage 0 (ch_ABEM_tutorial).\nRoom count 3, time limit 500 seconds, BGM new_04_0.cnd, and 2 sprays of each type are fixed."
+                : "チャレンジモード 0 面(ch_ABEM_tutorial)へ反映する開始数を指定してください．\n部屋数 3，制限時間 500 秒，BGM new_04_0.cnd，スプレー各2個は固定です．",
+            "CreateTestCaveUnitListPrefix" => english ? "Registered units: {0}" : "登録ユニット: {0}",
+            "PikminBlue" => english ? "Blue Pikmin" : "青ピクミン",
+            "PikminRed" => english ? "Red Pikmin" : "赤ピクミン",
+            "PikminYellow" => english ? "Yellow Pikmin" : "黄ピクミン",
+            "PikminPurple" => english ? "Purple Pikmin" : "紫ピクミン",
+            "PikminWhite" => english ? "White Pikmin" : "白ピクミン",
+            "PikminBulbmin" => english ? "Bulbmin" : "コッパチャッピー",
+            "PikminCarrot" => english ? "Carrot" : "ニンジン",
             "SaveConfirmTitle" => english ? "Confirm Save" : "保存確認",
             "SaveCompleteTitle" => english ? "Save Complete" : "保存完了",
             "SaveFailedTitle" => english ? "Save Failed" : "保存失敗",
@@ -2606,7 +2646,9 @@ public partial class Form1 : Form
             Dock = DockStyle.Top,
             Text = Localize("SelectedPoint"),
             AutoSize = true,
-            AutoSizeMode = AutoSizeMode.GrowAndShrink
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            MinimumSize = new Size(0, 78),
+            Margin = new Padding(3, 3, 3, 8)
         };
 
         FlowLayoutPanel selectionLayout = new()
@@ -2616,7 +2658,7 @@ public partial class Form1 : Form
             AutoSizeMode = AutoSizeMode.GrowAndShrink,
             FlowDirection = FlowDirection.TopDown,
             WrapContents = false,
-            Padding = new Padding(10)
+            Padding = new Padding(10, 12, 10, 14)
         };
         _labelInspectorSelection = new Label
         {
@@ -2715,7 +2757,7 @@ public partial class Form1 : Form
 
         _fieldConsoleWindow = new Panel
         {
-            Size = new Size(660, 432),
+            Size = new Size(760, 468),
             Location = new Point(64, 188),
             Padding = new Padding(8),
             BorderStyle = BorderStyle.FixedSingle,
@@ -2788,24 +2830,17 @@ public partial class Form1 : Form
         _comboBoxFieldConsoleAddFile = new ComboBox
         {
             DropDownStyle = ComboBoxStyle.DropDownList,
-            Width = 210,
+            Width = 250,
             Margin = new Padding(0, 3, 6, 0)
         };
         _comboBoxFieldConsoleAddType = new ComboBox
         {
             DropDownStyle = ComboBoxStyle.DropDownList,
-            Width = 160,
+            Width = 250,
             Margin = new Padding(0, 3, 6, 0)
         };
-        foreach ((FieldAddTemplateKind kind, string label) in FieldAddTemplateOptions)
-        {
-            _comboBoxFieldConsoleAddType.Items.Add(new FieldAddTemplateItem(kind, label));
-        }
-
-        if (_comboBoxFieldConsoleAddType.Items.Count > 0)
-        {
-            _comboBoxFieldConsoleAddType.SelectedIndex = 0;
-        }
+        _comboBoxFieldConsoleAddType.SelectedIndexChanged += comboBoxFieldConsoleAddType_SelectedIndexChanged;
+        ReloadFieldAddTemplateComboBox();
 
         _buttonFieldConsoleAddSpawnMode = CreateActionButton("クリック追加", buttonAddSpawn_Click);
         _buttonFieldConsoleAddSpawnMode.Width = 110;
@@ -2822,6 +2857,7 @@ public partial class Form1 : Form
             WordWrap = false,
             Font = new Font("Consolas", 9.5F, FontStyle.Regular, GraphicsUnit.Point)
         };
+        UpdateFieldConsoleAddTemplateRawText();
         _buttonApplyFieldConsoleObjectRaw = CreateActionButton("選択 object raw 反映", buttonApplyFieldObjectRaw_Click);
         _buttonApplyFieldConsoleObjectRaw.Dock = DockStyle.Left;
         _buttonApplyFieldConsoleObjectRaw.Width = 180;
@@ -3381,7 +3417,7 @@ public partial class Form1 : Form
             Text = "Radius",
             Margin = new Padding(8, 3, 0, 0)
         };
-        _checkBoxRadiusOverlay.CheckedChanged += (_, _) => UpdateAllPreviewOverlays();
+        _checkBoxRadiusOverlay.CheckedChanged += OverlayVisibility_CheckedChanged;
         _checkBoxWaterboxOverlay = new CheckBox
         {
             AutoSize = true,
@@ -3389,7 +3425,7 @@ public partial class Form1 : Form
             Text = "水を表示",
             Margin = new Padding(8, 3, 0, 0)
         };
-        _checkBoxWaterboxOverlay.CheckedChanged += (_, _) => UpdateAllPreviewOverlays();
+        _checkBoxWaterboxOverlay.CheckedChanged += OverlayVisibility_CheckedChanged;
         _checkBoxUnitConnectionOverlay = new CheckBox
         {
             AutoSize = true,
@@ -3397,7 +3433,7 @@ public partial class Form1 : Form
             Text = "接続を表示",
             Margin = new Padding(8, 3, 0, 0)
         };
-        _checkBoxUnitConnectionOverlay.CheckedChanged += (_, _) => UpdateAllPreviewOverlays();
+        _checkBoxUnitConnectionOverlay.CheckedChanged += OverlayVisibility_CheckedChanged;
         optionRow.Controls.Add(checkBoxSpawnOverlay);
         optionRow.Controls.Add(checkBoxRouteOverlay);
         optionRow.Controls.Add(_checkBoxRadiusOverlay);
@@ -3466,7 +3502,7 @@ public partial class Form1 : Form
             ClientSize = contentPanel.Size,
             MinimizeBox = true,
             MaximizeBox = false,
-            MinimumSize = new Size(260, 90)
+            MinimumSize = new Size(FloatingWindowMinimizedWidth + 20, 90)
         };
         form.Location = new Point(Location.X + offsetFromMainWindow.X, Location.Y + offsetFromMainWindow.Y);
         form.FormClosing += (_, e) =>
@@ -3604,6 +3640,49 @@ public partial class Form1 : Form
 
         using Image source = LoadImageCloneFromFile(iconPath);
         return new Bitmap(source, new Size(22, 22));
+    }
+
+    //-------------------------------------------------------------------------------
+    // ボタン用アイコンを指定サイズへリサイズして読み込む処理
+    //-------------------------------------------------------------------------------
+    private static Image? LoadButtonIcon(string fileName, Size size)
+    {
+        Image? embeddedSource = EmbeddedImageCatalog.LoadImage("ボタン用アイコン", fileName);
+        if (embeddedSource is not null)
+        {
+            using (embeddedSource)
+            {
+                return ResizeImageKeepAspect(embeddedSource, size);
+            }
+        }
+
+        string? iconPath = FindFileInParentDirectories("ボタン用アイコン", fileName);
+        if (iconPath is null)
+        {
+            return null;
+        }
+
+        using Image source = LoadImageCloneFromFile(iconPath);
+        return ResizeImageKeepAspect(source, size);
+    }
+
+    //-------------------------------------------------------------------------------
+    // 画像の縦横比を保ったまま指定サイズの中央へ描画する処理
+    //-------------------------------------------------------------------------------
+    private static Bitmap ResizeImageKeepAspect(Image source, Size canvasSize)
+    {
+        Bitmap canvas = new(canvasSize.Width, canvasSize.Height);
+        using Graphics graphics = Graphics.FromImage(canvas);
+        graphics.Clear(Color.Transparent);
+        graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+        graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+        float scale = Math.Min(canvasSize.Width / (float)source.Width, canvasSize.Height / (float)source.Height);
+        int width = Math.Max(1, (int)Math.Round(source.Width * scale));
+        int height = Math.Max(1, (int)Math.Round(source.Height * scale));
+        int x = (canvasSize.Width - width) / 2;
+        int y = (canvasSize.Height - height) / 2;
+        graphics.DrawImage(source, new Rectangle(x, y, width, height));
+        return canvas;
     }
 
     //-------------------------------------------------------------------------------
@@ -3914,7 +3993,7 @@ public partial class Form1 : Form
         {
             _quickToolExpandedSize = _quickToolWindow.Size;
             _quickToolContentPanel.Visible = false;
-            _quickToolWindow.Size = new Size(240, 42);
+            _quickToolWindow.Size = new Size(FloatingWindowMinimizedWidth, FloatingWindowMinimizedHeight);
         }
         else
         {
@@ -4074,11 +4153,11 @@ public partial class Form1 : Form
         {
             _fieldConsoleExpandedSize = _fieldConsoleWindow.Size;
             _fieldConsoleContentPanel.Visible = false;
-            _fieldConsoleWindow.Size = new Size(240, 42);
+            _fieldConsoleWindow.Size = new Size(FloatingWindowMinimizedWidth, FloatingWindowMinimizedHeight);
         }
         else
         {
-            _fieldConsoleWindow.Size = _fieldConsoleExpandedSize.Width > 0 ? _fieldConsoleExpandedSize : new Size(660, 460);
+            _fieldConsoleWindow.Size = _fieldConsoleExpandedSize.Width > 0 ? _fieldConsoleExpandedSize : new Size(760, 468);
             _fieldConsoleContentPanel.Visible = true;
         }
 
@@ -4159,6 +4238,504 @@ public partial class Form1 : Form
     }
 
     //-------------------------------------------------------------------------------
+    // プレビュー右上に「テスト洞窟作成」ボタンを配置する処理
+    //-------------------------------------------------------------------------------
+    private void BuildCreateTestCaveButton()
+    {
+        Image? buttonImage = LoadHomeImage("Create_testCave.png");
+        _buttonCreateTestCave = buttonImage is not null
+            ? CreateHomeImageButton("Create_testCave.png", buttonCreateTestCave_Click)
+            : new Button
+            {
+                Text = Localize("CreateTestCaveButtonFallback"),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Yu Gothic UI", 9F, FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+        if (buttonImage is not null)
+        {
+            int buttonWidth = 142;
+            int buttonHeight = Math.Max(1, (int)Math.Round(buttonImage.Height * (buttonWidth / (double)buttonImage.Width)));
+            _buttonCreateTestCave.Size = new Size(buttonWidth, buttonHeight);
+            buttonImage.Dispose();
+        }
+        else
+        {
+            _buttonCreateTestCave.Size = new Size(104, 48);
+            UiTheme.StyleLightButton(_buttonCreateTestCave);
+            _buttonCreateTestCave.Click += buttonCreateTestCave_Click;
+        }
+
+        _buttonCreateTestCave.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        _buttonCreateTestCave.Visible = false;
+        _buttonCreateTestCave.TabStop = false;
+        ApplyCreateTestCaveButtonLanguage();
+
+        panelPreview.Controls.Add(_buttonCreateTestCave);
+        PositionCreateTestCaveButton();
+        _buttonCreateTestCave.BringToFront();
+        panelPreview.Resize += (_, _) => PositionCreateTestCaveButton();
+        panelPreview.Scroll += (_, _) => PositionCreateTestCaveButton();
+    }
+
+    //-------------------------------------------------------------------------------
+    // 「テスト洞窟作成」ボタンの表示文言とツールチップを現在言語へ反映する処理
+    //-------------------------------------------------------------------------------
+    private void ApplyCreateTestCaveButtonLanguage()
+    {
+        if (_buttonCreateTestCave is null)
+        {
+            return;
+        }
+
+        if (_buttonCreateTestCave.BackgroundImage is null)
+        {
+            _buttonCreateTestCave.Text = Localize("CreateTestCaveButtonFallback");
+        }
+
+        _quickToolTip?.SetToolTip(_buttonCreateTestCave, Localize("TipCreateTestCave"));
+    }
+
+    //-------------------------------------------------------------------------------
+    // 「テスト洞窟作成」ボタンをプレビュー右上へ再配置する処理
+    //-------------------------------------------------------------------------------
+    private void PositionCreateTestCaveButton()
+    {
+        if (_buttonCreateTestCave is null)
+        {
+            return;
+        }
+
+        int scrollX = -panelPreview.AutoScrollPosition.X;
+        int scrollY = -panelPreview.AutoScrollPosition.Y;
+        _buttonCreateTestCave.Location = new Point(
+            scrollX + Math.Max(0, panelPreview.ClientSize.Width - _buttonCreateTestCave.Width - 26),
+            scrollY + 10);
+    }
+
+    //-------------------------------------------------------------------------------
+    // 洞窟モードでユニット読込中のみ「テスト洞窟作成」ボタンを表示する処理
+    //-------------------------------------------------------------------------------
+    private void UpdateCreateTestCaveButtonState()
+    {
+        if (_buttonCreateTestCave is null)
+        {
+            return;
+        }
+
+        bool canCreate = !IsHomeScreenVisible()
+            && GetCurrentMode() == EditorMode.Cave
+            && !string.IsNullOrWhiteSpace(_currentPreviewUnitName);
+        _buttonCreateTestCave.Visible = canCreate;
+        if (canCreate)
+        {
+            PositionCreateTestCaveButton();
+            _buttonCreateTestCave.BringToFront();
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // 「テスト洞窟作成」ボタン押下時の処理
+    // 編集中ユニットを含む 1 階層洞窟を生成しチャレンジ0面へ一括登録する
+    //-------------------------------------------------------------------------------
+    private void buttonCreateTestCave_Click(object? sender, EventArgs e)
+    {
+        string? unitsRoot = GetCurrentCaveUnitsRoot();
+        string? allUnitsPath = GetCurrentAllUnitsPath();
+        string? currentUnit = _currentPreviewUnitName;
+
+        if (string.IsNullOrWhiteSpace(unitsRoot) || string.IsNullOrWhiteSpace(allUnitsPath) || string.IsNullOrWhiteSpace(currentUnit))
+        {
+            MessageBox.Show(
+                Localize("CreateTestCaveNeedUnit"),
+                Localize("CreateTestCaveTitle"),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+            return;
+        }
+
+        string unitList = string.Join("，", TestCaveBuilder.FixedUnitNames.Append(currentUnit).Distinct());
+        TestCaveBuildOptions? options = ShowCreateTestCaveOptionsDialog(unitList);
+        if (options is null)
+        {
+            return;
+        }
+
+        TestCaveUnitDefinitionSyncResult unitDefinitionSyncResult;
+        try
+        {
+            unitDefinitionSyncResult = EnsureCurrentUnitDefinitionForTestCave(allUnitsPath, currentUnit);
+        }
+        catch (Exception ex)
+        {
+            AppendLog(string.Format(CultureInfo.CurrentCulture, Localize("CreateTestCaveDefinitionAddFailedLog"), ex.Message));
+            MessageBox.Show(
+                $"{Localize("CreateTestCaveDefinitionAddFailed")}{Environment.NewLine}{ex.Message}",
+                Localize("CreateTestCaveTitle"),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return;
+        }
+
+        TestCaveBuildResult result = TestCaveBuilder.Build(
+            unitsRoot,
+            allUnitsPath,
+            currentUnit,
+            options,
+            _settings.Language.Equals("en", StringComparison.OrdinalIgnoreCase));
+        string message = result.Message;
+        if (result.Success && unitDefinitionSyncResult == TestCaveUnitDefinitionSyncResult.Created)
+        {
+            message += Environment.NewLine + Localize("CreateTestCaveDefinitionCreatedNote");
+        }
+        else if (result.Success && unitDefinitionSyncResult == TestCaveUnitDefinitionSyncResult.Updated)
+        {
+            message += Environment.NewLine + Localize("CreateTestCaveDefinitionUpdatedNote");
+        }
+
+        AppendLog(result.Success
+            ? string.Format(CultureInfo.CurrentCulture, Localize("CreateTestCaveLogSuccess"), string.Join(", ", result.WrittenFiles))
+            : string.Format(CultureInfo.CurrentCulture, Localize("CreateTestCaveLogFailed"), result.Message));
+
+        MessageBox.Show(
+            message,
+            Localize("CreateTestCaveTitle"),
+            MessageBoxButtons.OK,
+            result.Success ? MessageBoxIcon.Information : MessageBoxIcon.Error);
+    }
+
+    //-------------------------------------------------------------------------------
+    // テスト洞窟作成前に編集中ユニットの定義を all_units.txt へ補完する処理
+    //-------------------------------------------------------------------------------
+    private TestCaveUnitDefinitionSyncResult EnsureCurrentUnitDefinitionForTestCave(string allUnitsPath, string currentUnit)
+    {
+        UnitDefinition? allUnitsDefinition = TryLoadUnitDefinitionFromFile(allUnitsPath, currentUnit);
+        UnitDefinition? currentDefinition = BuildCurrentUnitDefinitionForTestCave(currentUnit);
+        if (currentDefinition is null)
+        {
+            return TestCaveUnitDefinitionSyncResult.None;
+        }
+
+        if (allUnitsDefinition is not null &&
+            !ShouldUpdateAllUnitsDefinitionForTestCave(allUnitsDefinition, currentDefinition))
+        {
+            return TestCaveUnitDefinitionSyncResult.None;
+        }
+
+        SaveUnitDefinitionToFile(allUnitsPath, currentDefinition);
+        _currentUnitDefinition = currentDefinition;
+        _currentUnitDefinitionSourcePath = allUnitsPath;
+        if (allUnitsDefinition is null)
+        {
+            AppendLog(string.Format(CultureInfo.CurrentCulture, Localize("CreateTestCaveDefinitionCreatedLog"), currentUnit));
+            return TestCaveUnitDefinitionSyncResult.Created;
+        }
+
+        AppendLog(string.Format(CultureInfo.CurrentCulture, Localize("CreateTestCaveDefinitionUpdatedLog"), currentUnit));
+        return TestCaveUnitDefinitionSyncResult.Updated;
+    }
+
+    private enum TestCaveUnitDefinitionSyncResult
+    {
+        None,
+        Created,
+        Updated
+    }
+
+    //-------------------------------------------------------------------------------
+    // テスト洞窟用に現在ユニットの最良の UnitConnection 定義を作成する処理
+    //-------------------------------------------------------------------------------
+    private UnitDefinition? BuildCurrentUnitDefinitionForTestCave(string currentUnit)
+    {
+        List<UnitDefinition> candidates = new();
+        if (_currentUnitDefinition is not null)
+        {
+            ApplyUnitConnectionInspectorValues();
+            candidates.Add(RecalculateCurrentUnitDoorLinks(_currentUnitDefinition));
+        }
+
+        UnitDefinition? directDefinition = TryLoadDirectArcUnitDefinition(currentUnit);
+        if (directDefinition is not null)
+        {
+            candidates.Add(directDefinition);
+        }
+
+        if (candidates.Count == 0)
+        {
+            candidates.Add(CreateDefaultUnitDefinition(currentUnit, _currentModelBounds));
+        }
+
+        UnitDefinition definition = candidates
+            .OrderByDescending(unit => unit.Doors.Count)
+            .ThenByDescending(unit => unit.Doors.Sum(door => door.DoorLinks.Count))
+            .First();
+        return definition.Name.Equals(currentUnit, StringComparison.OrdinalIgnoreCase)
+            ? definition
+            : definition with { Name = currentUnit };
+    }
+
+    //-------------------------------------------------------------------------------
+    // mapunits/arc 配下の単体ユニット定義ファイルから UnitConnection 定義を読み込む処理
+    //-------------------------------------------------------------------------------
+    private UnitDefinition? TryLoadDirectArcUnitDefinition(string currentUnit)
+    {
+        string? unitsRoot = GetCurrentCaveUnitsRoot();
+        string? mapunitsDir = string.IsNullOrWhiteSpace(unitsRoot)
+            ? null
+            : Directory.GetParent(unitsRoot)?.FullName;
+        if (string.IsNullOrWhiteSpace(mapunitsDir))
+        {
+            return null;
+        }
+
+        string directDefinitionPath = Path.Combine(mapunitsDir, "arc", currentUnit, $"{currentUnit}.txt");
+        return TryLoadUnitDefinitionFromFile(directDefinitionPath, currentUnit);
+    }
+
+    //-------------------------------------------------------------------------------
+    // 指定ファイルから対象ユニットの UnitConnection 定義を読み込む処理
+    //-------------------------------------------------------------------------------
+    private static UnitDefinition? TryLoadUnitDefinitionFromFile(string path, string unitName)
+    {
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+        {
+            return null;
+        }
+
+        return UnitDefinitionParser.ParseMany(path)
+            .FirstOrDefault(unit => unit.Name.Equals(unitName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    //-------------------------------------------------------------------------------
+    // all_units.txt の既存定義を現在の定義で更新すべきか判定する処理
+    //-------------------------------------------------------------------------------
+    private static bool ShouldUpdateAllUnitsDefinitionForTestCave(UnitDefinition allUnitsDefinition, UnitDefinition currentDefinition)
+    {
+        if (currentDefinition.Doors.Count > allUnitsDefinition.Doors.Count)
+        {
+            return true;
+        }
+
+        if (currentDefinition.Doors.Count == allUnitsDefinition.Doors.Count &&
+            currentDefinition.Doors.Sum(door => door.DoorLinks.Count) > allUnitsDefinition.Doors.Sum(door => door.DoorLinks.Count))
+        {
+            return true;
+        }
+
+        return !UnitDefinitionsEqualForTestCave(allUnitsDefinition, currentDefinition);
+    }
+
+    //-------------------------------------------------------------------------------
+    // テスト洞窟作成に必要な UnitConnection 定義内容が一致しているか判定する処理
+    //-------------------------------------------------------------------------------
+    private static bool UnitDefinitionsEqualForTestCave(UnitDefinition first, UnitDefinition second)
+    {
+        if (!first.Name.Equals(second.Name, StringComparison.OrdinalIgnoreCase) ||
+            first.Width != second.Width ||
+            first.Height != second.Height ||
+            first.Kind != second.Kind ||
+            first.RoomFlagA != second.RoomFlagA ||
+            first.RoomFlagB != second.RoomFlagB ||
+            first.Doors.Count != second.Doors.Count)
+        {
+            return false;
+        }
+
+        List<DoorDefinition> firstDoors = first.Doors.OrderBy(door => door.Index).ToList();
+        List<DoorDefinition> secondDoors = second.Doors.OrderBy(door => door.Index).ToList();
+        for (int index = 0; index < firstDoors.Count; index++)
+        {
+            if (!DoorDefinitionsEqualForTestCave(firstDoors[index], secondDoors[index]))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    //-------------------------------------------------------------------------------
+    // テスト洞窟作成に必要な Door 定義内容が一致しているか判定する処理
+    //-------------------------------------------------------------------------------
+    private static bool DoorDefinitionsEqualForTestCave(DoorDefinition first, DoorDefinition second)
+    {
+        if (first.Index != second.Index ||
+            first.Direction != second.Direction ||
+            first.Offset != second.Offset ||
+            first.WayPointIndex != second.WayPointIndex ||
+            first.DoorLinks.Count != second.DoorLinks.Count)
+        {
+            return false;
+        }
+
+        for (int index = 0; index < first.DoorLinks.Count; index++)
+        {
+            DoorLinkDefinition firstLink = first.DoorLinks[index];
+            DoorLinkDefinition secondLink = second.DoorLinks[index];
+            if (Math.Abs(firstLink.Distance - secondLink.Distance) > 0.001f ||
+                firstLink.DoorId != secondLink.DoorId ||
+                firstLink.TekiFlag != secondLink.TekiFlag)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    //-------------------------------------------------------------------------------
+    // テスト洞窟作成時のピクミン数を入力するダイアログを表示する処理
+    //-------------------------------------------------------------------------------
+    private TestCaveBuildOptions? ShowCreateTestCaveOptionsDialog(string unitList)
+    {
+        using Form dialog = new()
+        {
+            Text = Localize("CreateTestCaveTitle"),
+            FormBorderStyle = FormBorderStyle.FixedDialog,
+            StartPosition = FormStartPosition.CenterParent,
+            MinimizeBox = false,
+            MaximizeBox = false,
+            ShowInTaskbar = false,
+            ClientSize = new Size(780, 330),
+            MinimumSize = new Size(780, 360),
+            BackColor = UiTheme.BackgroundDeep
+        };
+
+        TableLayoutPanel rootLayout = new()
+        {
+            Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 4,
+            Padding = new Padding(16),
+            BackColor = UiTheme.BackgroundDeep
+        };
+        rootLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        rootLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        rootLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        rootLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        dialog.Controls.Add(rootLayout);
+
+        Label descriptionLabel = new()
+        {
+            AutoSize = false,
+            Dock = DockStyle.Fill,
+            Height = 48,
+            TextAlign = ContentAlignment.MiddleLeft,
+            Text = Localize("CreateTestCaveDialogDescription")
+        };
+        rootLayout.Controls.Add(descriptionLabel, 0, 0);
+
+        Label unitListLabel = new()
+        {
+            AutoSize = false,
+            Dock = DockStyle.Fill,
+            Height = 24,
+            Margin = new Padding(0, 8, 0, 8),
+            AutoEllipsis = true,
+            TextAlign = ContentAlignment.MiddleLeft,
+            Text = string.Format(CultureInfo.CurrentCulture, Localize("CreateTestCaveUnitListPrefix"), unitList)
+        };
+        ToolTip unitListToolTip = new();
+        unitListToolTip.SetToolTip(unitListLabel, unitListLabel.Text);
+        unitListLabel.Tag = unitListToolTip;
+        rootLayout.Controls.Add(unitListLabel, 0, 1);
+
+        TableLayoutPanel optionLayout = new()
+        {
+            Dock = DockStyle.Top,
+            Height = 125,
+            ColumnCount = 7,
+            RowCount = 1,
+            BackColor = UiTheme.PanelBack,
+            Padding = new Padding(18, 12, 18, 12),
+            Margin = new Padding(0, 0, 0, 0)
+        };
+        for (int column = 0; column < 7; column++)
+        {
+            optionLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / 7F));
+        }
+        optionLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 101F));
+        rootLayout.Controls.Add(optionLayout, 0, 2);
+
+        NumericUpDown blueEditor = CreateTestCaveOptionEditor(TestCaveBuilder.DefaultPikminPerColor, 999);
+        NumericUpDown redEditor = CreateTestCaveOptionEditor(TestCaveBuilder.DefaultPikminPerColor, 999);
+        NumericUpDown yellowEditor = CreateTestCaveOptionEditor(TestCaveBuilder.DefaultPikminPerColor, 999);
+        NumericUpDown purpleEditor = CreateTestCaveOptionEditor(TestCaveBuilder.DefaultPikminPerColor, 999);
+        NumericUpDown whiteEditor = CreateTestCaveOptionEditor(TestCaveBuilder.DefaultPikminPerColor, 999);
+        NumericUpDown bulbminEditor = CreateTestCaveOptionEditor(0, 999);
+        NumericUpDown carrotEditor = CreateTestCaveOptionEditor(0, 999);
+
+        AddTestCaveOptionTile(optionLayout, 0, 0, "Piki_B_icon.png", Localize("PikminBlue"), blueEditor);
+        AddTestCaveOptionTile(optionLayout, 1, 0, "Piki_R_icon.png", Localize("PikminRed"), redEditor);
+        AddTestCaveOptionTile(optionLayout, 2, 0, "Piki_Y_icon.png", Localize("PikminYellow"), yellowEditor);
+        AddTestCaveOptionTile(optionLayout, 3, 0, "Piki_P_icon.png", Localize("PikminPurple"), purpleEditor);
+        AddTestCaveOptionTile(optionLayout, 4, 0, "Piki_W_icon.png", Localize("PikminWhite"), whiteEditor);
+        AddTestCaveOptionTile(optionLayout, 5, 0, "Piki_K_icon.png", Localize("PikminBulbmin"), bulbminEditor);
+        AddTestCaveOptionTile(optionLayout, 6, 0, "Piki_C_icon.png", Localize("PikminCarrot"), carrotEditor);
+
+        TableLayoutPanel buttonPanel = new()
+        {
+            Dock = DockStyle.Fill,
+            ColumnCount = 3,
+            RowCount = 1,
+            BackColor = UiTheme.BackgroundDeep,
+            Margin = new Padding(0, 12, 0, 0)
+        };
+        buttonPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        buttonPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 110F));
+        buttonPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 110F));
+        buttonPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 34F));
+        rootLayout.Controls.Add(buttonPanel, 0, 3);
+
+        Button createButton = new()
+        {
+            Text = Localize("CommonCreate"),
+            DialogResult = DialogResult.OK,
+            Width = 100,
+            Height = 32,
+            Anchor = AnchorStyles.Right,
+            Margin = new Padding(8, 0, 0, 0)
+        };
+        UiTheme.StyleLightButton(createButton);
+
+        Button cancelButton = new()
+        {
+            Text = Localize("CommonCancel"),
+            DialogResult = DialogResult.Cancel,
+            Width = 100,
+            Height = 32,
+            Anchor = AnchorStyles.Right,
+            Margin = new Padding(8, 0, 0, 0)
+        };
+        UiTheme.StyleDarkButton(cancelButton);
+        buttonPanel.Controls.Add(cancelButton, 1, 0);
+        buttonPanel.Controls.Add(createButton, 2, 0);
+
+        dialog.AcceptButton = createButton;
+        dialog.CancelButton = cancelButton;
+        UiTheme.ApplyDarkThemeRecursive(dialog);
+        UiTheme.StyleLightButton(createButton);
+        UiTheme.StyleDarkButton(cancelButton);
+
+        if (dialog.ShowDialog(this) != DialogResult.OK)
+        {
+            return null;
+        }
+
+        return new TestCaveBuildOptions(
+            (int)blueEditor.Value,
+            (int)redEditor.Value,
+            (int)yellowEditor.Value,
+            (int)purpleEditor.Value,
+            (int)whiteEditor.Value,
+            (int)bulbminEditor.Value,
+            (int)carrotEditor.Value,
+            TestCaveBuilder.DefaultSprayPerType,
+            TestCaveBuilder.DefaultSprayPerType);
+    }
+
+    //-------------------------------------------------------------------------------
     // 簡易操作ミニウィンドウの表示状態と色を更新する処理
     //-------------------------------------------------------------------------------
     private void UpdateQuickToolWindowState()
@@ -4196,6 +4773,11 @@ public partial class Form1 : Form
             _quickToolForm?.Hide();
             _fieldConsoleForm?.Hide();
             _quickToolWindow.Visible = false;
+            if (_buttonCreateTestCave is not null)
+            {
+                _buttonCreateTestCave.Visible = false;
+            }
+
             if (_fieldConsoleWindow is not null)
             {
                 _fieldConsoleWindow.Visible = false;
@@ -4349,6 +4931,7 @@ public partial class Form1 : Form
             SetDetachedToolWindowVisible(_fieldConsoleForm, _fieldConsoleWindow, hasFieldMap);
         }
         UpdateModeBanner();
+        UpdateCreateTestCaveButtonState();
     }
 
     //-------------------------------------------------------------------------------
@@ -4608,6 +5191,25 @@ public partial class Form1 : Form
         return editor;
     }
 
+    //-------------------------------------------------------------------------------
+    // テスト洞窟作成ダイアログ用の整数入力欄を生成する処理
+    //-------------------------------------------------------------------------------
+    private static NumericUpDown CreateTestCaveOptionEditor(int initialValue, int maximum)
+    {
+        NumericUpDown editor = new()
+        {
+            DecimalPlaces = 0,
+            Increment = 1,
+            Minimum = 0,
+            Maximum = maximum,
+            Width = 64,
+            Height = 24,
+            Anchor = AnchorStyles.Top,
+            Value = Math.Clamp(initialValue, 0, maximum)
+        };
+        return editor;
+    }
+
     private static void AddInspectorRow(TableLayoutPanel layout, int rowIndex, string labelText, Control editor)
     {
         layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 34F));
@@ -4619,6 +5221,40 @@ public partial class Form1 : Form
         };
         layout.Controls.Add(label, 0, rowIndex);
         layout.Controls.Add(editor, 1, rowIndex);
+    }
+
+    //-------------------------------------------------------------------------------
+    // テスト洞窟作成ダイアログへアイコン付き入力タイルを追加する処理
+    //-------------------------------------------------------------------------------
+    private static void AddTestCaveOptionTile(TableLayoutPanel layout, int columnIndex, int rowIndex, string iconFileName, string labelText, Control editor)
+    {
+        TableLayoutPanel tile = new()
+        {
+            Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 2,
+            Margin = new Padding(4),
+            BackColor = UiTheme.PanelBack
+        };
+        tile.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        tile.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+
+        PictureBox icon = new()
+        {
+            Dock = DockStyle.Fill,
+            Image = LoadButtonIcon(iconFileName, new Size(50, 50)),
+            SizeMode = PictureBoxSizeMode.CenterImage,
+            BackColor = UiTheme.PanelBack
+        };
+        ToolTip optionToolTip = new();
+        optionToolTip.SetToolTip(icon, labelText);
+        optionToolTip.SetToolTip(editor, labelText);
+        tile.Tag = optionToolTip;
+
+        editor.Margin = new Padding(0, 2, 0, 2);
+        tile.Controls.Add(icon, 0, 0);
+        tile.Controls.Add(editor, 0, 1);
+        layout.Controls.Add(tile, columnIndex, rowIndex);
     }
 
     //-------------------------------------------------------------------------------
@@ -4798,30 +5434,55 @@ public partial class Form1 : Form
     private void Form1_Load(object sender, EventArgs e)
     {
         _settings = _settingsStore.Load();
+        _loadingSettings = true;
 
-        if (string.IsNullOrWhiteSpace(_settings.ToolkitPath))
+        try
         {
-            _settings.ToolkitPath = _repository.TryFindDefaultToolkitPath() ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(_settings.ToolkitPath))
+            {
+                _settings.ToolkitPath = _repository.TryFindDefaultToolkitPath() ?? string.Empty;
+            }
+
+            if (string.IsNullOrWhiteSpace(_settings.DiscRoot))
+            {
+                _settings.DiscRoot = _repository.TryFindDefaultDiscRootPath() ?? string.Empty;
+            }
+
+            textBoxToolkitPath.Text = _settings.ToolkitPath;
+            textBoxDiscRoot.Text = _settings.DiscRoot;
+            _settings.UseObjDirectView = false;
+            checkBoxObjDirectView.Checked = false;
+            checkBoxSpawnOverlay.Checked = _settings.ShowSpawnOverlay;
+            checkBoxRouteOverlay.Checked = _settings.ShowRouteOverlay;
+            if (_checkBoxRadiusOverlay is not null)
+            {
+                _checkBoxRadiusOverlay.Checked = _settings.ShowRadiusOverlay;
+            }
+
+            if (_checkBoxWaterboxOverlay is not null)
+            {
+                _checkBoxWaterboxOverlay.Checked = _settings.ShowWaterboxOverlay;
+            }
+
+            if (_checkBoxUnitConnectionOverlay is not null)
+            {
+                _checkBoxUnitConnectionOverlay.Checked = _settings.ShowUnitConnectionOverlay;
+            }
+
+            comboBoxMode.SelectedIndex = _settings.LastMode switch
+            {
+                "Cave" => 1,
+                _ => 0
+            };
+            SelectHomeLanguageItem(_settings.Language);
+            SelectHomeCaveModelSourceItem(_settings.CaveModelSource);
+            ApplyLanguageToUi();
+            SetLoadFormat(LoadFormatKind.None, null);
         }
-
-        if (string.IsNullOrWhiteSpace(_settings.DiscRoot))
+        finally
         {
-            _settings.DiscRoot = _repository.TryFindDefaultDiscRootPath() ?? string.Empty;
+            _loadingSettings = false;
         }
-
-        textBoxToolkitPath.Text = _settings.ToolkitPath;
-        textBoxDiscRoot.Text = _settings.DiscRoot;
-        _settings.UseObjDirectView = false;
-        checkBoxObjDirectView.Checked = false;
-        comboBoxMode.SelectedIndex = _settings.LastMode switch
-        {
-            "Cave" => 1,
-            _ => 0
-        };
-        SelectHomeLanguageItem(_settings.Language);
-        SelectHomeCaveModelSourceItem(_settings.CaveModelSource);
-        ApplyLanguageToUi();
-        SetLoadFormat(LoadFormatKind.None, null);
 
         ConfigureEditorModeUi();
         ApplyToolkitState(showWarning: true);
@@ -5306,6 +5967,20 @@ public partial class Form1 : Form
             z,
             32f);
         updatedWaypoints[waypointIndex] = newWaypoint;
+        if (linkTargetIndex is int targetIndex && updatedWaypoints.TryGetValue(targetIndex, out RouteWaypoint? targetWaypoint))
+        {
+            List<int> reciprocalLinks = targetWaypoint.Links.ToList();
+            if (!reciprocalLinks.Contains(waypointIndex))
+            {
+                reciprocalLinks.Add(waypointIndex);
+                reciprocalLinks.Sort();
+                updatedWaypoints[targetIndex] = targetWaypoint with
+                {
+                    Links = reciprocalLinks
+                };
+            }
+        }
+
         return (new RouteFile(updatedWaypoints), waypointIndex, true);
     }
 
@@ -6059,13 +6734,20 @@ public partial class Form1 : Form
             if (_textBoxFieldObjectRaw is not null)
             {
                 _textBoxFieldObjectRaw.Enabled = hasFieldObject;
-                _textBoxFieldObjectRaw.Text = fieldObjectRawText;
+                _textBoxFieldObjectRaw.Text = NormalizeTextBoxLineEndings(fieldObjectRawText);
             }
 
             if (_textBoxFieldConsoleObjectRaw is not null)
             {
-                _textBoxFieldConsoleObjectRaw.Enabled = hasFieldObject;
-                _textBoxFieldConsoleObjectRaw.Text = fieldObjectRawText;
+                if (_fieldConsoleRawShowsAddTemplate)
+                {
+                    _textBoxFieldConsoleObjectRaw.Enabled = GetCurrentMode() == EditorMode.Field && _currentFieldMapData is not null;
+                }
+                else
+                {
+                    _textBoxFieldConsoleObjectRaw.Enabled = hasFieldObject;
+                    _textBoxFieldConsoleObjectRaw.Text = NormalizeTextBoxLineEndings(fieldObjectRawText);
+                }
             }
 
             if (_buttonApplyFieldObjectRaw is not null)
@@ -6075,7 +6757,7 @@ public partial class Form1 : Form
 
             if (_buttonApplyFieldConsoleObjectRaw is not null)
             {
-                _buttonApplyFieldConsoleObjectRaw.Enabled = hasFieldObject;
+                _buttonApplyFieldConsoleObjectRaw.Enabled = hasFieldObject && !_fieldConsoleRawShowsAddTemplate;
             }
 
             _groupBoxSpawnInspector.Enabled = GetCurrentMode() == EditorMode.Cave;
@@ -6518,6 +7200,8 @@ public partial class Form1 : Form
         {
             ClampFieldConsoleWindowToPreview();
         }
+
+        PositionCreateTestCaveButton();
     }
 
     //-------------------------------------------------------------------------------
@@ -6545,6 +7229,11 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     private void comboBoxMode_SelectedIndexChanged(object sender, EventArgs e)
     {
+        if (_loadingSettings)
+        {
+            return;
+        }
+
         _currentEditMode = UnitMapEditMode.Navigate;
         _unitMapView.SetEditMode(_currentEditMode);
         _objModelView.SetEditMode(_currentEditMode);
@@ -6561,6 +7250,12 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     private void checkBoxRouteOverlay_CheckedChanged(object sender, EventArgs e)
     {
+        if (_loadingSettings)
+        {
+            return;
+        }
+
+        SaveSettings();
         RefreshPreview();
     }
 
@@ -6569,6 +7264,12 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     private void checkBoxSpawnOverlay_CheckedChanged(object? sender, EventArgs e)
     {
+        if (_loadingSettings)
+        {
+            return;
+        }
+
+        SaveSettings();
         RefreshPreview();
     }
 
@@ -6577,9 +7278,28 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     private void checkBoxObjDirectView_CheckedChanged(object? sender, EventArgs e)
     {
+        if (_loadingSettings)
+        {
+            return;
+        }
+
         SaveSettings();
         ConfigureEditorModeUi();
         RefreshPreview();
+    }
+
+    //-------------------------------------------------------------------------------
+    // ミニコントローラの表示切替を保存してプレビューへ反映する処理
+    //-------------------------------------------------------------------------------
+    private void OverlayVisibility_CheckedChanged(object? sender, EventArgs e)
+    {
+        if (_loadingSettings)
+        {
+            return;
+        }
+
+        SaveSettings();
+        UpdateAllPreviewOverlays();
     }
 
     //-------------------------------------------------------------------------------
@@ -7905,6 +8625,11 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     private void SaveSettings()
     {
+        if (_loadingSettings)
+        {
+            return;
+        }
+
         _settings.ToolkitPath = textBoxToolkitPath.Text;
         _settings.DiscRoot = textBoxDiscRoot.Text;
         _settings.LastMode = GetCurrentMode().ToString();
@@ -7913,6 +8638,11 @@ public partial class Form1 : Form
             _settings.CaveModelSource = item.Code;
         }
         _settings.UseObjDirectView = false;
+        _settings.ShowSpawnOverlay = checkBoxSpawnOverlay.Checked;
+        _settings.ShowRouteOverlay = checkBoxRouteOverlay.Checked;
+        _settings.ShowRadiusOverlay = _checkBoxRadiusOverlay?.Checked ?? _settings.ShowRadiusOverlay;
+        _settings.ShowWaterboxOverlay = _checkBoxWaterboxOverlay?.Checked ?? _settings.ShowWaterboxOverlay;
+        _settings.ShowUnitConnectionOverlay = _checkBoxUnitConnectionOverlay?.Checked ?? _settings.ShowUnitConnectionOverlay;
         _settingsStore.Save(_settings);
     }
 
@@ -8609,6 +9339,189 @@ public partial class Form1 : Form
     }
 
     //-------------------------------------------------------------------------------
+    // 地上 generator 追加テンプレートのコンボボックスを再構築する処理
+    //-------------------------------------------------------------------------------
+    private void ReloadFieldAddTemplateComboBox()
+    {
+        if (_comboBoxFieldConsoleAddType is null)
+        {
+            return;
+        }
+
+        string? previousLabel = _comboBoxFieldConsoleAddType.SelectedItem is FieldAddTemplateItem previousItem
+            ? previousItem.Label
+            : null;
+        List<FieldAddTemplateItem> items = LoadFieldAddTemplateItems();
+        _comboBoxFieldConsoleAddType.BeginUpdate();
+        try
+        {
+            _comboBoxFieldConsoleAddType.Items.Clear();
+            foreach (FieldAddTemplateItem item in items)
+            {
+                _comboBoxFieldConsoleAddType.Items.Add(item);
+            }
+        }
+        finally
+        {
+            _comboBoxFieldConsoleAddType.EndUpdate();
+        }
+
+        int selectedIndex = previousLabel is null
+            ? -1
+            : items.FindIndex(item => string.Equals(item.Label, previousLabel, StringComparison.OrdinalIgnoreCase));
+        _comboBoxFieldConsoleAddType.SelectedIndex = items.Count == 0 ? -1 : Math.Max(0, selectedIndex);
+    }
+
+    //-------------------------------------------------------------------------------
+    // 地上 generator 追加テンプレート選択時に Raw 欄へテンプレートを表示する処理
+    //-------------------------------------------------------------------------------
+    private void comboBoxFieldConsoleAddType_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        UpdateFieldConsoleAddTemplateRawText();
+    }
+
+    //-------------------------------------------------------------------------------
+    // 地上 generator 追加用 Raw 欄を選択中テンプレートで更新する処理
+    //-------------------------------------------------------------------------------
+    private void UpdateFieldConsoleAddTemplateRawText()
+    {
+        if (_comboBoxFieldConsoleAddType?.SelectedItem is not FieldAddTemplateItem templateItem)
+        {
+            return;
+        }
+
+        _fieldConsoleRawShowsAddTemplate = true;
+        if (_textBoxFieldConsoleObjectRaw is not null)
+        {
+            _textBoxFieldConsoleObjectRaw.Enabled = GetCurrentMode() == EditorMode.Field && _currentFieldMapData is not null;
+            _textBoxFieldConsoleObjectRaw.Text = NormalizeTextBoxLineEndings(GetFieldAddTemplateRawText(templateItem));
+        }
+
+        if (_buttonApplyFieldConsoleObjectRaw is not null)
+        {
+            _buttonApplyFieldConsoleObjectRaw.Enabled = false;
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // 地上 generator 追加テンプレートの Raw テキストを取得する処理
+    //-------------------------------------------------------------------------------
+    private static string GetFieldAddTemplateRawText(FieldAddTemplateItem templateItem)
+    {
+        if (!string.IsNullOrWhiteSpace(templateItem.RawText))
+        {
+            return templateItem.RawText;
+        }
+
+        string position = "0 0 0 # Position";
+        return templateItem.Kind switch
+        {
+            FieldAddTemplateKind.Item => string.Join(Environment.NewLine, BuildFieldItemTemplateLines(position)),
+            FieldAddTemplateKind.Pikmin => string.Join(Environment.NewLine, BuildFieldPikminTemplateLines(position)),
+            FieldAddTemplateKind.CaveEntrance => string.Join(Environment.NewLine, BuildFieldCaveTemplateLines(position)),
+            _ => string.Join(Environment.NewLine, BuildFieldTekiTemplateLines(position))
+        };
+    }
+
+    //-------------------------------------------------------------------------------
+    // object_templates から地上 generator 追加テンプレートを読み込む処理
+    //-------------------------------------------------------------------------------
+    private static List<FieldAddTemplateItem> LoadFieldAddTemplateItems()
+    {
+        List<FieldAddTemplateItem> items = new();
+        foreach (EmbeddedTextResource template in EmbeddedTextResourceCatalog.LoadTextFiles("object_templates", ".txt", Encoding.UTF8))
+        {
+            items.Add(new FieldAddTemplateItem(FieldAddTemplateKind.TemplateFile, CreateFieldTemplateLabel(template.FileName), template.Text));
+        }
+
+        if (items.Count > 0)
+        {
+            return items;
+        }
+
+        string? templateDirectory = FindFieldObjectTemplateDirectory();
+        if (templateDirectory is not null)
+        {
+            foreach (string path in Directory.GetFiles(templateDirectory, "*.txt").OrderBy(Path.GetFileName))
+            {
+                string rawText = File.ReadAllText(path, Encoding.UTF8);
+                items.Add(new FieldAddTemplateItem(FieldAddTemplateKind.TemplateFile, CreateFieldTemplateLabel(path), rawText));
+            }
+        }
+
+        if (items.Count > 0)
+        {
+            return items;
+        }
+
+        foreach ((FieldAddTemplateKind kind, string label) in FieldAddFallbackTemplateOptions)
+        {
+            items.Add(new FieldAddTemplateItem(kind, label));
+        }
+
+        return items;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 開発用または配布用の object_templates フォルダを探す処理
+    //-------------------------------------------------------------------------------
+    private static string? FindFieldObjectTemplateDirectory()
+    {
+        foreach (string baseDirectory in new[] { AppContext.BaseDirectory, Directory.GetCurrentDirectory() })
+        {
+            DirectoryInfo? directory = new(baseDirectory);
+            for (int depth = 0; directory is not null && depth < 8; depth++)
+            {
+                string localCandidate = Path.Combine(directory.FullName, "object_templates");
+                if (Directory.Exists(localCandidate) && Directory.GetFiles(localCandidate, "*.txt").Length > 0)
+                {
+                    return localCandidate;
+                }
+
+                string referenceCandidate = Path.Combine(directory.FullName, "pikmin-tools-master", "object_templates");
+                if (Directory.Exists(referenceCandidate) && Directory.GetFiles(referenceCandidate, "*.txt").Length > 0)
+                {
+                    return referenceCandidate;
+                }
+
+                directory = directory.Parent;
+            }
+        }
+
+        return null;
+    }
+
+    //-------------------------------------------------------------------------------
+    // object_templates のファイル名から表示名を作成する処理
+    //-------------------------------------------------------------------------------
+    private static string CreateFieldTemplateLabel(string path)
+    {
+        string name = Path.GetFileNameWithoutExtension(path);
+        return name switch
+        {
+            "barl_drain" => "Water Drain",
+            "bridge" => "Bridge",
+            "burgeoning_spiderwort" => "Burg. Spiderwort",
+            "cave" => "Cave Entrance",
+            "downfloor" => "Down Floor / Paper Bag",
+            "electricalwire" => "Electrical Wire",
+            "gate_electric" => "Electric Gate",
+            "gate_sand" => "Gate",
+            "honeywisp" => "Honeywisp",
+            "onion_blue onion" => "Blue Onion",
+            "onion_red onion" => "Red Onion",
+            "onion_rocket" => "Rocket",
+            "onion_yellow onion" => "Yellow Onion",
+            "pellet" => "Pellet",
+            "pelletposy" => "Pellet Posy",
+            "teki" => "Teki",
+            "treasure" => "Treasure",
+            "treasure_exploration_kit" => "ExpKit Treasure",
+            _ => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(name.Replace('_', ' '))
+        };
+    }
+
+    //-------------------------------------------------------------------------------
     // 地上 generator 追加用コントロールの候補を現在日数に合わせる処理
     //-------------------------------------------------------------------------------
     private void RefreshFieldAddControls()
@@ -8621,6 +9534,11 @@ public partial class Form1 : Form
         }
 
         bool canAdd = GetCurrentMode() == EditorMode.Field && _currentFieldMapData is not null;
+        if (_comboBoxFieldConsoleAddType.Items.Count == 0)
+        {
+            ReloadFieldAddTemplateComboBox();
+        }
+
         _comboBoxFieldConsoleAddFile.Enabled = canAdd;
         _comboBoxFieldConsoleAddType.Enabled = canAdd;
         _buttonFieldConsoleAddSpawnMode.Enabled = canAdd;
@@ -8753,7 +9671,11 @@ public partial class Form1 : Form
             float y = GetGroundHeightOrFallback(x, z, 0f);
             FieldGeneratorFile targetFile = _currentFieldMapData.GeneratorFiles[fileItem.FileIndex];
             int newObjectIndex = targetFile.Objects.Count;
-            string rawText = BuildFieldObjectTemplate(templateItem.Kind, x, y, z);
+            string rawText = _fieldConsoleRawShowsAddTemplate &&
+                _textBoxFieldConsoleObjectRaw is not null &&
+                !string.IsNullOrWhiteSpace(_textBoxFieldConsoleObjectRaw.Text)
+                ? BuildFieldObjectTemplateFromRaw(_textBoxFieldConsoleObjectRaw.Text, x, y, z)
+                : BuildFieldObjectTemplate(templateItem, x, y, z);
             List<FieldGeneratorFile> generatorFiles = _currentFieldMapData.GeneratorFiles.ToList();
             generatorFiles[fileItem.FileIndex] = FieldGeneratorParser.AddObjectRawText(targetFile, rawText);
             _currentFieldMapData = _currentFieldMapData with
@@ -8844,16 +9766,110 @@ public partial class Form1 : Form
     //-------------------------------------------------------------------------------
     // 地上 generator へ追加する object テンプレートを作成する処理
     //-------------------------------------------------------------------------------
-    private static string BuildFieldObjectTemplate(FieldAddTemplateKind kind, float x, float y, float z)
+    private static string BuildFieldObjectTemplate(FieldAddTemplateItem templateItem, float x, float y, float z)
     {
+        if (!string.IsNullOrWhiteSpace(templateItem.RawText))
+        {
+            return BuildFieldObjectTemplateFromRaw(templateItem.RawText, x, y, z);
+        }
+
         string position = $"{ToFieldNumber(x)} {ToFieldNumber(y)} {ToFieldNumber(z)} # Position";
-        return kind switch
+        return templateItem.Kind switch
         {
             FieldAddTemplateKind.Item => string.Join(Environment.NewLine, BuildFieldItemTemplateLines(position)),
             FieldAddTemplateKind.Pikmin => string.Join(Environment.NewLine, BuildFieldPikminTemplateLines(position)),
             FieldAddTemplateKind.CaveEntrance => string.Join(Environment.NewLine, BuildFieldCaveTemplateLines(position)),
             _ => string.Join(Environment.NewLine, BuildFieldTekiTemplateLines(position))
         };
+    }
+
+    //-------------------------------------------------------------------------------
+    // Raw テキストを元にクリック位置の地上 generator object を作成する処理
+    //-------------------------------------------------------------------------------
+    private static string BuildFieldObjectTemplateFromRaw(string rawText, float x, float y, float z)
+    {
+        string position = $"{ToFieldNumber(x)} {ToFieldNumber(y)} {ToFieldNumber(z)} # Position";
+        return ReplaceFieldTemplatePosition(rawText, position);
+    }
+
+    //-------------------------------------------------------------------------------
+    // object_templates の position 行をクリック位置へ差し替える処理
+    //-------------------------------------------------------------------------------
+    private static string ReplaceFieldTemplatePosition(string rawText, string position)
+    {
+        List<string> lines = rawText
+            .Replace("\r\n", "\n", StringComparison.Ordinal)
+            .Replace('\r', '\n')
+            .Split('\n')
+            .ToList();
+        int positionLineIndex = FindFieldTemplatePositionLineIndex(lines);
+        if (positionLineIndex < 0)
+        {
+            throw new InvalidDataException("テンプレート内の Position 行を見つけられませんでした．");
+        }
+
+        lines[positionLineIndex] = ReplaceFieldTemplatePositionLine(lines[positionLineIndex], position);
+        return string.Join(Environment.NewLine, lines);
+    }
+
+    //-------------------------------------------------------------------------------
+    // object_templates の generator header から position 行を取得する処理
+    //-------------------------------------------------------------------------------
+    private static int FindFieldTemplatePositionLineIndex(IReadOnlyList<string> lines)
+    {
+        List<(string Text, int Index)> significantLines = new();
+        for (int i = 0; i < lines.Count; i++)
+        {
+            string cleaned = RemoveLineComment(lines[i]);
+            if (!string.IsNullOrWhiteSpace(cleaned))
+            {
+                significantLines.Add((cleaned, i));
+            }
+        }
+
+        int headerIndex = significantLines.FindIndex(line => line.Text.StartsWith("{v0.", StringComparison.OrdinalIgnoreCase));
+        return headerIndex >= 0 && headerIndex + 4 < significantLines.Count
+            ? significantLines[headerIndex + 4].Index
+            : -1;
+    }
+
+    //-------------------------------------------------------------------------------
+    // position 行のインデントとコメントを保ったまま座標値を差し替える処理
+    //-------------------------------------------------------------------------------
+    private static string ReplaceFieldTemplatePositionLine(string line, string position)
+    {
+        int commentIndex = line.IndexOf('#');
+        string valuePart = commentIndex >= 0 ? line[..commentIndex] : line;
+        string commentPart = commentIndex >= 0 ? line[commentIndex..] : string.Empty;
+        string indent = valuePart[..valuePart.TakeWhile(char.IsWhiteSpace).Count()];
+        if (!string.IsNullOrWhiteSpace(commentPart))
+        {
+            int valueCommentIndex = position.IndexOf('#');
+            string valueOnly = valueCommentIndex >= 0 ? position[..valueCommentIndex].TrimEnd() : position.TrimEnd();
+            return $"{indent}{valueOnly} {commentPart.TrimEnd()}";
+        }
+
+        return $"{indent}{position}";
+    }
+
+    //-------------------------------------------------------------------------------
+    // テンプレート行からコメントを除去する処理
+    //-------------------------------------------------------------------------------
+    private static string RemoveLineComment(string line)
+    {
+        int commentIndex = line.IndexOf('#');
+        return (commentIndex >= 0 ? line[..commentIndex] : line).Trim();
+    }
+
+    //-------------------------------------------------------------------------------
+    // TextBox 表示用に改行コードを Windows 形式へ正規化する処理
+    //-------------------------------------------------------------------------------
+    private static string NormalizeTextBoxLineEndings(string text)
+    {
+        return text
+            .Replace("\r\n", "\n", StringComparison.Ordinal)
+            .Replace('\r', '\n')
+            .Replace("\n", Environment.NewLine, StringComparison.Ordinal);
     }
 
     //-------------------------------------------------------------------------------
@@ -10709,8 +11725,8 @@ public partial class Form1 : Form
 
             fieldLines.Add(string.Empty);
             fieldLines.Add("地上 generator は経過日数に一致するファイルだけを表示・編集します．");
-            fieldLines.Add("地上 generator は既存 object の移動，角度，Radius 編集に対応しています．");
-            fieldLines.Add("新規追加と削除は generator 型の既定値整備後に有効化します．");
+            fieldLines.Add("地上 generator は object の移動，角度，Radius 編集，新規追加，削除に対応しています．");
+            fieldLines.Add("新規追加は object_templates の bridge，gate，treasure などのテンプレートを使用します．");
 
             _currentSummaryLines = fieldLines;
             RefreshConsoleOutput();
@@ -10825,7 +11841,7 @@ public partial class Form1 : Form
         }
     }
 
-    private sealed record FieldAddTemplateItem(FieldAddTemplateKind Kind, string Label)
+    private sealed record FieldAddTemplateItem(FieldAddTemplateKind Kind, string Label, string? RawText = null)
     {
         public override string ToString()
         {
@@ -10877,6 +11893,7 @@ public partial class Form1 : Form
 
     private enum FieldAddTemplateKind
     {
+        TemplateFile,
         Teki,
         Item,
         Pikmin,

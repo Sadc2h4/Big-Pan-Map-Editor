@@ -1,0 +1,99 @@
+#------------------------------------------------------
+#
+#	ペレット設定ファイル
+#
+#
+#
+#------------------------------------------------------
+
+4
+
+{
+	name			number1
+	archive			pellet.szs
+	bmd			white1.bmd
+	animmgr			pellet1AnimMgr.txt
+	colltree		pellet1Coll.txt
+	radius			10.0
+	p_radius		10.0
+	height			7.6
+	inertiascaling		90.0
+	particletype		simple
+	numparticles		0
+	particlesize		0.5
+	friction		0.5
+	min			1
+	max			2
+	pikicountmax		2
+	pikicountmin		1
+	dynamics		never
+#	dynamics		lod
+	end
+}
+
+{
+	name			number5
+	archive			pellet.szs
+	bmd			white2.bmd
+	animmgr			pellet2AnimMgr.txt
+	colltree		pellet2Coll.txt
+	radius			20.0
+	p_radius		20.0
+	height			14.0
+	inertiascaling		200.0
+	particletype		simple
+	numparticles		4 # 8
+	particlesize		1.0
+	friction		0.9
+	min			5
+	max			10
+	pikicountmax		5
+	pikicountmin		3
+	dynamics		lod
+	end
+}
+
+{
+	name			number10
+	archive			pellet.szs
+	bmd			white3.bmd
+	animmgr			pellet3AnimMgr.txt
+	colltree		pellet3Coll.txt
+	radius			35.0
+	p_radius		35.0
+	height			27.0
+	inertiascaling		500.0
+	particletype		complex
+	numparticles		8 # 24
+	particlesize		1.0
+	friction		0.9
+	min			10
+	max			20
+	pikicountmax		10
+	pikicountmin		5
+	dynamics		lod
+	end
+}
+
+{
+	name			number20
+	archive			pellet.szs
+	bmd			white4.bmd
+	animmgr			pellet4AnimMgr.txt
+	colltree		pellet4Coll.txt
+	radius			50.0
+	p_radius		50.0
+	height			36.5
+	inertiascaling		800.0
+	particletype		complex
+	numparticles		8 # 24
+	particlesize		1.0
+	friction		0.9
+	min			20
+	max			50
+	pikicountmax		20
+	pikicountmin		10
+	dynamics		lod
+	end
+}
+

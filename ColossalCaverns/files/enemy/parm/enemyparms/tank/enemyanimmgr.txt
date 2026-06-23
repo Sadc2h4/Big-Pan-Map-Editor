@@ -1,0 +1,54 @@
+#
+#	AnimMgr
+#
+	7 	# number of animations
+# dead.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tank\anim\dead.bca 
+	dead.bca 
+	-1 
+}
+# move1.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tank\anim\move1.bca 
+	move1.bca 
+	15 0 
+	44 1 
+	-1 
+}
+# flick.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tank\anim\flick.bca 
+	flick.bca 
+	45 2 
+	-1 
+}
+# attack.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tank\anim\attack.bca 
+	attack.bca 
+	55 2 
+	-1 
+}
+# waitact1.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tank\anim\waitact1.bca 
+	waitact1.bca 
+	0 0 
+	34 1 
+	-1 
+}
+# waitact2.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tank\anim\waitact2.bca 
+	waitact2.bca 
+	-1 
+}
+# type5.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\Tank\anim\type5.bca 
+	type5.bca 
+	10 0 
+	29 1 
+	-1 
+}

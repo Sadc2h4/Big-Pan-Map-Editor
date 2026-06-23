@@ -1,0 +1,49 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v3.1.29665513)
+
+newmtl lambert1_v
+kd 0.501961 0.501961 0.501961
+ka 0.196078 0.196078 0.196078
+illum 1
+
+newmtl mizu_ki_wood_01_v
+kd 1 1 1
+ka 0.196078 0.196078 0.196078
+illum 1
+map_kd C:\Users\catso\Desktop\ColossalCaverns\files\user\Mukki\mapunits\arc\room_kingchp_tsuchi\arc\wood_tsuchi_256x256_s3tc.png
+
+newmtl sandhard_v
+kd 1 1 1
+ka 0.196078 0.196078 0.196078
+illum 1
+map_kd C:\Users\catso\Desktop\ColossalCaverns\files\user\Mukki\mapunits\arc\room_kingchp_tsuchi\arc\sandhard_256x256_s3tc.png
+
+newmtl tsuchi_main3_v
+kd 1 1 1
+ka 0.196078 0.196078 0.196078
+illum 1
+map_kd C:\Users\catso\Desktop\ColossalCaverns\files\user\Mukki\mapunits\arc\room_kingchp_tsuchi\arc\tsuchi_floor3_256x256_s3tc.png
+
+newmtl z1_gomi02_v_x
+kd 1 1 1
+ka 0.196078 0.196078 0.196078
+illum 1
+map_kd C:\Users\catso\Desktop\ColossalCaverns\files\user\Mukki\mapunits\arc\room_kingchp_tsuchi\arc\gomi02_256x256_s3tc.png
+
+newmtl z1_sandhard_v_x
+kd 1 1 1
+ka 0.196078 0.196078 0.196078
+illum 1
+map_kd C:\Users\catso\Desktop\ColossalCaverns\files\user\Mukki\mapunits\arc\room_kingchp_tsuchi\arc\sandhard_256x256_s3tc.png
+
+newmtl z4_alp_v_x
+kd 0 0 0
+ka 0.196078 0.196078 0.196078
+illum 1
+
+newmtl z_tsuchi_Joint_v
+kd 1 1 1
+ka 0.196078 0.196078 0.196078
+illum 1
+map_kd C:\Users\catso\Desktop\ColossalCaverns\files\user\Mukki\mapunits\arc\room_kingchp_tsuchi\arc\tsuchi_joint_256x512_s3tc.png
+

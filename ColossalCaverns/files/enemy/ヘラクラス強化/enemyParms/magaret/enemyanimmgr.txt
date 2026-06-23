@@ -1,0 +1,10 @@
+#
+#	AnimMgr
+#
+	1 	# number of animations
+# magaret.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\magaret\motion\magaret.bca 
+	magaret.bca 
+	-1 
+}

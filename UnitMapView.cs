@@ -506,7 +506,12 @@ internal sealed class UnitMapView : Control
         {
             _rightButtonDown = true;
             Capture = true;
-            int? hitSpawn = HitTestLayoutSpawn(e.Location);
+            int? hitSpawn = HitTestLayoutSpawn(e.Location, includeFieldFootprint: false);
+            if (hitSpawn is null && _editMode == UnitMapEditMode.RotateSpawn)
+            {
+                hitSpawn = HitTestSelectedFieldObjectFootprint(e.Location);
+            }
+
             if (hitSpawn is not null)
             {
                 SetSelectedSpawn(hitSpawn);
@@ -518,7 +523,7 @@ internal sealed class UnitMapView : Control
                     OverlayDragStarted?.Invoke(this, EventArgs.Empty);
                     UpdateSelectedRadiusFromScreenPoint(e.Location);
                 }
-                else
+                else if (_editMode == UnitMapEditMode.RotateSpawn)
                 {
                     _rotatingSpawn = true;
                     OverlayDragStarted?.Invoke(this, EventArgs.Empty);
@@ -742,6 +747,7 @@ internal sealed class UnitMapView : Control
         DrawTerrain(g);
         DrawUnitConnectionPlacementGrid(g);
         DrawWaterbox(g);
+        DrawFieldObjectFootprints(g);
         DrawUnitConnections(g);
         DrawRoute(g, viewport);
         DrawRouteConnectionPreview(g);
@@ -920,18 +926,7 @@ internal sealed class UnitMapView : Control
         for (int index = 0; index < _layout.Spawns.Count; index++)
         {
             LayoutSpawn spawn = _layout.Spawns[index];
-            using SolidBrush fillBrush = new(GetSpawnColor(spawn.TypeId));
             using Pen rangePen = new(Color.FromArgb(230, 255, 132, 0), 2.2f / unitScale);
-            if (_useFieldObjectIcons && FieldObjectIconCatalog.GetFootprintSize(spawn.TypeLabel) is SizeF footprintSize)
-            {
-                Color footprintColor = FieldObjectIconCatalog.GetFootprintColor(spawn.TypeLabel);
-                PointF[] footprintPoints = GetOrientedFootprintPoints(spawn, footprintSize);
-                using SolidBrush footprintBrush = new(footprintColor);
-                using Pen footprintPen = new(Color.FromArgb(Math.Min(220, footprintColor.A + 110), footprintColor.R, footprintColor.G, footprintColor.B), 2.2f / unitScale);
-                g.FillPolygon(footprintBrush, footprintPoints);
-                g.DrawPolygon(footprintPen, footprintPoints);
-            }
-
             if (_showRadius && spawn.Radius > 0.01f)
             {
                 g.DrawEllipse(rangePen, spawn.X - spawn.Radius, spawn.Z - spawn.Radius, spawn.Radius * 2f, spawn.Radius * 2f);
@@ -1031,21 +1026,73 @@ internal sealed class UnitMapView : Control
     }
 
     //-------------------------------------------------------------------------------
+    // 橋やゲートなどの地上 object フットプリントをルートより下のレイヤーへ描画する処理
+    //-------------------------------------------------------------------------------
+    private void DrawFieldObjectFootprints(Graphics g)
+    {
+        if (!_useFieldObjectIcons || _layout.Spawns.Count == 0)
+        {
+            return;
+        }
+
+        float unitScale = Math.Max(_baseScale * _zoom, 0.0001f);
+        for (int index = 0; index < _layout.Spawns.Count; index++)
+        {
+            LayoutSpawn spawn = _layout.Spawns[index];
+            if (FieldObjectIconCatalog.GetFootprintSize(spawn.TypeLabel) is not SizeF footprintSize)
+            {
+                continue;
+            }
+
+            DrawFieldObjectFootprint(g, spawn, footprintSize, FieldObjectIconCatalog.GetIcon(spawn.TypeLabel), _selectedSpawnIndex == index, unitScale);
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // 地上 object の向き付きフットプリントへアイコン画像を描画する処理
+    //-------------------------------------------------------------------------------
+    private static void DrawFieldObjectFootprint(Graphics g, LayoutSpawn spawn, SizeF footprintSize, Image? icon, bool isSelected, float unitScale)
+    {
+        PointF[] points = GetOrientedFootprintPoints(spawn, footprintSize, FieldObjectIconCatalog.GetFootprintOffset(spawn.TypeLabel));
+        Color footprintColor = FieldObjectIconCatalog.GetFootprintColor(spawn.TypeLabel);
+        using SolidBrush footprintBrush = new(footprintColor);
+        using Pen footprintPen = new(
+            isSelected ? Color.FromArgb(255, 255, 193, 7) : Color.FromArgb(Math.Min(220, footprintColor.A + 110), footprintColor.R, footprintColor.G, footprintColor.B),
+            (isSelected ? 4.2f : 2.2f) / Math.Max(unitScale, 0.0001f));
+        g.FillPolygon(footprintBrush, points);
+        if (icon is not null)
+        {
+            PointF[] imagePoints =
+            {
+                points[0],
+                points[1],
+                points[3]
+            };
+            g.DrawImage(icon, imagePoints);
+        }
+
+        g.DrawPolygon(footprintPen, points);
+    }
+
+    //-------------------------------------------------------------------------------
     // Spawn の Angle とサイズから地上 object の向き付き矩形を作成する処理
     //-------------------------------------------------------------------------------
-    private static PointF[] GetOrientedFootprintPoints(LayoutSpawn spawn, SizeF size)
+    private static PointF[] GetOrientedFootprintPoints(LayoutSpawn spawn, SizeF size, PointF offset)
     {
         float radians = spawn.Angle * MathF.PI / 180f;
         PointF forward = new(MathF.Sin(radians), MathF.Cos(radians));
         PointF right = new(forward.Y, -forward.X);
+        PointF center = new(
+            spawn.X + (right.X * offset.X) + (forward.X * offset.Y),
+            spawn.Z + (right.Y * offset.X) + (forward.Y * offset.Y));
         float halfWidth = size.Width * 0.5f;
         float halfLength = size.Height * 0.5f;
         return new[]
         {
-            new PointF(spawn.X - (right.X * halfWidth) - (forward.X * halfLength), spawn.Z - (right.Y * halfWidth) - (forward.Y * halfLength)),
-            new PointF(spawn.X + (right.X * halfWidth) - (forward.X * halfLength), spawn.Z + (right.Y * halfWidth) - (forward.Y * halfLength)),
-            new PointF(spawn.X + (right.X * halfWidth) + (forward.X * halfLength), spawn.Z + (right.Y * halfWidth) + (forward.Y * halfLength)),
-            new PointF(spawn.X - (right.X * halfWidth) + (forward.X * halfLength), spawn.Z - (right.Y * halfWidth) + (forward.Y * halfLength))
+            new PointF(center.X - (right.X * halfWidth) - (forward.X * halfLength), center.Y - (right.Y * halfWidth) - (forward.Y * halfLength)),
+            new PointF(center.X + (right.X * halfWidth) - (forward.X * halfLength), center.Y + (right.Y * halfWidth) - (forward.Y * halfLength)),
+            new PointF(center.X + (right.X * halfWidth) + (forward.X * halfLength), center.Y + (right.Y * halfWidth) + (forward.Y * halfLength)),
+            new PointF(center.X - (right.X * halfWidth) + (forward.X * halfLength), center.Y - (right.Y * halfWidth) + (forward.Y * halfLength))
         };
     }
 
@@ -1084,9 +1131,19 @@ internal sealed class UnitMapView : Control
             const float iconSize = 32f;
             RectangleF iconBounds = new(screen.X - iconSize * 0.5f, screen.Y - iconSize * 0.5f, iconSize, iconSize);
             Image? fieldIcon = _useFieldObjectIcons ? FieldObjectIconCatalog.GetIcon(spawn.TypeLabel) : null;
+            SizeF? fieldFootprintSize = _useFieldObjectIcons ? FieldObjectIconCatalog.GetFootprintSize(spawn.TypeLabel) : null;
             Image? icon = fieldIcon ?? SpawnIconCatalog.GetIcon(spawn.TypeId);
 
-            if (icon is not null)
+            if (fieldIcon is not null && fieldFootprintSize is not null)
+            {
+                const float centerSize = 10f;
+                RectangleF centerBounds = new(screen.X - centerSize * 0.5f, screen.Y - centerSize * 0.5f, centerSize, centerSize);
+                using SolidBrush centerBrush = new(Color.FromArgb(230, 255, 255, 255));
+                using Pen centerPen = new(isSelected ? Color.FromArgb(255, 111, 0) : Color.FromArgb(230, 30, 30, 30), isSelected ? 2.5f : 1.4f);
+                g.FillEllipse(centerBrush, centerBounds);
+                g.DrawEllipse(centerPen, centerBounds);
+            }
+            else if (icon is not null)
             {
                 g.DrawImage(icon, iconBounds);
             }
@@ -1096,14 +1153,17 @@ internal sealed class UnitMapView : Control
                 g.FillEllipse(fillBrush, iconBounds);
             }
 
-            using Pen edgePen = new(isSelected ? Color.FromArgb(255, 111, 0) : Color.White, isSelected ? 2.5f : 1.5f);
-            if (fieldIcon is not null)
+            if (fieldIcon is null || fieldFootprintSize is null)
             {
-                g.DrawRectangle(edgePen, iconBounds.X, iconBounds.Y, iconBounds.Width, iconBounds.Height);
-            }
-            else
-            {
-                g.DrawEllipse(edgePen, iconBounds);
+                using Pen edgePen = new(isSelected ? Color.FromArgb(255, 111, 0) : Color.White, isSelected ? 2.5f : 1.5f);
+                if (fieldIcon is not null)
+                {
+                    g.DrawRectangle(edgePen, iconBounds.X, iconBounds.Y, iconBounds.Width, iconBounds.Height);
+                }
+                else
+                {
+                    g.DrawEllipse(edgePen, iconBounds);
+                }
             }
             DrawSpawnAngleHandle(g, worldToScreen, spawn, screen, isSelected);
             DrawPointText(g, index.ToString(), new PointF(screen.X + 15f, screen.Y - 17f), Color.White, labelFont);
@@ -1452,7 +1512,7 @@ internal sealed class UnitMapView : Control
     //-------------------------------------------------------------------------------
     // マウス位置に最も近い spawn を画面座標から求める処理
     //-------------------------------------------------------------------------------
-    private int? HitTestLayoutSpawn(Point location)
+    private int? HitTestLayoutSpawn(Point location, bool includeFieldFootprint = true)
     {
         if (_layout.Spawns.Count == 0)
         {
@@ -1476,7 +1536,75 @@ internal sealed class UnitMapView : Control
             }
         }
 
+        if (nearestSpawn is not null)
+        {
+            return nearestSpawn;
+        }
+
+        if (includeFieldFootprint && _useFieldObjectIcons)
+        {
+            PointF worldPoint = ScreenToWorld(location);
+            for (int index = _layout.Spawns.Count - 1; index >= 0; index--)
+            {
+                LayoutSpawn spawn = _layout.Spawns[index];
+                if (FieldObjectIconCatalog.GetFootprintSize(spawn.TypeLabel) is SizeF footprintSize &&
+                    IsPointInsidePolygon(worldPoint, GetOrientedFootprintPoints(spawn, footprintSize, FieldObjectIconCatalog.GetFootprintOffset(spawn.TypeLabel))))
+                {
+                    return index;
+                }
+            }
+        }
+
         return nearestSpawn;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 選択中の地上 object フットプリント内にマウス位置があるかを判定する処理
+    //-------------------------------------------------------------------------------
+    private int? HitTestSelectedFieldObjectFootprint(Point location)
+    {
+        if (!_useFieldObjectIcons ||
+            _selectedSpawnIndex is null ||
+            _selectedSpawnIndex.Value < 0 ||
+            _selectedSpawnIndex.Value >= _layout.Spawns.Count)
+        {
+            return null;
+        }
+
+        LayoutSpawn spawn = _layout.Spawns[_selectedSpawnIndex.Value];
+        if (FieldObjectIconCatalog.GetFootprintSize(spawn.TypeLabel) is not SizeF footprintSize)
+        {
+            return null;
+        }
+
+        PointF worldPoint = ScreenToWorld(location);
+        return IsPointInsidePolygon(worldPoint, GetOrientedFootprintPoints(spawn, footprintSize, FieldObjectIconCatalog.GetFootprintOffset(spawn.TypeLabel)))
+            ? _selectedSpawnIndex.Value
+            : null;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 指定点が多角形の内側にあるかどうかを判定する処理
+    //-------------------------------------------------------------------------------
+    private static bool IsPointInsidePolygon(PointF point, IReadOnlyList<PointF> polygon)
+    {
+        bool inside = false;
+        for (int i = 0, j = polygon.Count - 1; i < polygon.Count; j = i++)
+        {
+            PointF current = polygon[i];
+            PointF previous = polygon[j];
+            bool crosses = current.Y > point.Y != previous.Y > point.Y;
+            if (crosses)
+            {
+                float intersectionX = ((previous.X - current.X) * (point.Y - current.Y) / (previous.Y - current.Y)) + current.X;
+                if (point.X < intersectionX)
+                {
+                    inside = !inside;
+                }
+            }
+        }
+
+        return inside;
     }
 
     //-------------------------------------------------------------------------------

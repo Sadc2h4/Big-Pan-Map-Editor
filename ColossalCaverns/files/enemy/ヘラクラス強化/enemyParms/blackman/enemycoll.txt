@@ -1,0 +1,31 @@
+3 		# child count
+80.000000 	# radius
+{none} 		# id
+{____} 		# code
+20.000000 0.000000 0.000000 # offset
+0 		# joint index
+0 		# attribute
+# child
+{
+	0 		# child count
+	28.000000 	# radius
+	{kosi} 		# id
+	{____} 		# code
+	0.000000 0.000000 0.000000 # offset
+	0 		# joint index
+	0 		# attribute
+	0 		# child count
+	20.000000 	# radius
+	{mune} 		# id
+	{____} 		# code
+	10.000000 0.000000 0.000000 # offset
+	1 		# joint index
+	0 		# attribute
+	0 		# child count
+	15.000000 	# radius
+	{head} 		# id
+	{____} 		# code
+	15.000000 0.000000 0.000000 # offset
+	2 		# joint index
+	0 		# attribute
+}

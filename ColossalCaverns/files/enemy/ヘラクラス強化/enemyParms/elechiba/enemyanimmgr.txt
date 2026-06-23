@@ -1,0 +1,10 @@
+#
+#	AnimMgr
+#
+	1 	# number of animations
+# wait.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\ElecHiba\anim\wait.bca 
+	wait.bca 
+	-1 
+}

@@ -46,4 +46,9 @@ internal sealed class EditorSettings
     public string Language { get; set; } = "ja-JP";
     public string CaveModelSource { get; set; } = "TextsGrid";
     public bool UseObjDirectView { get; set; }
+    public bool ShowSpawnOverlay { get; set; } = true;
+    public bool ShowRouteOverlay { get; set; } = true;
+    public bool ShowRadiusOverlay { get; set; } = true;
+    public bool ShowWaterboxOverlay { get; set; } = true;
+    public bool ShowUnitConnectionOverlay { get; set; } = true;
 }

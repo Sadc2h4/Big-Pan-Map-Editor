@@ -1,0 +1,10 @@
+#
+#	AnimMgr
+#
+	1 	# number of animations
+# ooinu_s.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\ooinu_s\motion\ooinu_s.bca 
+	ooinu_s.bca 
+	-1 
+}

@@ -1,0 +1,129 @@
+#
+#	AnimMgr
+#
+	14 	# number of animations
+# kagebozu_bend.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\blackMan\motion\kagebozu_bend.bca 
+	kagebozu_bend.bca 
+	4  2
+	5  0 
+	24 1 
+	
+	-1 
+}
+# kagebozu_bend2.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\blackMan\motion\kagebozu_bend2.bca 
+	kagebozu_bend2.bca 
+	2  2
+	3  0 
+	22 1
+	 
+	-1 
+}
+# kagebozu_dead.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\blackMan\motion\kagebozu_dead.bca 
+	kagebozu_dead.bca 
+	14  2
+	65  3
+	102  4
+	125  5
+	-1 
+}
+# kagebozu_flick.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\blackMan\motion\kagebozu_flick.bca 
+	kagebozu_flick.bca 
+	10 2 
+	-1 
+}
+# kagebozu_flick2.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\blackMan\motion\kagebozu_flick2.bca 
+	kagebozu_flick2.bca 
+	12 2 
+	-1 
+}
+# kagebozu_getoff.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\blackMan\motion\kagebozu_getoff.bca 
+	kagebozu_getoff.bca 
+	5 2 
+       	13 3
+	21 4
+	26 5
+	-1 
+}
+# kagebozu_move.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\blackMan\motion\kagebozu_move.bca 
+	kagebozu_move.bca 
+	0 0 
+	29 1 
+	-1 
+}
+# kagebozu_recover.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\blackMan\motion\kagebozu_recover.bca 
+	kagebozu_recover.bca 
+	14 2 
+	41 3
+	43 4 
+	50 5
+	-1 
+}
+# kagebozu_run.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\blackMan\motion\kagebozu_run.bca 
+	kagebozu_run.bca 
+	0 0 
+	1  2
+        5  3		
+	11 1 
+	-1 
+}
+# kagebozu_wait.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\blackMan\motion\kagebozu_wait.bca 
+	kagebozu_wait.bca 
+	8 0 
+	27 1 
+	-1 
+}
+# kagebozu_wait2.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\blackMan\motion\kagebozu_wait2.bca 
+	kagebozu_wait2.bca 
+	9 0 
+	28 1 
+	-1 
+}
+# kagebozu_walk.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\blackMan\motion\kagebozu_walk.bca 
+	kagebozu_walk.bca 
+	7 0 
+	20 2	
+	35 3 	
+	36 1
+	-1 
+}
+# kagebozu_through.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\blackMan\motion\kagebozu_through.bca 
+	kagebozu_through.bca 
+	6 0 
+	6 1 
+	-1 
+}
+# kagebozu_land.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\blackMan\motion\kagebozu_land.bca 
+	kagebozu_land.bca 
+	0 0 
+	0 1
+	4 2
+	-1 
+}

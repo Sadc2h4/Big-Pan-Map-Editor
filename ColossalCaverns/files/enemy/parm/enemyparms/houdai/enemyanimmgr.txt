@@ -1,0 +1,50 @@
+#
+#	AnimMgr
+#
+	5 	# number of animations
+# dead.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\houdai\motion\dead.bca 
+	dead.bca 
+	-1 
+}
+# landing.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\houdai\motion\landing.bca 
+	landing.bca 
+	54 2 
+	84 3 
+	100 4 
+	130 5 
+	150 6 
+	-1 
+}
+# wait.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\houdai\motion\wait.bca 
+	wait.bca 
+	0 0 
+	39 1 
+	-1 
+}
+# flick.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\houdai\motion\flick.bca 
+	flick.bca 
+	40 2 
+	45 3 
+	68 4 
+	-1 
+}
+# attack.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\houdai\motion\attack.bca 
+	attack.bca 
+	33 2 
+	34 0 
+	35 3 
+	37 4 
+	38 1 
+	39 5 
+	-1 
+}

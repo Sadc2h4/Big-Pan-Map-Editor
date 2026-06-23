@@ -1,0 +1,219 @@
+# ƒ`ƒƒƒŒƒ“ƒWƒ‚[ƒh‚a‚f‚lİ’è
+
+# “´ŒA”=30, ŠK‘w”Å‘å=7
+
+30
+
+
+#ƒV[ƒ“ 0 ‚±‚Ä‚µ‚ç‚×‚Ì“´ŒA
+{
+	2	#ŠK‘w”(‰¼j
+	caveconc_00_0.cnd	# ŠK‘w 0
+	cavesoil_00_0.cnd	# ŠK‘w 1
+}
+
+#ƒV[ƒ“ 1 VQÒ‚Ì—ûê
+{
+	2	#ŠK‘w”(‰¼j
+	caveconc_10_0.cnd	# ŠK‘w 0
+	caveconc_10_0.cnd	# ŠK‘w 1
+}
+
+#ƒV[ƒ“ 2 _X‚Ì‚¨‚à‚¿‚á” 
+{
+	2	#ŠK‘w”(‰¼j
+	cavetsumiki_00_0.cnd	# ŠK‘w 0
+	new_08_0.cnd			# ŠK‘w 1
+}
+
+#ƒV[ƒ“ 3 ‚ ‚Ìl‚Ì’ë
+{
+	1	#ŠK‘w”(‰¼j
+	caveglass_00_0.cnd	# ŠK‘w 0
+}
+
+#ƒV[ƒ“ 4 ƒOƒŠ[ƒ“ƒz[ƒ‹
+{
+	2	#ŠK‘w”(‰¼j
+	caveconc_10_0.cnd	# ŠK‘w 0
+	cavetile_00_0.cnd	# ŠK‘w 1
+}
+
+#ƒV[ƒ“ 5 ’n‰º‚Ì‰·º
+{
+	2	#ŠK‘w”(‰¼j
+	new_06_0.cnd		# ŠK‘w 0
+	cavesoil_05_0.cnd	# ŠK‘w 1
+}
+
+#ƒV[ƒ“ 6 “Sl‚ÌŒŠ
+{
+	2	#ŠK‘w”(‰¼j
+	cavemetal_00_0.cnd	# ŠK‘w 0
+	cavemetal_05_4.cnd	# ŠK‘w 1
+}
+
+#ƒV[ƒ“ 7 Ô‚Ì“´ŒA
+{
+	1	#ŠK‘w”(‰¼j
+	caveconc_05_0.cnd	# ŠK‘w 0
+}
+
+#ƒV[ƒ“ 8 ‰Ô‰€‚ğr‚ç‚·‚à‚Ì
+{
+	1	#ŠK‘w”(‰¼j
+	cavesoil_10_3.cnd	# ŠK‘w 0
+}
+
+#ƒV[ƒ“ 9 ‚½‚»‚ª‚ê‚Ì’ë
+{
+	1	#ŠK‘w”(‰¼j
+	new_07_0.cnd		# ŠK‘w 0
+}
+
+#ƒV[ƒ“ 10 ‚©‚­‚µ‚à‚¿‚Ì“´ŒA
+{
+	5	#ŠK‘w”(‰¼j
+	cavetsumiki_00_0.cnd	# ŠK‘w 0
+	cavesoil_00_0.cnd	# ŠK‘w 1
+	caveconc_05_0.cnd	# ŠK‘w 2 // (TODO)
+	cavesoil_05_0.cnd	# ŠK‘w 3
+	caveconc_10_0.cnd	# ŠK‘w 4
+}
+
+#ƒV[ƒ“ 11 ƒRƒ“ƒNƒŠ[ƒg–À˜H
+{
+	3	#ŠK‘w”(‰¼j
+	new_04_0.cnd		# ŠK‘w 0
+	caveconc_10_0.cnd	# ŠK‘w 1
+	caveconc_00_0.cnd	# ŠK‘w 2
+}
+
+#ƒV[ƒ“ 12 ƒRƒŒƒNƒ^[ƒ‹[ƒ€
+{
+	7	#ŠK‘w”(‰¼j
+	new_04_0.cnd		# ŠK‘w 0
+	cavetile_00_0.cnd	# ŠK‘w 1
+	cavemetal_10_0.cnd	# ŠK‘w 2
+	caveconc_00_0.cnd	# ŠK‘w 3
+	cavesoil_00_0.cnd	# ŠK‘w 4 
+	cavetile_00_0.cnd	# ŠK‘w 5	(TODO)
+	caveconc_10_0.cnd	# ŠK‘w 6
+}
+
+#ƒV[ƒ“ 13 ƒVƒ‡ƒCƒOƒ‚‚Ì‘ƒ
+{
+	1	#ŠK‘w”(‰¼j
+	caveconc_10_0.cnd	# ŠK‘w 0
+}
+
+#ƒV[ƒ“ 14 ‘å‘«‚ÌŒŠ
+{
+	1	#ŠK‘w”(‰¼j
+	cavetile_00_0.cnd	# ŠK‘w 0
+}
+
+#ƒV[ƒ“ 15 H_‚Ì‚©‚Ü‚Ç
+{
+	1	#ŠK‘w”(‰¼j
+	new_03_0.cnd		# ŠK‘w 0
+}
+
+#ƒV[ƒ“ 16 OFŒ±ê
+{
+	1	#ŠK‘w”(‰¼j
+	caveglass_00_0.cnd	# ŠK‘w 0
+}
+
+#ƒV[ƒ“ 17 ‰Š‚Æ…‚Ì—ûê
+{
+	2	#ŠK‘w”(‰¼j
+	caveconc_05_0.cnd	# ŠK‘w 0
+	cavetile_00_0.cnd	# ŠK‘w 1
+}
+
+#ƒV[ƒ“ 18 •@‘§‚Ì“´ŒA
+{
+	2	#ŠK‘w”(‰¼j
+	cavesoil_05_0.cnd	# ŠK‘w 0
+	cavemetal_05_4.cnd	# ŠK‘w 1
+}
+
+#ƒV[ƒ“ 19 ‹l‚ÌƒgƒCƒŒ
+{
+	2	#ŠK‘w”(‰¼j
+	new_02_0.cnd		# ŠK‘w 0
+	cavetile_00_0.cnd	# ŠK‘w 1
+}
+
+#ƒV[ƒ“ 20 “y‚Æ‚ñ‚Ì“´ŒA
+{
+	2	#ŠK‘w”(‰¼j
+	caveconc_00_0.cnd	# ŠK‘w 0
+	caveconc_05_0.cnd	# ŠK‘w 1
+}
+
+#ƒV[ƒ“ 21 ’n’êŒx”õº
+{
+	1	#ŠK‘w”(‰¼j
+	cavetile_00_0.cnd	# ŠK‘w 0
+}
+
+#ƒV[ƒ“ 22 ‚Ğ‚İ‚Â‚Ì‰Ô‰€
+{
+	1	#ŠK‘w”(‰¼j
+	new_07_0.cnd		# ŠK‘w 0
+}
+
+#ƒV[ƒ“ 23 ‚³‚ç‚¢‚Ì“´ŒA
+{
+	1	#ŠK‘w”(‰¼j
+	new_00_1.cnd		# ŠK‘w 0
+}
+
+#ƒV[ƒ“ 24 ”é–§•ºŠíÀŒ±ê
+{
+	2	#ŠK‘w”(‰¼j
+	cavemetal_10_0.cnd	# ŠK‘w 0
+	cavemetal_05_0.cnd	# ŠK‘w 1
+}
+
+#ƒV[ƒ“ 25 ”{XƒQ[ƒ€‚ÌŒŠ
+{
+	3	#ŠK‘w”(‰¼j
+	caveglass_00_0.cnd	# ŠK‘w 0
+	caveconc_10_0.cnd	# ŠK‘w 1
+	cavetile_00_0.cnd	# ŠK‘w 2
+}
+
+#ƒV[ƒ“ 26 “V”±‚ÌŒŠ
+{
+	1	#ŠK‘w”(‰¼j
+	new_00_0.cnd		# ŠK‘w 0
+}
+
+#ƒV[ƒ“ 27 ‚Ç‚Á‚·‚ñ–À˜H
+{
+	1	#ŠK‘w”(‰¼j
+	cavetile_00_0.cnd	# ŠK‘w 0
+}
+
+#ƒV[ƒ“ 28 ƒXƒiƒCƒp[ƒ‹[ƒ€
+{
+	1	#ŠK‘w”(‰¼j
+	caveconc_05_0.cnd	# ŠK‘w 0
+}
+
+
+#ƒV[ƒ“ 29
+{
+	5	#ŠK‘w”(‰¼j
+	new_05_0.cnd		# ŠK‘w 0
+	cavesoil_05_0.cnd	# ŠK‘w 1
+	cavesoil_10_3.cnd	# ŠK‘w 2
+	cavesoil_05_0.cnd	# ŠK‘w 3
+	new_05_0.cnd		# ŠK‘w 4
+}
+
+endoffile
+

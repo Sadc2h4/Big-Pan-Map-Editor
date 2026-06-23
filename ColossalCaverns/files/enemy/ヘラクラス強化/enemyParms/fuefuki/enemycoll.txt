@@ -1,0 +1,17 @@
+1 		# child count
+30.000000 	# radius
+{none} 		# id
+{____} 		# code
+7.500000 0.000000 0.000000 # offset
+1 		# joint index
+0 		# attribute
+# child
+{
+	0 		# child count
+	17.500000 	# radius
+	{none} 		# id
+	{st__} 		# code
+	7.500000 0.000000 0.000000 # offset
+	1 		# joint index
+	0 		# attribute
+}

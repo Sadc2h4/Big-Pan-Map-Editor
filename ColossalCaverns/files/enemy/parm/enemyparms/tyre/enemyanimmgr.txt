@@ -1,0 +1,17 @@
+#
+#	AnimMgr
+#
+	2 	# number of animations
+# tyre_move.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\tyre\motion\tyre_move.bca 
+	tyre_move.bca 
+	-1 
+}
+# tyre_getoff.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\tyre\motion\tyre_getoff.bca 
+	tyre_getoff.bca 
+	-1 
+}
+

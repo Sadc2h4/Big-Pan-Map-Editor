@@ -373,6 +373,7 @@ internal sealed class ObjModelView : Control
 
         DrawUnitConnectionPlacementGrid(e.Graphics);
         DrawUnitConnectionOverlay(e.Graphics);
+        DrawFieldObjectFootprintOverlay(e.Graphics);
         DrawRouteOverlay(e.Graphics);
         DrawSpawnOverlay(e.Graphics);
         DrawSelectedWaterboxResizeHandles(e.Graphics);
@@ -581,7 +582,12 @@ internal sealed class ObjModelView : Control
         {
             _rightButtonDown = true;
             Capture = true;
-            int? hitSpawn = HitTestLayoutSpawn(e.Location);
+            int? hitSpawn = HitTestLayoutSpawn(e.Location, includeFieldFootprint: false);
+            if (hitSpawn is null && _editMode == UnitMapEditMode.RotateSpawn)
+            {
+                hitSpawn = HitTestSelectedFieldObjectFootprint(e.Location);
+            }
+
             if (hitSpawn is not null)
             {
                 SetSelectedSpawn(hitSpawn);
@@ -595,7 +601,7 @@ internal sealed class ObjModelView : Control
                     UpdateSelectedRadiusFromScreenPoint(e.Location);
                     Cursor = Cursors.Cross;
                 }
-                else
+                else if (_editMode == UnitMapEditMode.RotateSpawn)
                 {
                     _rotatingSpawn = true;
                     BeginOverlayInteraction();
@@ -1458,6 +1464,28 @@ internal sealed class ObjModelView : Control
     }
 
     //-------------------------------------------------------------------------------
+    // 橋やゲートなどの地上 object フットプリントを route overlay より下へ描画する処理
+    //-------------------------------------------------------------------------------
+    private void DrawFieldObjectFootprintOverlay(Graphics graphics)
+    {
+        if (!_useFieldObjectIcons || _layout.Spawns.Count == 0)
+        {
+            return;
+        }
+
+        for (int index = 0; index < _layout.Spawns.Count; index++)
+        {
+            LayoutSpawn spawn = _layout.Spawns[index];
+            if (FieldObjectIconCatalog.GetFootprintSize(spawn.TypeLabel) is not SizeF footprintSize)
+            {
+                continue;
+            }
+
+            DrawProjectedFieldFootprint(graphics, spawn, footprintSize, FieldObjectIconCatalog.GetIcon(spawn.TypeLabel), _selectedSpawnIndex == index);
+        }
+    }
+
+    //-------------------------------------------------------------------------------
     // spawn の位置と半径を 3D overlay として描画する処理
     //-------------------------------------------------------------------------------
     private void DrawSpawnOverlay(Graphics graphics)
@@ -1477,11 +1505,8 @@ internal sealed class ObjModelView : Control
             }
 
             bool isSelected = _selectedSpawnIndex == index;
-            if (_useFieldObjectIcons && FieldObjectIconCatalog.GetFootprintSize(spawn.TypeLabel) is SizeF footprintSize)
-            {
-                DrawProjectedFieldFootprint(graphics, spawn, footprintSize);
-            }
-
+            SizeF? fieldFootprintSize = _useFieldObjectIcons ? FieldObjectIconCatalog.GetFootprintSize(spawn.TypeLabel) : null;
+            Image? fieldIcon = _useFieldObjectIcons ? FieldObjectIconCatalog.GetIcon(spawn.TypeLabel) : null;
             if (_showRadius)
             {
                 DrawProjectedRadiusCircle(
@@ -1495,9 +1520,17 @@ internal sealed class ObjModelView : Control
 
             const float iconSize = 32f;
             RectangleF iconBounds = new(point.X - iconSize * 0.5f, point.Y - iconSize * 0.5f, iconSize, iconSize);
-            Image? fieldIcon = _useFieldObjectIcons ? FieldObjectIconCatalog.GetIcon(spawn.TypeLabel) : null;
             Image? icon = fieldIcon ?? SpawnIconCatalog.GetIcon(spawn.TypeId);
-            if (icon is not null)
+            if (fieldIcon is not null && fieldFootprintSize is not null)
+            {
+                const float centerSize = 10f;
+                RectangleF centerBounds = new(point.X - centerSize * 0.5f, point.Y - centerSize * 0.5f, centerSize, centerSize);
+                using SolidBrush centerBrush = new(Color.FromArgb(230, 255, 255, 255));
+                graphics.FillEllipse(centerBrush, centerBounds);
+                using Pen centerPen = new(isSelected ? Color.FromArgb(255, 111, 0) : Color.FromArgb(230, 30, 30, 30), isSelected ? 2.5f : 1.4f);
+                graphics.DrawEllipse(centerPen, centerBounds);
+            }
+            else if (icon is not null)
             {
                 graphics.DrawImage(icon, iconBounds);
             }
@@ -1507,14 +1540,17 @@ internal sealed class ObjModelView : Control
                 graphics.FillEllipse(fillBrush, iconBounds);
             }
 
-            using Pen edgePen = new(isSelected ? Color.FromArgb(255, 111, 0) : Color.White, isSelected ? 2.5f : 1.5f);
-            if (fieldIcon is not null)
+            if (fieldIcon is null || fieldFootprintSize is null)
             {
-                graphics.DrawRectangle(edgePen, iconBounds.X, iconBounds.Y, iconBounds.Width, iconBounds.Height);
-            }
-            else
-            {
-                graphics.DrawEllipse(edgePen, iconBounds);
+                using Pen edgePen = new(isSelected ? Color.FromArgb(255, 111, 0) : Color.White, isSelected ? 2.5f : 1.5f);
+                if (fieldIcon is not null)
+                {
+                    graphics.DrawRectangle(edgePen, iconBounds.X, iconBounds.Y, iconBounds.Width, iconBounds.Height);
+                }
+                else
+                {
+                    graphics.DrawEllipse(edgePen, iconBounds);
+                }
             }
             DrawSpawnAngleHandle(graphics, spawn, point, isSelected);
             DrawPointText(graphics, index.ToString(), new PointF(point.X + 15f, point.Y - 17f), Color.White, labelFont);
@@ -1526,9 +1562,9 @@ internal sealed class ObjModelView : Control
     //-------------------------------------------------------------------------------
     // 地上 object の向き付き矩形を 3D overlay 上に投影して描画する処理
     //-------------------------------------------------------------------------------
-    private void DrawProjectedFieldFootprint(Graphics graphics, LayoutSpawn spawn, SizeF size)
+    private void DrawProjectedFieldFootprint(Graphics graphics, LayoutSpawn spawn, SizeF size, Image? icon, bool isSelected)
     {
-        PointF[] worldPoints = GetOrientedFootprintPoints(spawn, size);
+        PointF[] worldPoints = GetOrientedFootprintPoints(spawn, size, FieldObjectIconCatalog.GetFootprintOffset(spawn.TypeLabel));
         PointF[] screenPoints = new PointF[worldPoints.Length];
         float worldY = GetOverlayWorldY(spawn.Y);
         for (int i = 0; i < worldPoints.Length; i++)
@@ -1541,27 +1577,43 @@ internal sealed class ObjModelView : Control
 
         Color footprintColor = FieldObjectIconCatalog.GetFootprintColor(spawn.TypeLabel);
         using SolidBrush brush = new(footprintColor);
-        using Pen pen = new(Color.FromArgb(Math.Min(220, footprintColor.A + 110), footprintColor.R, footprintColor.G, footprintColor.B), 1.8f);
+        using Pen pen = new(
+            isSelected ? Color.FromArgb(255, 255, 193, 7) : Color.FromArgb(Math.Min(220, footprintColor.A + 110), footprintColor.R, footprintColor.G, footprintColor.B),
+            isSelected ? 4f : 1.8f);
         graphics.FillPolygon(brush, screenPoints);
+        if (icon is not null)
+        {
+            PointF[] imagePoints =
+            {
+                screenPoints[0],
+                screenPoints[1],
+                screenPoints[3]
+            };
+            graphics.DrawImage(icon, imagePoints);
+        }
+
         graphics.DrawPolygon(pen, screenPoints);
     }
 
     //-------------------------------------------------------------------------------
     // Spawn の Angle とサイズから地上 object の向き付き矩形を作成する処理
     //-------------------------------------------------------------------------------
-    private static PointF[] GetOrientedFootprintPoints(LayoutSpawn spawn, SizeF size)
+    private static PointF[] GetOrientedFootprintPoints(LayoutSpawn spawn, SizeF size, PointF offset)
     {
         float radians = spawn.Angle * MathF.PI / 180f;
         PointF forward = new(MathF.Sin(radians), MathF.Cos(radians));
         PointF right = new(forward.Y, -forward.X);
+        PointF center = new(
+            spawn.X + (right.X * offset.X) + (forward.X * offset.Y),
+            spawn.Z + (right.Y * offset.X) + (forward.Y * offset.Y));
         float halfWidth = size.Width * 0.5f;
         float halfLength = size.Height * 0.5f;
         return new[]
         {
-            new PointF(spawn.X - (right.X * halfWidth) - (forward.X * halfLength), spawn.Z - (right.Y * halfWidth) - (forward.Y * halfLength)),
-            new PointF(spawn.X + (right.X * halfWidth) - (forward.X * halfLength), spawn.Z + (right.Y * halfWidth) - (forward.Y * halfLength)),
-            new PointF(spawn.X + (right.X * halfWidth) + (forward.X * halfLength), spawn.Z + (right.Y * halfWidth) + (forward.Y * halfLength)),
-            new PointF(spawn.X - (right.X * halfWidth) + (forward.X * halfLength), spawn.Z - (right.Y * halfWidth) + (forward.Y * halfLength))
+            new PointF(center.X - (right.X * halfWidth) - (forward.X * halfLength), center.Y - (right.Y * halfWidth) - (forward.Y * halfLength)),
+            new PointF(center.X + (right.X * halfWidth) - (forward.X * halfLength), center.Y + (right.Y * halfWidth) - (forward.Y * halfLength)),
+            new PointF(center.X + (right.X * halfWidth) + (forward.X * halfLength), center.Y + (right.Y * halfWidth) + (forward.Y * halfLength)),
+            new PointF(center.X - (right.X * halfWidth) + (forward.X * halfLength), center.Y - (right.Y * halfWidth) + (forward.Y * halfLength))
         };
     }
 
@@ -2114,7 +2166,7 @@ internal sealed class ObjModelView : Control
     //-------------------------------------------------------------------------------
     // マウス位置に最も近い spawn を画面座標から求める処理
     //-------------------------------------------------------------------------------
-    private int? HitTestLayoutSpawn(Point location)
+    private int? HitTestLayoutSpawn(Point location, bool includeFieldFootprint = true)
     {
         if (_layout.Spawns.Count == 0)
         {
@@ -2141,7 +2193,66 @@ internal sealed class ObjModelView : Control
             }
         }
 
+        if (nearestSpawn is not null)
+        {
+            return nearestSpawn;
+        }
+
+        if (includeFieldFootprint && _useFieldObjectIcons)
+        {
+            for (int index = _layout.Spawns.Count - 1; index >= 0; index--)
+            {
+                LayoutSpawn spawn = _layout.Spawns[index];
+                if (FieldObjectIconCatalog.GetFootprintSize(spawn.TypeLabel) is SizeF footprintSize &&
+                    HitTestProjectedFieldFootprint(location, spawn, footprintSize))
+                {
+                    return index;
+                }
+            }
+        }
+
         return nearestSpawn;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 選択中の地上 object フットプリント内にマウス位置があるかを判定する処理
+    //-------------------------------------------------------------------------------
+    private int? HitTestSelectedFieldObjectFootprint(Point location)
+    {
+        if (!_useFieldObjectIcons ||
+            _selectedSpawnIndex is null ||
+            _selectedSpawnIndex.Value < 0 ||
+            _selectedSpawnIndex.Value >= _layout.Spawns.Count)
+        {
+            return null;
+        }
+
+        LayoutSpawn spawn = _layout.Spawns[_selectedSpawnIndex.Value];
+        return FieldObjectIconCatalog.GetFootprintSize(spawn.TypeLabel) is SizeF footprintSize &&
+            HitTestProjectedFieldFootprint(location, spawn, footprintSize)
+            ? _selectedSpawnIndex.Value
+            : null;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 投影後の地上 object フットプリント内にマウス位置があるかを判定する処理
+    //-------------------------------------------------------------------------------
+    private bool HitTestProjectedFieldFootprint(Point location, LayoutSpawn spawn, SizeF size)
+    {
+        PointF[] worldPoints = GetOrientedFootprintPoints(spawn, size, FieldObjectIconCatalog.GetFootprintOffset(spawn.TypeLabel));
+        PointF[] screenPoints = new PointF[worldPoints.Length];
+        float worldY = GetOverlayWorldY(spawn.Y);
+        for (int i = 0; i < worldPoints.Length; i++)
+        {
+            if (!TryProjectWorldPoint(worldPoints[i].X, worldY, worldPoints[i].Y, out screenPoints[i], out _))
+            {
+                return false;
+            }
+        }
+
+        using GraphicsPath path = new();
+        path.AddPolygon(screenPoints);
+        return path.IsVisible(location);
     }
 
     //-------------------------------------------------------------------------------

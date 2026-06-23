@@ -1,0 +1,244 @@
+#
+#	AnimMgr
+#
+	30 	# number of animations
+# appear.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\appear.bca 
+	appear.bca 
+	26 2 
+	30 3 
+	50 4 
+	60 5 
+	82 6 
+	90 7 
+	100 8 
+	115 9 
+	191 10 
+	-1 
+}
+# appear2.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\appear2.bca 
+	appear2.bca 
+	-1 
+}
+# wait1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\wait1.bca 
+	wait1.bca 
+	0 0 
+	89 1 
+	-1 
+}
+# preattackF.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\preattackF.bca 
+	preattackF.bca 
+	20 2 
+	68 0 
+	82 1 
+	85 3 
+	-1 
+}
+# attackF.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\attackF.bca 
+	attackF.bca 
+	0 0 
+	1 2 
+	119 1 
+	-1 
+}
+# attackendF.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\attackendF.bca 
+	attackendF.bca 
+	-1 
+}
+# preattackFR.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\preattackFR.bca 
+	preattackFR.bca 
+	-1 
+}
+# attackFR.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\attackFR.bca 
+	attackFR.bca 
+	0 0 
+	1 2 
+	119 1 
+	-1 
+}
+# attackendFR.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\attackendFR.bca 
+	attackendFR.bca 
+	-1 
+}
+# preattackFL.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\preattackFL.bca 
+	preattackFL.bca 
+	-1 
+}
+# attackFL.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\attackFL.bca 
+	attackFL.bca 
+	0 0 
+	1 2 
+	119 1 
+	-1 
+}
+# attackendFL.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\attackendFL.bca 
+	attackendFL.bca 
+	-1 
+}
+# preattackFB.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\preattackFB.bca 
+	preattackFB.bca 
+	-1 
+}
+# attackFB.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\attackFB.bca 
+	attackFB.bca 
+	0 0 
+	1 2 
+	119 1 
+	-1 
+}
+# attackendFB.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\attackendFB.bca 
+	attackendFB.bca 
+	-1 
+}
+# preattackW.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\preattackW.bca 
+	preattackW.bca 
+	20 2 
+	68 0 
+	82 1 
+	-1 
+}
+# attackW.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\attackW.bca 
+	attackW.bca 
+	0 0 
+	1 2 
+	29 1 
+	-1 
+}
+# attackendW.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\attackendW.bca 
+	attackendW.bca 
+	-1 
+}
+# preattackG.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\preattackG.bca 
+	preattackG.bca 
+	20 2 
+	68 0 
+	82 1 
+	-1 
+}
+# attackG.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\attackG.bca 
+	attackG.bca 
+	0 0 
+	1 2 
+	79 1 
+	-1 
+}
+# attackendG.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\attackendG.bca 
+	attackendG.bca 
+	-1 
+}
+# preattackE.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\preattackE.bca 
+	preattackE.bca 
+	20 2 
+	68 0 
+	82 1 
+	-1 
+}
+# attackE.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\attackE.bca 
+	attackE.bca 
+	0 0 
+	1 2 
+	39 1 
+	-1 
+}
+# attackendE.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\attackendE.bca 
+	attackendE.bca 
+	-1 
+}
+# dropitem.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\dropitem.bca 
+	dropitem.bca 
+	60 2 
+	-1 
+}
+# wait2.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\wait2.bca 
+	wait2.bca 
+	0 0 
+	29 1 
+	-1 
+}
+# flick.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\flick.bca 
+	flick.bca 
+	35 2 
+	-1 
+}
+# dead.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\dead.bca 
+	dead.bca 
+	60 2 
+	100 3 
+	125 4 
+	150 5 
+	175 6 
+	200 7 
+	290 8 
+	295 9 
+	300 10 
+	305 11 
+	320 100 
+	-1 
+}
+# move1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\move1.bca 
+	move1.bca 
+	-1 
+}
+# wait2.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\oootakara\motion\wait2.bca 
+	wait2.bca 
+	-1 
+}

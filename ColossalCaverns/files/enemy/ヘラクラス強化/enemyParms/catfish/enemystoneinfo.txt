@@ -1,0 +1,51 @@
+#	 D:\data\maya_data\pikmin2\enemy\fix_data\dangonamazu\dmd\stoneInfo_dangonamazu.txt 
+7 						# joint num 
+{
+	regR_sune 					# joint name 
+	1 					# TypeID 
+	0.192058 4.310183 -1.783965 		# pos
+	98.723503 -10.697400 -122.054108 		# rot
+	1.208636 0.528598 2.092914 		# scale
+}
+{
+	regL_sune 					# joint name 
+	1 					# TypeID 
+	-0.298735 3.443192 1.737132 		# pos
+	-80.359322 -24.133148 59.672600 		# rot
+	1.060680 0.528598 2.092914 		# scale
+}
+{
+	regR_momo 					# joint name 
+	1 					# TypeID 
+	7.262359 11.674421 -3.562728 		# pos
+	114.569862 -0.865868 -78.312714 		# rot
+	1.060680 0.528598 2.401447 		# scale
+}
+{
+	regL_momo 					# joint name 
+	1 					# TypeID 
+	7.045198 11.163391 3.777402 		# pos
+	-106.066132 7.611446 -81.593025 		# rot
+	1.021854 0.509249 2.113461 		# scale
+}
+{
+	body 					# joint name 
+	0 					# TypeID 
+	-3.590466 0.625529 0.000000 		# pos
+	153.322510 90.000000 -21.221094 		# rot
+	1.323347 1.147356 1.515970 		# scale
+}
+{
+	body 					# joint name 
+	1 					# TypeID 
+	-13.870001 -6.630113 -0.000001 		# pos
+	-0.000176 89.643967 5.456224 		# rot
+	1.917991 0.582923 1.286099 		# scale
+}
+{
+	ago 					# joint name 
+	1 					# TypeID 
+	5.878271 -1.040985 0.000000 		# pos
+	-179.999954 -84.893715 0.047074 		# rot
+	1.667967 0.506935 1.118446 		# scale
+}

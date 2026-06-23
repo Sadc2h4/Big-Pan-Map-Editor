@@ -1,0 +1,10 @@
+#
+#	AnimMgr
+#
+	1 	# number of animations
+# karaOoinu_l.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\kareOoinu_l\motion\karaOoinu_l.bca 
+	karaOoinu_l.bca 
+	-1 
+}

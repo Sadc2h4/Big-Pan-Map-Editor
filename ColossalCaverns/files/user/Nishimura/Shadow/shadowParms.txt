@@ -1,0 +1,6 @@
+1 1 0 0 0 0 0 150 # ShadowParms
+{
+	{lodn} 4 0.100000 	# LOD NearÅF
+	{lodf} 4 0.020000 	# LOD FarÅF
+	{_eof} 
+}

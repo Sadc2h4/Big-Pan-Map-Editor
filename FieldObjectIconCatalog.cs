@@ -22,6 +22,11 @@ internal static class FieldObjectIconCatalog
         ["Rocket"] = "Rocket.png",
         ["Onion / Rocket"] = "Rocket.png",
         ["Cave Entrance"] = "05_Hole_Geyser.png",
+        ["Water Drain"] = "WaterDrains_icon.png",
+        ["Teki: Pellet Posy"] = "Teki_PelletPosy_icon.png",
+        ["Teki: Honeywisp"] = "Teki_Honeywisp_icon.png",
+        ["Pellet / Treasure"] = "02_Item.png",
+        ["Pellet"] = "02_Item.png",
         ["Item"] = "02_Item.png",
         ["Pikmin"] = "Pikmin_icon.png"
     };
@@ -34,7 +39,8 @@ internal static class FieldObjectIconCatalog
     //-------------------------------------------------------------------------------
     public static Image? GetIcon(string label)
     {
-        if (!FileNames.TryGetValue(label, out string? fileName))
+        string? fileName = ResolveIconFileName(label);
+        if (fileName is null)
         {
             return null;
         }
@@ -63,16 +69,111 @@ internal static class FieldObjectIconCatalog
     {
         return label switch
         {
-            "Short Bridge" => new SizeF(95f, 210f),
-            "Short Bridge (Slanted)" => new SizeF(95f, 250f),
-            "Long Bridge" => new SizeF(105f, 430f),
-            "Gate" => new SizeF(210f, 70f),
-            "Electric Gate" => new SizeF(210f, 70f),
-            "Small Block" or "Small Block [Seesaw]" => new SizeF(95f, 95f),
-            "Normal Block" or "Normal Block [Seesaw]" => new SizeF(130f, 130f),
-            "Paper Bag" => new SizeF(160f, 95f),
+            "Short Bridge" => new SizeF(130f, 260f),
+            "Short Bridge (Slanted)" => new SizeF(130f, 200f),
+            "Long Bridge" => new SizeF(130f, 440f),
+            "Gate" => new SizeF(267f, 70f),
+            "Electric Gate" => new SizeF(267f, 35f),
+            "Small Block" or "Small Block [Seesaw]" => new SizeF(100f, 100f),
+            "Normal Block" or "Normal Block [Seesaw]" => new SizeF(150f, 120f),
+            "Paper Bag" => new SizeF(256f, 197f),
             _ => null
         };
+    }
+
+    //-------------------------------------------------------------------------------
+    // 地上 object の表示名から参考元と同じ前方オフセットを取得する処理
+    //-------------------------------------------------------------------------------
+    public static PointF GetFootprintOffset(string label)
+    {
+        return label switch
+        {
+            "Short Bridge" => new PointF(0f, 88f),
+            "Short Bridge (Slanted)" => new PointF(0f, 58f),
+            "Long Bridge" => new PointF(0f, 178f),
+            "Electric Gate" => new PointF(0f, -10f),
+            _ => PointF.Empty
+        };
+    }
+
+    //-------------------------------------------------------------------------------
+    // 地上 object の表示名からアイコンファイル名を解決する処理
+    //-------------------------------------------------------------------------------
+    private static string? ResolveIconFileName(string label)
+    {
+        if (FileNames.TryGetValue(label, out string? fileName))
+        {
+            return fileName;
+        }
+
+        if (label.StartsWith("Treasure:", StringComparison.OrdinalIgnoreCase) ||
+            label.StartsWith("ExpKit Treasure:", StringComparison.OrdinalIgnoreCase) ||
+            label.StartsWith("Unknown treasure:", StringComparison.OrdinalIgnoreCase) ||
+            label.StartsWith("Unknown exploration kit treasure:", StringComparison.OrdinalIgnoreCase) ||
+            label.Contains("Pellet", StringComparison.OrdinalIgnoreCase))
+        {
+            return "02_Item.png";
+        }
+
+        if (label.StartsWith("Burg. Spiderwort", StringComparison.OrdinalIgnoreCase))
+        {
+            return "06_Plant.png";
+        }
+
+        if (TryResolveTekiIconFileName(label, out string? tekiFileName))
+        {
+            return tekiFileName;
+        }
+
+        return null;
+    }
+
+    //-------------------------------------------------------------------------------
+    // Teki 表示名から専用アイコンファイル名を解決する処理
+    //-------------------------------------------------------------------------------
+    private static bool TryResolveTekiIconFileName(string label, out string? fileName)
+    {
+        fileName = null;
+        const string prefix = "Teki: ";
+        if (!label.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        string name = label[prefix.Length..];
+        if (IsPlantTekiName(name))
+        {
+            fileName = "Teki_plant_icon.png";
+            return true;
+        }
+
+        if (name.Equals("Bomb rock", StringComparison.OrdinalIgnoreCase) ||
+            name.Equals("Falling boulder", StringComparison.OrdinalIgnoreCase))
+        {
+            fileName = "Teki_Stone_icon.png";
+            return true;
+        }
+
+        if (name.Equals("Egg", StringComparison.OrdinalIgnoreCase))
+        {
+            fileName = "Teki_egg_icon.png";
+            return true;
+        }
+
+        return false;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 草系として扱う Teki 名かどうかを判定する処理
+    //-------------------------------------------------------------------------------
+    private static bool IsPlantTekiName(string name)
+    {
+        return name.Equals("Dandelion", StringComparison.OrdinalIgnoreCase) ||
+            name.Equals("Seeding Dandelion", StringComparison.OrdinalIgnoreCase) ||
+            name.Equals("Clover", StringComparison.OrdinalIgnoreCase) ||
+            name.Equals("Figwort", StringComparison.OrdinalIgnoreCase) ||
+            name.Equals("Horsetail", StringComparison.OrdinalIgnoreCase) ||
+            name.Equals("Glowstem", StringComparison.OrdinalIgnoreCase);
     }
 
     //-------------------------------------------------------------------------------

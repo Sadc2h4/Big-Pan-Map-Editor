@@ -1,0 +1,16 @@
+#	 D:\stoneInfo_otama.txt 
+2 						# joint num 
+{
+	headjnt1 					# joint name 
+	1 					# TypeID 
+	8.799992 -0.950221 0.000004 		# pos
+	18.794294 89.999977 3.867261 		# rot
+	1.565181 1.423241 1.773330 		# scale
+}
+{
+	sippojnt1 					# joint name 
+	1 					# TypeID 
+	8.159092 0.053293 -0.000003 		# pos
+	89.999977 0.000002 -90.000000 		# rot
+	0.892595 0.435061 1.804655 		# scale
+}

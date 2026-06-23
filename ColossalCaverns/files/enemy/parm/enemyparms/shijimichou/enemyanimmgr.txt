@@ -1,0 +1,26 @@
+#
+#	AnimMgr
+#
+	3 	# number of animations
+# carry.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\shijimi\motion\carry.bca 
+	carry.bca 
+	10 0 
+	29 1 
+	-1 
+}
+# dead.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\shijimi\motion\dead.bca 
+	dead.bca 
+	-1 
+}
+# move.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\shijimi\motion\move.bca 
+	move.bca 
+	0 0 
+	7 1 
+	-1 
+}

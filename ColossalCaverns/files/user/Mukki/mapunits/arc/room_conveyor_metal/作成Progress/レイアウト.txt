@@ -1,0 +1,800 @@
+{v0.1}
+0.0 0.0 0.0 
+0.0
+34
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	144 194 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 青オニヨン 
+	862.0 233.423 936.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 -135.000000 0.000000 # rotation 
+		{0001} # item local version 
+		0 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	-694.0 -11.11509 -880.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	-766.0 -11.11509 -748.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	-626.0 -11.11509 -748.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	686.0 -10.90129 -580.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	122.0 -11.11509 -656.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	106.0 -11.11509 848.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	114.0 -11.11509 992.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	850.0 233.423 1240.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	1174.0 233.423 1252.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	-1042.0 29.19643 152.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	-1050.0 29.19643 260.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	-1262.0 -11.11509 2052.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	-1122.0 -11.11509 1900.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	-982.0 -9.975791 1296.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	137 169 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 黄オニヨン 
+	-1958.0 -11.11509 1188.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 142.910004 0.000000 # rotation 
+		{0001} # item local version 
+		2 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	108 97 115 116 95 49 129 124 141 172 147 215 0 73 131 147 131 138 129 91 0 206 149 158 0 0 0 0 0 0 0 0 # last_1－混沌 
+	-2.0 -11.11509 828.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{cave} # Item ID 
+		0.000000 40.000000 0.000000 # rotation 
+		{0002} # item local version 
+		last_1.txt
+		units.txt
+		{l_01}
+		{
+			{fg00} 4 1.000000 
+			{fg01} 4 650.000000 
+			{fg02} 4 1.500000 
+			{fg03} 4 2.000000 
+			{fg04} 1 42 
+			{fg05} 1 55 
+			{fg06} 1 45 
+			{fg07} 4 6000.000000 
+			{fg08} 4 200.000000 
+			{fg09} 4 205.000000 
+			{_eof}
+		}
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	108 97 115 116 95 49 129 124 141 172 147 215 0 73 131 147 131 138 129 91 0 206 149 158 0 0 0 0 0 0 0 0 # last_1－混沌 
+	-2.0 -11.11509 996.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{cave} # Item ID 
+		0.000000 40.000000 0.000000 # rotation 
+		{0002} # item local version 
+		last_1.txt
+		units.txt
+		{l_01}
+		{
+			{fg00} 4 1.000000 
+			{fg01} 4 650.000000 
+			{fg02} 4 1.500000 
+			{fg03} 4 2.000000 
+			{fg04} 1 42 
+			{fg05} 1 55 
+			{fg06} 1 45 
+			{fg07} 4 6000.000000 
+			{fg08} 4 200.000000 
+			{fg09} 4 205.000000 
+			{_eof}
+		}
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	108 97 115 116 95 49 129 124 141 172 147 215 0 73 131 147 131 138 129 91 0 206 149 158 0 0 0 0 0 0 0 0 # last_1－混沌 
+	-1826.0 -11.11509 1296.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{cave} # Item ID 
+		0.000000 40.000000 0.000000 # rotation 
+		{0002} # item local version 
+		last_1.txt
+		units.txt
+		{l_01}
+		{
+			{fg00} 4 1.000000 
+			{fg01} 4 650.000000 
+			{fg02} 4 1.500000 
+			{fg03} 4 2.000000 
+			{fg04} 1 42 
+			{fg05} 1 55 
+			{fg06} 1 45 
+			{fg07} 4 6000.000000 
+			{fg08} 4 200.000000 
+			{fg09} 4 205.000000 
+			{_eof}
+		}
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	108 97 115 116 95 49 129 124 141 172 147 215 0 73 131 147 131 138 129 91 0 206 149 158 0 0 0 0 0 0 0 0 # last_1－混沌 
+	650.0 -10.90129 -860.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{cave} # Item ID 
+		0.000000 40.000000 0.000000 # rotation 
+		{0002} # item local version 
+		last_1.txt
+		units.txt
+		{l_01}
+		{
+			{fg00} 4 1.000000 
+			{fg01} 4 650.000000 
+			{fg02} 4 1.500000 
+			{fg03} 4 2.000000 
+			{fg04} 1 42 
+			{fg05} 1 55 
+			{fg06} 1 45 
+			{fg07} 4 6000.000000 
+			{fg08} 4 200.000000 
+			{fg09} 4 205.000000 
+			{_eof}
+		}
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	108 97 115 116 95 49 129 124 141 172 147 215 0 73 131 147 131 138 129 91 0 206 149 158 0 0 0 0 0 0 0 0 # last_1－混沌 
+	930.0 -10.90129 -576.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{cave} # Item ID 
+		0.000000 40.000000 0.000000 # rotation 
+		{0002} # item local version 
+		last_1.txt
+		units.txt
+		{l_01}
+		{
+			{fg00} 4 1.000000 
+			{fg01} 4 650.000000 
+			{fg02} 4 1.500000 
+			{fg03} 4 2.000000 
+			{fg04} 1 42 
+			{fg05} 1 55 
+			{fg06} 1 45 
+			{fg07} 4 6000.000000 
+			{fg08} 4 200.000000 
+			{fg09} 4 205.000000 
+			{_eof}
+		}
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	108 97 115 116 95 49 129 124 141 172 147 215 0 73 131 147 131 138 129 91 0 206 149 158 0 0 0 0 0 0 0 0 # last_1－混沌 
+	1066.0 -10.90129 -868.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{cave} # Item ID 
+		0.000000 40.000000 0.000000 # rotation 
+		{0002} # item local version 
+		last_1.txt
+		units.txt
+		{l_01}
+		{
+			{fg00} 4 1.000000 
+			{fg01} 4 650.000000 
+			{fg02} 4 1.500000 
+			{fg03} 4 2.000000 
+			{fg04} 1 42 
+			{fg05} 1 55 
+			{fg06} 1 45 
+			{fg07} 4 6000.000000 
+			{fg08} 4 200.000000 
+			{fg09} 4 205.000000 
+			{_eof}
+		}
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	108 97 115 116 95 49 129 124 141 172 147 215 0 73 131 147 131 138 129 91 0 206 149 158 0 0 0 0 0 0 0 0 # last_1－混沌 
+	1254.0 233.423 840.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{cave} # Item ID 
+		0.000000 40.000000 0.000000 # rotation 
+		{0002} # item local version 
+		last_1.txt
+		units.txt
+		{l_01}
+		{
+			{fg00} 4 1.000000 
+			{fg01} 4 650.000000 
+			{fg02} 4 1.500000 
+			{fg03} 4 2.000000 
+			{fg04} 1 42 
+			{fg05} 1 55 
+			{fg06} 1 45 
+			{fg07} 4 6000.000000 
+			{fg08} 4 200.000000 
+			{fg09} 4 205.000000 
+			{_eof}
+		}
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	108 97 115 116 95 49 129 124 141 172 147 215 0 73 131 147 131 138 129 91 0 206 149 158 0 0 0 0 0 0 0 0 # last_1－混沌 
+	1250.0 233.423 1084.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{cave} # Item ID 
+		0.000000 40.000000 0.000000 # rotation 
+		{0002} # item local version 
+		last_1.txt
+		units.txt
+		{l_01}
+		{
+			{fg00} 4 1.000000 
+			{fg01} 4 650.000000 
+			{fg02} 4 1.500000 
+			{fg03} 4 2.000000 
+			{fg04} 1 42 
+			{fg05} 1 55 
+			{fg06} 1 45 
+			{fg07} 4 6000.000000 
+			{fg08} 4 200.000000 
+			{fg09} 4 205.000000 
+			{_eof}
+		}
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	108 97 115 116 95 49 129 124 141 172 147 215 0 73 131 147 131 138 129 91 0 206 149 158 0 0 0 0 0 0 0 0 # last_1－混沌 
+	1034.0 233.423 1216.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{cave} # Item ID 
+		0.000000 40.000000 0.000000 # rotation 
+		{0002} # item local version 
+		last_1.txt
+		units.txt
+		{l_01}
+		{
+			{fg00} 4 1.000000 
+			{fg01} 4 650.000000 
+			{fg02} 4 1.500000 
+			{fg03} 4 2.000000 
+			{fg04} 1 42 
+			{fg05} 1 55 
+			{fg06} 1 45 
+			{fg07} 4 6000.000000 
+			{fg08} 4 200.000000 
+			{fg09} 4 205.000000 
+			{_eof}
+		}
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.3} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	131 73 131 73 131 67 131 107 130 147 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 # オオイヌｓ 
+	-38.0 -11.11509 904.0 # Position 
+	0.0 0 0.0 # Offset 
+	{teki} {0005} 	49 
+	0 # Teki Birth Type 
+	1 # Teki Number 
+	180.000000 # Face Direction 
+	1 # 0: Point, 1: Circle 
+	100.000000 # appear radius 
+	0.000000 # enemy size 
+	0 # Treasure item code 
+	3 # Pellet color 
+	1 # Pellet size 
+	1 # Pellet Min 
+	8 # Pellet Max 
+	0.000000 # Pellet Min 
+	{????}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.3} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	131 73 131 73 131 67 131 107 130 147 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 # オオイヌｓ 
+	850.0 -10.90129 -772.0 # Position 
+	0.0 0 0.0 # Offset 
+	{teki} {0005} 	49 
+	0 # Teki Birth Type 
+	1 # Teki Number 
+	180.000000 # Face Direction 
+	1 # 0: Point, 1: Circle 
+	100.000000 # appear radius 
+	0.000000 # enemy size 
+	0 # Treasure item code 
+	3 # Pellet color 
+	1 # Pellet size 
+	1 # Pellet Min 
+	8 # Pellet Max 
+	0.000000 # Pellet Min 
+	{????}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.3} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	131 73 131 73 131 67 131 107 130 147 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 # オオイヌｓ 
+	-722.0 -9.975792 716.0 # Position 
+	0.0 0 0.0 # Offset 
+	{teki} {0005} 	49 
+	0 # Teki Birth Type 
+	1 # Teki Number 
+	180.000000 # Face Direction 
+	1 # 0: Point, 1: Circle 
+	100.000000 # appear radius 
+	0.000000 # enemy size 
+	0 # Treasure item code 
+	3 # Pellet color 
+	1 # Pellet size 
+	1 # Pellet Min 
+	8 # Pellet Max 
+	0.000000 # Pellet Min 
+	{????}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.3} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	131 73 131 73 131 67 131 107 130 147 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 # オオイヌｓ 
+	-1278.0 -9.975791 1272.0 # Position 
+	0.0 0 0.0 # Offset 
+	{teki} {0005} 	49 
+	0 # Teki Birth Type 
+	1 # Teki Number 
+	180.000000 # Face Direction 
+	1 # 0: Point, 1: Circle 
+	100.000000 # appear radius 
+	0.000000 # enemy size 
+	0 # Treasure item code 
+	3 # Pellet color 
+	1 # Pellet size 
+	1 # Pellet Min 
+	8 # Pellet Max 
+	0.000000 # Pellet Min 
+	{????}
+	{
+		{_eof}
+	}
+}
+# Treasure 
+{
+	{v0.1} # Version 
+	11 # Reserved 
+	0 # Days till resurrection 
+	129 154 129 70 97 107 97 103 97 105 129 105 145 83 150 132 130 220 130 232 129 106 0 101 110 116 108 101 129 106 0 0 # ★：akagai（全埋まり） 
+	1082.0 233.423 1036.0 # Position 
+	0.0 0 0.0 # Offset 
+	{pelt} {0000} 
+	{
+		3 # Treasure category: 3=regular, 4=exploration kit 
+		0.000000 -120.000000 0.000000 # Rotation 
+		{0000} # Local version 
+		0 # Identifier of treasure, see https://pikmintkb.com/wiki/Pikmin_2_identifiers	 
+	}
+	{
+		{_eof}
+	}
+}
+# Treasure 
+{
+	{v0.1} # Version 
+	11 # Reserved 
+	0 # Days till resurrection 
+	129 154 129 70 97 107 97 103 97 105 129 105 145 83 150 132 130 220 130 232 129 106 0 101 110 116 108 101 129 106 0 0 # ★：akagai（全埋まり） 
+	858.0 -10.90129 -984.0 # Position 
+	0.0 0 0.0 # Offset 
+	{pelt} {0000} 
+	{
+		3 # Treasure category: 3=regular, 4=exploration kit 
+		0.000000 -120.000000 0.000000 # Rotation 
+		{0000} # Local version 
+		0 # Identifier of treasure, see https://pikmintkb.com/wiki/Pikmin_2_identifiers	 
+	}
+	{
+		{_eof}
+	}
+}
+# Treasure 
+{
+	{v0.1} # Version 
+	11 # Reserved 
+	0 # Days till resurrection 
+	129 154 129 70 97 107 97 103 97 105 129 105 145 83 150 132 130 220 130 232 129 106 0 101 110 116 108 101 129 106 0 0 # ★：akagai（全埋まり） 
+	-706.0 -9.975791 1276.0 # Position 
+	0.0 0 0.0 # Offset 
+	{pelt} {0000} 
+	{
+		3 # Treasure category: 3=regular, 4=exploration kit 
+		0.000000 -120.000000 0.000000 # Rotation 
+		{0000} # Local version 
+		0 # Identifier of treasure, see https://pikmintkb.com/wiki/Pikmin_2_identifiers	 
+	}
+	{
+		{_eof}
+	}
+}
+{
+	{v0.1} # Version 
+	0 # Reserved 
+	0 # Days till resurrection 
+	144 212 131 73 131 106 131 136 131 147 0 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 205 # 赤オニヨン 
+	-990.0 -66.547783 1064.0 # Position 
+	0.0 0 0.0 # Offset 
+	{item} {0002} 
+	{
+		{onyn} # Item ID 
+		0.000000 31.120001 0.000000 # rotation 
+		{0001} # item local version 
+		1 # Onion type: 0=blue, 1=red, 2=yellow, 4=rocket 
+		1 # after boot? true==1 
+	}
+	{
+		{_eof}
+	}
+}
+# Treasure 
+{
+	{v0.1} # Version 
+	11 # Reserved 
+	0 # Days till resurrection 
+	129 154 129 70 97 107 97 103 97 105 129 105 145 83 150 132 130 220 130 232 129 106 0 101 110 116 108 101 129 106 0 0 # ★：akagai（全埋まり） 
+	-1190.0 -11.11509 1980.0 # Position 
+	0.0 0 0.0 # Offset 
+	{pelt} {0000} 
+	{
+		3 # Treasure category: 3=regular, 4=exploration kit 
+		0.000000 -120.000000 0.000000 # Rotation 
+		{0000} # Local version 
+		0 # Identifier of treasure, see https://pikmintkb.com/wiki/Pikmin_2_identifiers	 
+	}
+	{
+		{_eof}
+	}
+}

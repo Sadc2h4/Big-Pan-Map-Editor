@@ -1,0 +1,10 @@
+#
+#	AnimMgr
+#
+	1 	# number of animations
+# damage1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\egg\motion\damage1.bca 
+	damage1.bca 
+	-1 
+}

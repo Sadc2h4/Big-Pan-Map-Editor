@@ -1,0 +1,30 @@
+#	 D:\data\maya_data\pikmin2\enemy\fix_data\babychappy\dmd\stoneInfo_babychappy.txt 
+4 						# joint num 
+{
+	body 					# joint name 
+	1 					# TypeID 
+	0.258301 1.179305 -0.034752 		# pos
+	0.000000 81.814293 180.000000 		# rot
+	2.088074 1.751260 1.939303 		# scale
+}
+{
+	head 					# joint name 
+	1 					# TypeID 
+	3.592573 1.100858 0.148921 		# pos
+	-16.053162 -87.573410 180.000000 		# rot
+	1.905926 1.407299 1.855083 		# scale
+}
+{
+	head 					# joint name 
+	1 					# TypeID 
+	8.707579 6.334727 5.394131 		# pos
+	0.000000 -87.573410 180.000000 		# rot
+	0.942956 0.900676 0.781248 		# scale
+}
+{
+	head 					# joint name 
+	1 					# TypeID 
+	9.151321 6.334727 -5.077082 		# pos
+	51.429096 -1.232938 32.740932 		# rot
+	0.948309 0.997912 0.737849 		# scale
+}

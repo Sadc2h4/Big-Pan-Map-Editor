@@ -1,0 +1,142 @@
+#
+#	AnimMgr
+#
+	17 	# number of animations
+# appear1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\appear1.bca 
+	appear1.bca 
+	10 2
+	-1 
+}
+# attack1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\attack1.bca 
+	attack1.bca  
+ 	26 2
+	-1 
+}
+# backrun1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\backrun1.bca 
+	backrun1.bca 
+	10 0 
+	19 1 
+	-1 
+}
+# backwait1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\backwait1.bca 
+	backwait1.bca
+	0 0 
+	9 1 	 
+	-1 
+}
+# dead1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\dead1.bca 
+	dead1.bca 
+	24 2
+	-1 
+}
+# dive1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\dive1.bca 
+	dive1.bca	
+	23 2
+	28 3
+	33 4
+	38 5
+	43 6
+        59 7
+	80 8          
+	-1 
+}
+# flick1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\flick1.bca 
+	flick1.bca 
+	9 2 
+        16 3
+	-1 
+}
+# hide1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\hide1.bca 
+	hide1.bca 
+	-1 
+}
+
+# rdive1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\rdive1.bca 
+	rdive1.bca 
+	-1 
+}
+# rflick1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\rflick1.bca 
+	rflick1.bca 
+	14 2 
+        21 3
+	-1 
+}
+# runaway1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\runaway1.bca 
+	runaway1.bca 
+	0 0 
+	19 1 
+	-1 
+}
+# sattack1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\sattack1.bca 
+	sattack1.bca 
+	15 2
+	26 3
+	56 4
+	61 5
+	66 6
+	71 7
+	76 8
+	91 9
+	115 10 
+	-1 
+}
+# smiss1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\smiss1.bca 
+	smiss1.bca 
+	-1 
+}
+# turn1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\turn1.bca 
+	turn1.bca 
+	0 0 
+	14 1 
+	-1 
+}
+# type5.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\type5.bca 
+	type5.bca 
+	10 0 
+	29 1 
+	-1 
+}
+# wait1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\wait1.bca 
+	wait1.bca 
+	0 0 
+	29 1 
+	-1 
+}
+# to_runaway1.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\jigumo\motion\to_runaway1.bca 
+	to_runaway1.bca 
+	-1 
+}

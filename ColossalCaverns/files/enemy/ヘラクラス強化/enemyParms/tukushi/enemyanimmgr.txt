@@ -1,0 +1,10 @@
+#
+#	AnimMgr
+#
+	1 	# number of animations
+# tukushi.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\tukushi\motion\tukushi.bca 
+	tukushi.bca 
+	-1 
+}

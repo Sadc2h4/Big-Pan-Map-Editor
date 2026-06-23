@@ -1,0 +1,104 @@
+#
+#	AnimMgr
+#
+	14 	# number of animations
+# dead.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\babykabuto\anim\dead.bca 
+	dead.bca 
+	-1 
+}
+# move.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\babykabuto\anim\move.bca 
+	move.bca 
+	15 0 
+	44 1 
+	-1 
+}
+# flick.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\babykabuto\anim\flick.bca 
+	flick.bca 
+	30 2 
+	-1 
+}
+# attack.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\babykabuto\anim\attack.bca 
+	attack.bca 
+	50 2 
+	-1 
+}
+# pivot.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\babykabuto\anim\pivot.bca 
+	pivot.bca 
+	0 0 
+	34 1 
+	-1 
+}
+# wait.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\babykabuto\anim\wait.bca 
+	wait.bca 
+	0 0 
+	49 1 
+	-1 
+}
+# K_pivot.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\babykabuto\anim\K_pivot.bca 
+	K_pivot.bca 
+	0 0 
+	34 1 
+	-1 
+}
+# K_wait.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\babykabuto\anim\K_wait.bca 
+	K_wait.bca 
+	0 0 
+	49 1 
+	-1 
+}
+# K_attack.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\babykabuto\anim\K_attack.bca 
+	K_attack.bca 
+	55 2 
+	-1 
+}
+# K_flick.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\babykabuto\anim\K_flick.bca 
+	K_flick.bca 
+	30 2 
+	-1 
+}
+# K_dead.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\babykabuto\anim\K_dead.bca 
+	K_dead.bca 
+	-1 
+}
+# K_appear.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\babykabuto\anim\K_appear.bca 
+	K_appear.bca 
+	-1 
+}
+# K_hide.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\babykabuto\anim\K_hide.bca 
+	K_hide.bca 
+	-1 
+}
+# carry.bca
+{
+	Z:\Pikmin2Data\conversion\enemy\nishimura\babykabuto\anim\carry.bca 
+	carry.bca 
+	10 0 
+	29 1 
+	-1 
+}

@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 
 namespace PikminUnitEditor;
 
@@ -296,18 +297,21 @@ internal static class FieldGeneratorParser
     //-------------------------------------------------------------------------------
     private static FieldGeneratorObject? TryParseObject(FieldGeneratorBlock block, string sourceFile, int sourceIndex)
     {
-        if (block.Lines.Count < 8)
+        int headerIndex = FindGeneratorHeaderIndex(block.Lines);
+        if (headerIndex < 0 || headerIndex + 6 >= block.Lines.Count)
         {
             return null;
         }
 
-        float[] position = TryParseFloatLine(block.Lines[5], 3);
+        int positionLineIndex = headerIndex + 4;
+        int typeLineIndex = headerIndex + 6;
+        float[] position = TryParseFloatLine(block.Lines[positionLineIndex], 3);
         if (position.Length < 3)
         {
             return null;
         }
 
-        string typeLine = block.Lines[7];
+        string typeLine = block.Lines[typeLineIndex];
         string objectType = ParseObjectType(typeLine);
         string label = BuildObjectLabel(objectType, block.Lines);
         int? angleLineIndex = TryFindAngleLineIndex(objectType, block.Lines);
@@ -327,7 +331,7 @@ internal static class FieldGeneratorParser
             radius,
             block.OriginalLineIndices.First(),
             block.OriginalLineIndices.Last(),
-            block.OriginalLineIndices[5],
+            block.OriginalLineIndices[positionLineIndex],
             angleLineIndex is null ? null : block.OriginalLineIndices[angleLineIndex.Value],
             radiusLineIndex is null ? null : block.OriginalLineIndices[radiusLineIndex.Value]);
     }
@@ -337,10 +341,10 @@ internal static class FieldGeneratorParser
     //-------------------------------------------------------------------------------
     public static void WriteFile(FieldGeneratorFile generatorFile)
     {
-        string[] lines = generatorFile.Lines.ToArray();
+        List<string> lines = generatorFile.Lines.ToList();
         foreach (FieldGeneratorObject fieldObject in generatorFile.Objects)
         {
-            if (fieldObject.PositionLineIndex >= 0 && fieldObject.PositionLineIndex < lines.Length)
+            if (fieldObject.PositionLineIndex >= 0 && fieldObject.PositionLineIndex < lines.Count)
             {
                 lines[fieldObject.PositionLineIndex] = ReplaceLeadingNumbers(
                     lines[fieldObject.PositionLineIndex],
@@ -351,7 +355,7 @@ internal static class FieldGeneratorParser
 
             if (fieldObject.AngleLineIndex is int angleLineIndex &&
                 angleLineIndex >= 0 &&
-                angleLineIndex < lines.Length)
+                angleLineIndex < lines.Count)
             {
                 lines[angleLineIndex] = fieldObject.ObjectType switch
                 {
@@ -363,12 +367,13 @@ internal static class FieldGeneratorParser
 
             if (fieldObject.RadiusLineIndex is int radiusLineIndex &&
                 radiusLineIndex >= 0 &&
-                radiusLineIndex < lines.Length)
+                radiusLineIndex < lines.Count)
             {
                 lines[radiusLineIndex] = ReplaceLeadingNumbers(lines[radiusLineIndex], Math.Max(0f, fieldObject.Radius));
             }
         }
 
+        UpdateDeclaredObjectCount(lines, generatorFile.Objects.Count);
         File.WriteAllLines(generatorFile.Path, lines);
     }
 
@@ -464,11 +469,42 @@ internal static class FieldGeneratorParser
     //-------------------------------------------------------------------------------
     private static List<string> NormalizeRawTextLines(string rawText)
     {
-        return rawText
+        List<string> lines = rawText
             .Replace("\r\n", "\n", StringComparison.Ordinal)
             .Replace('\r', '\n')
             .Split('\n')
             .ToList();
+        return EnsureObjectBlockWrapped(lines);
+    }
+
+    //-------------------------------------------------------------------------------
+    // object_templates の外側ブロック省略形式を generator object 形式へ補完する処理
+    //-------------------------------------------------------------------------------
+    private static List<string> EnsureObjectBlockWrapped(List<string> lines)
+    {
+        int firstContentIndex = lines.FindIndex(line => !string.IsNullOrWhiteSpace(RemoveComment(line)));
+        if (firstContentIndex < 0)
+        {
+            return lines;
+        }
+
+        string firstContent = RemoveComment(lines[firstContentIndex]);
+        if (firstContent == "{")
+        {
+            return lines;
+        }
+
+        if (!IsGeneratorVersionLine(firstContent))
+        {
+            return lines;
+        }
+
+        List<string> wrappedLines = new(lines.Count + 2);
+        wrappedLines.AddRange(lines.Take(firstContentIndex));
+        wrappedLines.Add("{");
+        wrappedLines.AddRange(lines.Skip(firstContentIndex));
+        wrappedLines.Add("}");
+        return wrappedLines;
     }
 
     //-------------------------------------------------------------------------------
@@ -480,8 +516,7 @@ internal static class FieldGeneratorParser
         List<int> indices = new();
         for (int i = 0; i < lines.Count; i++)
         {
-            string line = RemoveComment(lines[i]);
-            if (!string.IsNullOrWhiteSpace(line))
+            foreach (string line in SplitStructuralCleanedLines(lines[i]))
             {
                 cleanedLines.Add(line);
                 indices.Add(i);
@@ -542,15 +577,16 @@ internal static class FieldGeneratorParser
                 "{dwfl}" => GetDownFloorLabel(block, subtypeIndex),
                 "{onyn}" => GetOnionLabel(block, subtypeIndex),
                 "{cave}" => "Cave Entrance",
-                "{plnt}" => "Plant",
+                "{plnt}" => GetPlantLabel(block, subtypeIndex),
+                "{barl}" => "Water Drain",
                 _ => "Item"
             };
         }
 
         return objectType switch
         {
-            "{teki}" => "Teki",
-            "{pelt}" => "Pellet / Treasure",
+            "{teki}" => GetTekiLabel(block),
+            "{pelt}" => GetPeltLabel(block),
             "{piki}" => "Pikmin",
             _ => objectType
         };
@@ -633,11 +669,92 @@ internal static class FieldGeneratorParser
     }
 
     //-------------------------------------------------------------------------------
+    // Burgeoning Spiderwort の berry 種別から表示名を取得する処理
+    //-------------------------------------------------------------------------------
+    private static string GetPlantLabel(IReadOnlyList<string> block, int subtypeIndex)
+    {
+        if (subtypeIndex >= 0 && subtypeIndex + 3 < block.Count && TryParseLeadingInt(block[subtypeIndex + 3], out int plantType))
+        {
+            return plantType switch
+            {
+                0 => "Burg. Spiderwort (Red Berry)",
+                1 => "Burg. Spiderwort (Purple Berry)",
+                2 => "Burg. Spiderwort (Mixed)",
+                _ => "Burg. Spiderwort"
+            };
+        }
+
+        return "Burg. Spiderwort";
+    }
+
+    //-------------------------------------------------------------------------------
+    // teki identifier から参考元と同じ形式の表示名を取得する処理
+    //-------------------------------------------------------------------------------
+    private static string GetTekiLabel(IReadOnlyList<string> block)
+    {
+        int typeIndex = FindLineIndex(block, line => line.StartsWith("{teki}", StringComparison.Ordinal));
+        if (typeIndex >= 0 && TryParseLastIntToken(block[typeIndex], out int tekiId))
+        {
+            return $"Teki: {FieldEntityNameCatalog.GetName("teki", tekiId, $"ID {tekiId}")}";
+        }
+
+        return "Teki";
+    }
+
+    //-------------------------------------------------------------------------------
+    // pelt object をペレット，通常宝，探索キット宝へ分類する処理
+    //-------------------------------------------------------------------------------
+    private static string GetPeltLabel(IReadOnlyList<string> block)
+    {
+        int typeIndex = FindLineIndex(block, line => line.StartsWith("{pelt}", StringComparison.Ordinal));
+        int dataBlockIndex = FindLineIndexFrom(block, typeIndex + 1, line => line == "{");
+        if (typeIndex < 0 ||
+            dataBlockIndex < 0 ||
+            dataBlockIndex + 4 >= block.Count ||
+            !TryParseLeadingInt(block[dataBlockIndex + 1], out int peltType))
+        {
+            return "Pellet / Treasure";
+        }
+
+        int identifierLineIndex = dataBlockIndex + 4;
+        if (peltType == 0)
+        {
+            int[] values = ParseLeadingIntTokens(block[identifierLineIndex]);
+            if (values.Length >= 2)
+            {
+                string colorName = values[0] switch
+                {
+                    0 => "Blue",
+                    1 => "Red",
+                    2 => "Yellow",
+                    _ => "Unknown"
+                };
+                return $"{colorName} {values[1]}-Pellet";
+            }
+
+            return "Pellet";
+        }
+
+        if (!TryParseLeadingInt(block[identifierLineIndex], out int treasureId))
+        {
+            return peltType == 4 ? "ExpKit Treasure" : "Treasure";
+        }
+
+        return peltType switch
+        {
+            3 => $"Treasure: {FieldEntityNameCatalog.GetName("treasures", treasureId, $"ID {treasureId}")}",
+            4 => $"ExpKit Treasure: {FieldEntityNameCatalog.GetName("expkit_treasures", treasureId, $"ID {treasureId}")}",
+            _ => "Pellet / Treasure"
+        };
+    }
+
+    //-------------------------------------------------------------------------------
     // object 種別から表示用 Spawn Type を割り当てる処理
     //-------------------------------------------------------------------------------
     public static int ToDisplayTypeId(FieldGeneratorObject fieldObject)
     {
-        if (fieldObject.ObjectLabel.Contains("Plant", StringComparison.OrdinalIgnoreCase))
+        if (fieldObject.ObjectLabel.Contains("Plant", StringComparison.OrdinalIgnoreCase) ||
+            fieldObject.ObjectLabel.Contains("Spiderwort", StringComparison.OrdinalIgnoreCase))
         {
             return 6;
         }
@@ -710,7 +827,14 @@ internal static class FieldGeneratorParser
     //-------------------------------------------------------------------------------
     private static int? TryFindAngleLineIndex(string objectType, IReadOnlyList<string> block)
     {
-        if (objectType is "{item}" or "{pelt}")
+        if (objectType == "{pelt}")
+        {
+            int typeIndex = FindLineIndex(block, line => line.StartsWith("{pelt}", StringComparison.Ordinal));
+            int dataBlockIndex = FindLineIndexFrom(block, typeIndex + 1, line => line == "{");
+            return dataBlockIndex >= 0 && dataBlockIndex + 2 < block.Count ? dataBlockIndex + 2 : null;
+        }
+
+        if (objectType == "{item}")
         {
             int subtypeIndex = FindItemSubtypeIndex(block, objectType);
             return subtypeIndex >= 0 && subtypeIndex + 1 < block.Count ? subtypeIndex + 1 : null;
@@ -756,6 +880,38 @@ internal static class FieldGeneratorParser
     }
 
     //-------------------------------------------------------------------------------
+    // 指定位置以降で条件に一致する行番号を取得する処理
+    //-------------------------------------------------------------------------------
+    private static int FindLineIndexFrom(IReadOnlyList<string> block, int startIndex, Func<string, bool> predicate)
+    {
+        for (int i = Math.Max(0, startIndex); i < block.Count; i++)
+        {
+            if (predicate(block[i]))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    //-------------------------------------------------------------------------------
+    // generator object の version 行番号を取得する処理
+    //-------------------------------------------------------------------------------
+    private static int FindGeneratorHeaderIndex(IReadOnlyList<string> block)
+    {
+        return FindLineIndex(block, IsGeneratorVersionLine);
+    }
+
+    //-------------------------------------------------------------------------------
+    // generator object の version 行かどうかを判定する処理
+    //-------------------------------------------------------------------------------
+    private static bool IsGeneratorVersionLine(string line)
+    {
+        return line.StartsWith("{v0.", StringComparison.OrdinalIgnoreCase);
+    }
+
+    //-------------------------------------------------------------------------------
     // 行コメントを除去する処理
     //-------------------------------------------------------------------------------
     private static string RemoveComment(string line)
@@ -772,14 +928,53 @@ internal static class FieldGeneratorParser
         List<(string Line, int OriginalLineIndex)> cleanedLines = new();
         for (int i = 0; i < lines.Count; i++)
         {
-            string line = RemoveComment(lines[i]);
-            if (!string.IsNullOrWhiteSpace(line))
+            foreach (string line in SplitStructuralCleanedLines(lines[i]))
             {
                 cleanedLines.Add((line, i));
             }
         }
 
         return cleanedLines;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 値と同じ行にある構造用の閉じ括弧を抽出する処理
+    //-------------------------------------------------------------------------------
+    private static IEnumerable<string> SplitStructuralCleanedLines(string line)
+    {
+        string cleaned = RemoveComment(line);
+        if (string.IsNullOrWhiteSpace(cleaned))
+        {
+            yield break;
+        }
+
+        int closingBraceCount = 0;
+        string remaining = cleaned.Trim();
+        while (EndsWithInlineStructuralClosingBrace(remaining))
+        {
+            remaining = remaining[..^1].TrimEnd();
+            closingBraceCount++;
+        }
+
+        if (!string.IsNullOrWhiteSpace(remaining))
+        {
+            yield return remaining;
+        }
+
+        for (int i = 0; i < closingBraceCount; i++)
+        {
+            yield return "}";
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // 末尾の } が識別子ではなく構造用の閉じ括弧かどうかを判定する処理
+    //-------------------------------------------------------------------------------
+    private static bool EndsWithInlineStructuralClosingBrace(string line)
+    {
+        return line.Length >= 2 &&
+            line[^1] == '}' &&
+            char.IsWhiteSpace(line[^2]);
     }
 
     //-------------------------------------------------------------------------------
@@ -790,6 +985,44 @@ internal static class FieldGeneratorParser
         value = 0;
         string token = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? string.Empty;
         return int.TryParse(token, NumberStyles.Integer, CultureInfo.InvariantCulture, out value);
+    }
+
+    //-------------------------------------------------------------------------------
+    // 行の最後に現れる整数トークンを取得する処理
+    //-------------------------------------------------------------------------------
+    private static bool TryParseLastIntToken(string line, out int value)
+    {
+        value = 0;
+        string[] tokens = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        for (int i = tokens.Length - 1; i >= 0; i--)
+        {
+            if (int.TryParse(tokens[i], NumberStyles.Integer, CultureInfo.InvariantCulture, out value))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 行頭から連続する整数トークンを取得する処理
+    //-------------------------------------------------------------------------------
+    private static int[] ParseLeadingIntTokens(string line)
+    {
+        string[] tokens = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        List<int> values = new();
+        foreach (string token in tokens)
+        {
+            if (!int.TryParse(token, NumberStyles.Integer, CultureInfo.InvariantCulture, out int value))
+            {
+                break;
+            }
+
+            values.Add(value);
+        }
+
+        return values.ToArray();
     }
 
     //-------------------------------------------------------------------------------
@@ -845,5 +1078,142 @@ internal static class FieldGeneratorParser
 
         string trailing = string.IsNullOrWhiteSpace(commentPart) ? string.Empty : " " + commentPart.TrimEnd();
         return indent + string.Join(" ", tokens) + trailing;
+    }
+}
+
+internal static class FieldEntityNameCatalog
+{
+    private static readonly object SyncRoot = new();
+    private static IReadOnlyDictionary<string, IReadOnlyDictionary<int, string>>? s_tables;
+
+    //-------------------------------------------------------------------------------
+    // entities.json から指定 ID の表示名を取得する処理
+    //-------------------------------------------------------------------------------
+    public static string GetName(string tableName, int id, string fallback)
+    {
+        IReadOnlyDictionary<string, IReadOnlyDictionary<int, string>> tables = LoadTables();
+        return tables.TryGetValue(tableName, out IReadOnlyDictionary<int, string>? table) &&
+            table.TryGetValue(id, out string? name)
+            ? name
+            : fallback;
+    }
+
+    //-------------------------------------------------------------------------------
+    // 参考元の entities.json を必要時に読み込む処理
+    //-------------------------------------------------------------------------------
+    private static IReadOnlyDictionary<string, IReadOnlyDictionary<int, string>> LoadTables()
+    {
+        if (s_tables is not null)
+        {
+            return s_tables;
+        }
+
+        lock (SyncRoot)
+        {
+            if (s_tables is not null)
+            {
+                return s_tables;
+            }
+
+            string? embeddedJson = EmbeddedTextResourceCatalog.ReadText("resources", "entities.json", System.Text.Encoding.UTF8);
+            if (embeddedJson is not null)
+            {
+                s_tables = ReadTablesFromText(embeddedJson);
+                return s_tables;
+            }
+
+            string? path = FindEntitiesPath();
+            s_tables = path is null
+                ? new Dictionary<string, IReadOnlyDictionary<int, string>>(StringComparer.OrdinalIgnoreCase)
+                : ReadTablesFromFile(path);
+            return s_tables;
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // 実行フォルダまたは開発用フォルダから entities.json を探す処理
+    //-------------------------------------------------------------------------------
+    private static string? FindEntitiesPath()
+    {
+        foreach (string baseDirectory in new[] { AppContext.BaseDirectory, Directory.GetCurrentDirectory() })
+        {
+            DirectoryInfo? directory = new(baseDirectory);
+            for (int depth = 0; directory is not null && depth < 8; depth++)
+            {
+                string localCandidate = Path.Combine(directory.FullName, "resources", "entities.json");
+                if (File.Exists(localCandidate))
+                {
+                    return localCandidate;
+                }
+
+                string referenceCandidate = Path.Combine(directory.FullName, "pikmin-tools-master", "resources", "entities.json");
+                if (File.Exists(referenceCandidate))
+                {
+                    return referenceCandidate;
+                }
+
+                directory = directory.Parent;
+            }
+        }
+
+        return null;
+    }
+
+    //-------------------------------------------------------------------------------
+    // entities.json を表示名テーブルへ変換する処理
+    //-------------------------------------------------------------------------------
+    private static IReadOnlyDictionary<string, IReadOnlyDictionary<int, string>> ReadTablesFromText(string text)
+    {
+        try
+        {
+            using JsonDocument document = JsonDocument.Parse(text);
+            return ReadTables(document);
+        }
+        catch
+        {
+            return new Dictionary<string, IReadOnlyDictionary<int, string>>(StringComparer.OrdinalIgnoreCase);
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // entities.json ファイルを表示名テーブルへ変換する処理
+    //-------------------------------------------------------------------------------
+    private static IReadOnlyDictionary<string, IReadOnlyDictionary<int, string>> ReadTablesFromFile(string path)
+    {
+        try
+        {
+            using FileStream stream = File.OpenRead(path);
+            using JsonDocument document = JsonDocument.Parse(stream);
+            return ReadTables(document);
+        }
+        catch
+        {
+            return new Dictionary<string, IReadOnlyDictionary<int, string>>(StringComparer.OrdinalIgnoreCase);
+        }
+    }
+
+    //-------------------------------------------------------------------------------
+    // entities.json を表示名テーブルへ変換する処理
+    //-------------------------------------------------------------------------------
+    private static IReadOnlyDictionary<string, IReadOnlyDictionary<int, string>> ReadTables(JsonDocument document)
+    {
+        Dictionary<string, IReadOnlyDictionary<int, string>> tables = new(StringComparer.OrdinalIgnoreCase);
+        foreach (JsonProperty tableProperty in document.RootElement.EnumerateObject())
+        {
+            Dictionary<int, string> table = new();
+            foreach (JsonProperty entryProperty in tableProperty.Value.EnumerateObject())
+            {
+                if (int.TryParse(entryProperty.Name, NumberStyles.Integer, CultureInfo.InvariantCulture, out int id) &&
+                    entryProperty.Value.ValueKind == JsonValueKind.String &&
+                    entryProperty.Value.GetString() is string name)
+                {
+                    table[id] = name;
+                }
+            }
+
+            tables[tableProperty.Name] = table;
+        }
+
+        return tables;
     }
 }

@@ -1,0 +1,52 @@
+6 		# child count
+45.000000 	# radius
+{none} 		# id
+{____} 		# code
+5.000000 0.000000 0.000000 # offset
+0 		# joint index
+0 		# attribute
+# child
+{
+	0 		# child count
+	30.000000 	# radius
+	{slot} 		# id
+	{st__} 		# code
+	-7.500000 0.000000 0.000000 # offset
+	0 		# joint index
+	0 		# attribute
+	0 		# child count
+	10.000000 	# radius
+	{none} 		# id
+	{____} 		# code
+	7.500000 5.000000 0.000000 # offset
+	2 		# joint index
+	0 		# attribute
+	0 		# child count
+	10.000000 	# radius
+	{none} 		# id
+	{____} 		# code
+	7.500000 5.000000 0.000000 # offset
+	4 		# joint index
+	0 		# attribute
+	0 		# child count
+	10.000000 	# radius
+	{none} 		# id
+	{____} 		# code
+	7.500000 5.000000 0.000000 # offset
+	6 		# joint index
+	0 		# attribute
+	0 		# child count
+	10.000000 	# radius
+	{none} 		# id
+	{____} 		# code
+	7.500000 5.000000 0.000000 # offset
+	8 		# joint index
+	0 		# attribute
+	0 		# child count
+	10.000000 	# radius
+	{none} 		# id
+	{____} 		# code
+	7.500000 5.000000 0.000000 # offset
+	10 		# joint index
+	0 		# attribute
+}

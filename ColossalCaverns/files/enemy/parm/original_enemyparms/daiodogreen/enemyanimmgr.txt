@@ -1,0 +1,10 @@
+#
+#	AnimMgr
+#
+	1 	# number of animations
+# daiodo_green.bca
+{
+	D:\home\Project\Pikmin2\Pikmin2Data\conversion\enemy\designer\daiodoGreen\motion\daiodo_green.bca 
+	daiodo_green.bca 
+	-1 
+}
