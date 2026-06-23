@@ -1,5 +1,0 @@
-# RumbleParms
-{
-	{rrdm} 4 750.000000 	# Distance
-	{_eof} 
-}
